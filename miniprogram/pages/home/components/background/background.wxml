@@ -1,0 +1,3 @@
+<image class="bg" src="./../../../../images/home-bg.jpg" />
+
+<image class="home-setting touch" catchtap="onToSetting" src="./../../../../images/home-setting.png" />
