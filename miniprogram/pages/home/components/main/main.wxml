@@ -1,5 +1,5 @@
 <view class="main">
-
+  <!-- 随机匹配按钮 -->
   <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onRandomMatch">
     <image class="btn-oneline__icon" src="./../../../../images/home-btn-random.png" />
     <image class="btn-oneline__tag" src="./../../../../images/home-btn-hot.png" />
@@ -9,6 +9,7 @@
     </view>
   </button>
 
+  <!-- 好友对战按钮 -->
   <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onChallengeFriend">
     <image class="btn-oneline__icon" src="./../../../../images/home-btn-pk.png" />
     <view class="btn-oneline__text">
@@ -17,9 +18,18 @@
     </view>
   </button>
 
-  <view class="btn-two-wrap">
+  <!-- AIGC按钮：修改事件绑定为onAIGC -->
+  <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onAIGC">
+    <image class="btn-oneline__icon" src="./../../../../images/home-btn-pk.png" />
+    <view class="btn-oneline__text">
+      <text class="oneline-text__title">智 能 英 语 学 习 助 手</text>
+      <text class="oneline-text__desc">AIGC</text>
+    </view>
+  </button>
 
-    <button class="btn-two shadow-lg" hover-class="btn-hover" catchtap="onChallengeWord">
+  <view class="btn-two-wrap">
+    <!-- 每日词汇按钮 -->
+    <button class="btn-two shadow-lg" hover-class="btn-hover" catchtap="onChallengeWord" style="position: relative; left: -31rpx">
       <view class="btn-two__text">
         <text class="btn-two__title">每日词汇</text>
         <text class="btn-two__desc">Everyday Study</text>
@@ -27,14 +37,14 @@
       <image class="btn-two__icon" src="./../../../../images/home-pikaqiu.png" />
     </button>
 
-    <button class="btn-two shadow-lg" hover-class="btn-hover" catchtap="onToUserWords">
+    <!-- 生词本按钮 -->
+    <button class="btn-two shadow-lg" hover-class="btn-hover" catchtap="onToUserWords" style="position: relative; left: 16rpx">
       <view class="btn-two__text">
         <text class="btn-two__title">生词本</text>
         <text class="btn-two__desc">Review Words</text>
       </view>
       <image class="btn-two__icon" style="width: 56rpx;" src="./../../../../images/home-userwords.png" />
     </button>
-
   </view>
-
 </view>
+    

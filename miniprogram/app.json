@@ -6,7 +6,8 @@
     "pages/review/review",
     "pages/ranking/ranking",
     "pages/setting/setting",
-    "pages/about/about"
+    "pages/about/about",
+    "pages/aigc/aigc"
   ],
   "window": {
     "backgroundColor": "#FFFFFF",

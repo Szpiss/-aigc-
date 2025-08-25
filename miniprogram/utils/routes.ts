@@ -10,7 +10,9 @@ export const routesConfig = [
   { path: '/review', route: '/pages/review/review' },
   { path: '/ranking', route: '/pages/ranking/ranking' },
   { path: '/setting', route: '/pages/setting/setting' },
-  { path: '/about', route: '/pages/about/about' }
+  { path: '/about', route: '/pages/about/about' },
+  // 添加AIGC页面路由配置
+  { path: '/aigc', route: '/pages/aigc/aigc' }
 ]
 
 export interface ICombatRoute {
@@ -30,6 +32,12 @@ export interface ICombatRoute {
   share_result?: string
 }
 
+// AIGC页面路由参数接口（如果需要传递参数）
+export interface IAIGCRoute {
+  // 可以添加AIGC页面需要的参数，如：
+  // from?: string  // 记录来源页面
+}
+
 export interface IRoutes {
   pages: {
     /** 首页 */
@@ -46,6 +54,8 @@ export interface IRoutes {
     setting: Route<{}>
     /** 关于 */
     about: Route<{}>
+    /** AIGC英语学习助手 */
+    aigc: Route<IAIGCRoute>  // 添加AIGC路由类型定义
   }
 }
 

@@ -7,8 +7,6 @@ const app = getApp<IAppOption>()
 
 App.Component({
   options: {
-    /** 页面 wxss 样式将影响到自定义组件，但自定义组件 wxss 中指定的样式不会影响页面 */
-    /** 为了使用 app.wxss 中定义的一些全局样式，比如：.shadow-lg 和 动画库 */
     addGlobalClass: true
   },
   methods: {
@@ -20,8 +18,6 @@ App.Component({
       const book = store.getState().book
       const combatInfo = formatCombatInfo(userinfo, book, 'random', new Array(+userinfo.config.combatQuestionNumber).fill({}))
 
-      // NOTE: 先用本地数据生成对战信息，用于展示「好友邀请」页面所需信息
-      // NOTE: 该处的 state 应该为 precreate 或 create 更加合理，但是如果为这两个值，小程序数据变了，小程序的 UI 却不会变 ... 小程序框架有 BUG，
       store.setState({
         combat: { ...combatInfo, state: 'lock', next: '', _id: '', _createTime: '', isOwner: true }
       })
@@ -38,13 +34,22 @@ App.Component({
 
       const combatInfo = formatCombatInfo(userinfo, book, 'friend', new Array(+userinfo.config.combatQuestionNumber).fill({}))
 
-      // NOTE: 先用本地数据生成对战信息，用于展示「好友邀请」页面所需信息
       store.setState({
         combat: { ...combatInfo, state: 'create', next: '', _id: '', _createTime: '', isOwner: true }
       })
 
       void app.routes.pages.combat.go({ type: 'friend', state: 'create' })
     }, 500),
+
+    /**
+     * AIGC英语学习助手
+     */
+    onAIGC: throttle(async function() {
+      // 可以添加必要的前置检查，如用户登录状态等
+      await getUserInfo(); // 确保用户信息已加载
+      
+	  void app.routes.pages.aigc.go({});
+      }, 500),
 
     /**
      * 每日词汇
