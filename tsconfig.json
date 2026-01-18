@@ -27,7 +27,7 @@
   },
   "include": [
     "./**/*.ts"
-  ],
+, "miniprogram/pages/aigc/aigc.js"  ],
   "exclude": [
     "node_modules"
   ]

@@ -118,3 +118,9 @@ App<IAppOption>({
     return user
   }
 })
+
+wx.cloud.init({
+	// env：你的云环境ID，直接复制你的值即可
+	env: "cloud1-9gs5ba14ed2d8844",
+	traceUser: true,
+  });

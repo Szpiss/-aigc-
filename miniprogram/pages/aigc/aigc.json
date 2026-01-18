@@ -1,4 +1,6 @@
-{"navigationStyle": "custom",
-	"navigationBarTextStyle": "black"
+{
+	"usingComponents": {
+	  "agent-ui": "../../components/agent-ui/index"
+	},
+	"navigationBarTitleText": "英语学习助手"
   }
-  
