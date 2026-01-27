@@ -1,0 +1,272 @@
+page {
+  background: #f2f4fb;
+  font-family: "DIN Alternate", "Avenir Next", "PingFang SC", sans-serif;
+}
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f7f9ff 0%, #eef3ff 42%, #f7f7ff 100%);
+  padding-bottom: 48rpx;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+}
+
+.header-icon {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.header-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1b2b52;
+  margin-left: 16rpx;
+}
+
+.header-spacer {
+  flex: 1;
+}
+
+.hero {
+  margin: 12rpx 32rpx 0;
+  padding: 24rpx 28rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, #e4f0ff 0%, #f3e7ff 100%);
+  box-shadow: 0 12rpx 24rpx rgba(122, 134, 255, 0.15);
+}
+
+.hero-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2d2f4a;
+}
+
+.hero-subtitle {
+  font-size: 22rpx;
+  color: #6b6f8f;
+  margin-top: 8rpx;
+}
+
+.tabs {
+  margin: 24rpx 32rpx 0;
+  display: flex;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 8rpx;
+  box-shadow: 0 8rpx 20rpx rgba(21, 32, 64, 0.08);
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  color: #6d7798;
+  padding: 12rpx 0;
+  border-radius: 999rpx;
+}
+
+.tab-active {
+  background: linear-gradient(135deg, #4d8cff, #7d5cff);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.section {
+  margin-top: 20rpx;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  margin: 0 32rpx;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 18rpx;
+  padding: 24rpx;
+  box-shadow: 0 12rpx 24rpx rgba(9, 20, 55, 0.08);
+}
+
+.card-label {
+  font-size: 22rpx;
+  color: #8891b5;
+}
+
+.card-value {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #2c3454;
+  margin-top: 8rpx;
+}
+
+.card-unit {
+  font-size: 22rpx;
+  margin-left: 6rpx;
+  color: #7a84a6;
+}
+
+.chart-card,
+.detail-card {
+  margin: 24rpx 32rpx 0;
+  background: #ffffff;
+  border-radius: 22rpx;
+  padding: 24rpx;
+  box-shadow: 0 16rpx 30rpx rgba(25, 40, 80, 0.08);
+}
+
+.chart-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.chart-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #29324a;
+}
+
+.chart-unit {
+  font-size: 20rpx;
+  color: #9aa3c2;
+}
+
+.bar-chart {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-height: 220rpx;
+}
+
+.bar-item {
+  width: 68rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bar-value {
+  font-size: 20rpx;
+  color: #6a74a6;
+  margin-bottom: 6rpx;
+}
+
+.bar {
+  width: 30rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(180deg, #4d8cff, #7d5cff);
+  box-shadow: 0 10rpx 18rpx rgba(83, 120, 255, 0.32);
+}
+
+.bar-label {
+  margin-top: 10rpx;
+  font-size: 20rpx;
+  color: #9aa3c2;
+}
+
+.detail-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #29324a;
+  margin-bottom: 16rpx;
+}
+
+.detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.detail-item {
+  display: grid;
+  grid-template-columns: 120rpx 1fr 1fr 1fr;
+  background: #f6f7ff;
+  border-radius: 14rpx;
+  padding: 16rpx 18rpx;
+  font-size: 22rpx;
+  color: #5b6485;
+}
+
+.detail-date {
+  font-weight: 600;
+  color: #3b4466;
+}
+
+.detail-meta {
+  text-align: right;
+}
+
+.record-item {
+  position: relative;
+  padding: 18rpx 18rpx 18rpx 22rpx;
+  background: #f6f7ff;
+  border-radius: 16rpx;
+  display: grid;
+  gap: 8rpx;
+}
+
+.record-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.record-book {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #2b3454;
+}
+
+.record-type {
+  font-size: 20rpx;
+  color: #7a84a6;
+}
+
+.record-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22rpx;
+  color: #5f6b90;
+}
+
+.record-score {
+  font-weight: 600;
+}
+
+.record-time {
+  font-size: 20rpx;
+}
+
+.record-badge {
+  position: absolute;
+  top: 18rpx;
+  right: 18rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  color: #ffffff;
+}
+
+.badge-win {
+  background: linear-gradient(135deg, #29d9a7, #24b6a4);
+}
+
+.badge-lose {
+  background: linear-gradient(135deg, #ff6b6b, #ff8f71);
+}
+
+.empty {
+  text-align: center;
+  font-size: 24rpx;
+  color: #98a0bf;
+  padding: 24rpx 0;
+}

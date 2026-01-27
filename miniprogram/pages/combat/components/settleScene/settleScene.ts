@@ -4,6 +4,7 @@ import { store, IAppOption } from './../../../../app'
 import { COMBAT_TYPE } from './../../../../../typings/model'
 import { getUserInfo, formatCombatInfo } from './../../../../utils/helper'
 import { throttle, loading, sleep } from './../../../../utils/util'
+import { recordCombatData } from './../../../../utils/learningDataRecorder'
 
 const app = getApp<IAppOption>()
 
@@ -16,7 +17,8 @@ App.Component({
   },
   data: {
     leftIncExperience: 0,
-    rightIncExperience: 0
+    rightIncExperience: 0,
+    combatStartTime: null as Date | null // 记录对战开始时间
   },
   options: {
     addGlobalClass: true
@@ -24,6 +26,14 @@ App.Component({
   lifetimes: {
     ready () {
       if (!this.data.isShareResult) {
+        // 记录对战开始时间（从创建时间获取）
+        const combat = store.$state.combat
+        if (combat?._createTime) {
+          const createTime = typeof combat._createTime === 'string'
+            ? new Date(combat._createTime)
+            : new Date()
+          this.setData({ combatStartTime: createTime })
+        }
         void this.onSettle()
       }
     }
@@ -40,7 +50,7 @@ App.Component({
       isOwner && combatModel.end(_id)
 
       // NOTE: 对战结算出现 users 长度 < 2 的情况，可能是用户逃离、异常，做兜底处理
-      const otherUserGradeTotal = (users.length > 1 && users[1].gradeTotal) ? users[1].gradeTotal : 0
+      const otherUserGradeTotal = (users.length >1 && users[1].gradeTotal) ? users[1].gradeTotal : 0
       const isWin = isOwner ? users[0]?.gradeTotal >= otherUserGradeTotal : otherUserGradeTotal >= users[0]?.gradeTotal
 
       // NOTE: 云端增加词力值
@@ -55,6 +65,93 @@ App.Component({
           totalGames: store.$state.user.totalGames + 1
         }
       })
+
+      // 记录对战数据
+      const combat = store.$state.combat
+      const book = store.$state.book
+      if (combat && book && this.data.combatStartTime) {
+        console.log('🚀 开始记录对战数据', {
+          combatId: _id,
+          combatType: combat.type,
+          combat,
+          book,
+          startTime: this.data.combatStartTime
+        })
+
+        // 计算当前用户的对战数据
+        const myUserIndex = isOwner ? 0 : 1
+        const myUser = combat.users?.[myUserIndex]
+
+        if (!myUser) {
+          console.warn('⚠️ 找不到当前用户的对战数据')
+          return
+        }
+
+        // 统计答题情况
+        let correctCount = 0
+        let wrongCount = 0
+        let tipCount = 0
+        const wrongWords: Array<{wordId: string, word: string, isTip: boolean, responseTime: number}> = []
+
+        combat.wordList?.forEach((word, index) => {
+          const record = myUser.records?.[index] as { score?: number; isTip?: boolean } | undefined
+          if (!record) return
+
+          const score = record.score ?? 0
+          const isTip = record.isTip ?? false
+
+          if (score > 0) {
+            correctCount++
+          } else {
+            wrongCount++
+            if (word.word) {
+              wrongWords.push({
+                wordId: word.wordId,
+                word: word.word,
+                isTip: isTip ?? false,
+                responseTime: 0
+              })
+            }
+          }
+
+          if (isTip) {
+            tipCount++
+          }
+        })
+
+        // 计算对手分数
+        const opponentUserIndex = isOwner ? 1 : 0
+        const opponentUser = combat.users?.[opponentUserIndex]
+        const opponentScore = opponentUser?.gradeTotal ?? 0
+        const myScore = myUser.gradeTotal
+        const isWin: boolean = myScore >= opponentScore
+
+        void recordCombatData({
+          combatId: String(_id),
+          combatType: combat.type!,
+          bookId: book._id,
+          bookName: book.name,
+          isWin,
+          score: myScore,
+          opponentScore,
+          totalQuestions: combat.wordList?.length ?? 0,
+          correctCount,
+          wrongCount,
+          tipCount,
+          avgResponseTime: 0,
+          wrongWords,
+          startTime: this.data.combatStartTime.toISOString(),
+          endTime: new Date().toISOString()
+        })
+
+        console.log('✅ 对战数据记录完成')
+      } else {
+        console.warn('⚠️ 对战数据记录条件不满足', {
+          combat: !!combat,
+          book: !!book,
+          startTime: !!this.data.combatStartTime
+        })
+      }
     },
     /**
      * 获取需要增加的词力值，计算规则为 向下取整 (本局分数 / 50)，返回自己需要增加的词力值

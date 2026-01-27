@@ -1,7 +1,6 @@
-import { COMBAT_TYPE } from './../../../../../typings/model'
-import { getUserInfo, formatCombatInfo } from './../../../../utils/helper'
+import { getUserInfo } from './../../../../utils/helper'
 import { throttle } from './../../../../utils/util'
-import { IAppOption, store } from './../../../../app'
+import { IAppOption } from './../../../../app'
 
 const app = getApp<IAppOption>()
 
@@ -11,34 +10,11 @@ App.Component({
   },
   methods: {
     /**
-     * 随机匹配
+     * 单词对战入口
      */
-    onRandomMatch: throttle(async function (this: {createCombat: (combatType: COMBAT_TYPE) => Promise<void>}) {
-      const userinfo = await getUserInfo()
-      const book = store.getState().book
-      const combatInfo = formatCombatInfo(userinfo, book, 'random', new Array(+userinfo.config.combatQuestionNumber).fill({}))
-
-      store.setState({
-        combat: { ...combatInfo, state: 'lock', next: '', _id: '', _createTime: '', isOwner: true }
-      })
-
-      void app.routes.pages.combat.go({ type: 'random' })
-    }, 500),
-
-    /**
-     * 好友对战
-     */
-    onChallengeFriend: throttle(async function (this: {createCombat: (combatType: COMBAT_TYPE) => Promise<void>}) {
-      const userinfo = await getUserInfo()
-      const book = store.getState().book
-
-      const combatInfo = formatCombatInfo(userinfo, book, 'friend', new Array(+userinfo.config.combatQuestionNumber).fill({}))
-
-      store.setState({
-        combat: { ...combatInfo, state: 'create', next: '', _id: '', _createTime: '', isOwner: true }
-      })
-
-      void app.routes.pages.combat.go({ type: 'friend', state: 'create' })
+    onCombatModule: throttle(async function () {
+      await getUserInfo()
+      void app.routes.pages.combatSelect.go({})
     }, 500),
 
     /**
@@ -64,6 +40,13 @@ App.Component({
      */
     onToUserWords () {
       void app.routes.pages.review.go({})
+    },
+
+    /**
+     * 数据看板
+     */
+    onToStatistics () {
+      void app.routes.pages.statistics.go({})
     }
   }
 })

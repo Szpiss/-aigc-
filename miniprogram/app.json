@@ -1,9 +1,11 @@
 {
   "pages": [
     "pages/home/home",
+    "pages/combatSelect/combatSelect",
     "pages/combat/combat",
     "pages/learning/learning",
     "pages/review/review",
+    "pages/statistics/statistics",
     "pages/ranking/ranking",
     "pages/setting/setting",
     "pages/about/about",

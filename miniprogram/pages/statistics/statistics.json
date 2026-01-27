@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "header": "/components/header/header",
+    "loading": "/components/loading/loading"
+  },
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true
+}

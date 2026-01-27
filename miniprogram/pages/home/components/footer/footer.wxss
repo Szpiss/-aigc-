@@ -1,7 +1,7 @@
 .footer {
   display: flex;
-  justify-content: center;
-  padding: 0 64rpx;
+  justify-content: space-between;
+  padding: 0 48rpx;
   margin-top: 100rpx;
 }
 
@@ -10,7 +10,7 @@
   background: transparent;
   display: flex;
   align-items: center;
-  width: 200rpx!important;
+  width: 220rpx!important;
   border: 0;
   outline: none;
 }

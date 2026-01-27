@@ -3,6 +3,7 @@ import config from './../../utils/config'
 import { store, IAppOption, events } from './../../app'
 import { formatWordList } from './../../utils/helper'
 import { loading, toast } from './../../utils/util'
+import { recordLearningData } from './../../utils/learningDataRecorder'
 
 const app = getApp<IAppOption>()
 
@@ -38,6 +39,9 @@ App.Page({
 
     await this.loadWordsData()
     loading.hide()
+
+    // 记录学习开始时间（存储在全局对象中，供组件使用）
+    app.learningStartTime = new Date()
   },
 
   async loadWordsData () {

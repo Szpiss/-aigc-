@@ -1,9 +1,10 @@
 import { throttle, playAudio, sleep } from './../../../../utils/util'
 import { LearningWord } from './../../../../utils/state'
 import config from './../../../../utils/config'
-import { store, events } from './../../../../app'
+import { store, events, IAppOption } from './../../../../app'
 import userWordModel from './../../../../models/userWord'
 import userModel from './../../../../models/user'
+import { recordLearningData } from './../../../../utils/learningDataRecorder'
 
 type SelectEvent = WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {index: number, useTip?: boolean} >
 
@@ -29,6 +30,7 @@ enum OptionIndex {
 const TIMER_NULL = -1
 
 let countdownTimer = TIMER_NULL
+const app = getApp<IAppOption>()
 
 App.Component({
   data: {
@@ -166,6 +168,18 @@ App.Component({
               }
             })
           })
+        }
+
+        const book = store.$state.book
+        const learningStartTime = app.learningStartTime ?? undefined
+        if (book && learningStartTime) {
+          void recordLearningData({
+            bookId: book._id,
+            bookName: book.name,
+            startTime: learningStartTime.toISOString(),
+            endTime: new Date().toISOString()
+          })
+          app.learningStartTime = null
         }
 
         clearInterval(countdownTimer)

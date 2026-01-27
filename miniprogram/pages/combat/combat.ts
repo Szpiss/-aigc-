@@ -49,6 +49,23 @@ App.Page({
       return
     }
 
+    if (options.type === 'npc') {
+      const combatId = await this.createCombat('random')
+      await this.initCombatWatcher(combatId)
+      const isCreate = await combatModel.pre2Create(combatId)
+      if (!isCreate) {
+        void this.closeCombatWatcher()
+        toast.show('人机对战创建失败，请稍后重试', 2000).finally(() => {
+          this.onBack()
+        })
+      } else {
+        setTimeout(() => {
+          events.emit('startNPCCombat')
+        }, 200)
+      }
+      return
+    }
+
     if (options.type === 'random') {
       const startRandom = await this.randomCombat()
       if (!startRandom) {

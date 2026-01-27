@@ -1,4 +1,6 @@
 "use strict";
+// 云函数入口 - 学习数据统计模块
+// 部署时间: 2026-01-23 01:45 强制更新
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -39,6 +41,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.main = void 0;
 var cloud = require("wx-server-sdk");
 var user_1 = require("./controller/user");
+var learningData_1 = require("./controller/learningData");
 var Router_1 = require("./utils/Router");
 cloud.init({
     // @ts-expect-error
@@ -49,7 +52,7 @@ var main = function (event, context) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                controllers = { user: user_1.default };
+                controllers = { user: user_1.default, learningData: learningData_1.default };
                 router = new Router_1.default(controllers);
                 return [4 /*yield*/, router.run(event, context)];
             case 1: return [2 /*return*/, _a.sent()];

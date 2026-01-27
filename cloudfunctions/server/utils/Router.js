@@ -78,7 +78,18 @@ var Router = /** @class */ (function () {
                         if (!fn || typeof fn !== 'function') {
                             return [2 /*return*/, response_1.default.fail('路由未找到')];
                         }
-                        ActionThis = __assign({ event: event, context: context, openId: event.userInfo.openId }, response_1.default);
+                        // 创建 ActionThis 对象，手动绑定 success 和 fail 方法
+                        ActionThis = {
+                            event: event,
+                            context: context,
+                            openId: event.userInfo.openId,
+                            success: function(data) { 
+                                return { state: 0, data: data }; 
+                            },
+                            fail: function(data) { 
+                                return { state: -1, data: data }; 
+                            }
+                        };
                         console.log('debug: url =>', url);
                         console.log('debug: event =>', event);
                         return [4 /*yield*/, fn.call(ActionThis, event)];

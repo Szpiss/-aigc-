@@ -8,6 +8,8 @@ export const routesConfig = [
   { path: '/learning', route: '/pages/learning/learning' },
   { path: '/combat', route: '/pages/combat/combat' },
   { path: '/review', route: '/pages/review/review' },
+  { path: '/combatSelect', route: '/pages/combatSelect/combatSelect' },
+  { path: '/statistics', route: '/pages/statistics/statistics' },
   { path: '/ranking', route: '/pages/ranking/ranking' },
   { path: '/setting', route: '/pages/setting/setting' },
   { path: '/about', route: '/pages/about/about' },
@@ -16,7 +18,7 @@ export const routesConfig = [
 ]
 
 export interface ICombatRoute {
-  type: 'friend' | 'random'
+  type: 'friend' | 'random' | 'npc'
   state?: 'create' | 'ready' | 'start'
 
   /** 上一局对战的房间 id，通过对战结束后的「再来一局」创建的房间将携带 */
@@ -48,8 +50,12 @@ export interface IRoutes {
     review: Route<{}>
     /** 对战模式 */
     combat: Route<ICombatRoute>
+    /** 对战选择 */
+    combatSelect: Route<{}>
     /** 排行榜 */
     ranking: Route<{}>
+    /** 数据看板 */
+    statistics: Route<{}>
     /** 设置页 */
     setting: Route<{}>
     /** 关于 */

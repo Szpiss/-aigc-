@@ -1,20 +1,11 @@
 <view class="main">
-  <!-- 随机匹配按钮 -->
-  <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onRandomMatch">
-    <image class="btn-oneline__icon" src="./../../../../images/home-btn-random.png" />
+  <!-- 单词对战模块 -->
+  <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onCombatModule">
+    <image class="btn-oneline__icon" src="./../../../../images/home-btn-pk.png" />
     <image class="btn-oneline__tag" src="./../../../../images/home-btn-hot.png" />
     <view class="btn-oneline__text">
-      <text class="oneline-text__title">随 机 匹 配</text>
-      <text class="oneline-text__desc">Random match</text>
-    </view>
-  </button>
-
-  <!-- 好友对战按钮 -->
-  <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onChallengeFriend">
-    <image class="btn-oneline__icon" src="./../../../../images/home-btn-pk.png" />
-    <view class="btn-oneline__text">
-      <text class="oneline-text__title">好 友 对 战</text>
-      <text class="oneline-text__desc">Challenge a friend</text>
+      <text class="oneline-text__title">单 词 对 战</text>
+      <text class="oneline-text__desc">Word battle</text>
     </view>
   </button>
 
@@ -24,6 +15,15 @@
     <view class="btn-oneline__text">
       <text class="oneline-text__title">智 能 英 语 学 习 助 手</text>
       <text class="oneline-text__desc">AIGC</text>
+    </view>
+  </button>
+
+  <!-- 数据看板按钮 -->
+  <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onToStatistics">
+    <image class="btn-oneline__icon" src="./../../../../images/home-grade.png" />
+    <view class="btn-oneline__text">
+      <text class="oneline-text__title">数 据 看 板</text>
+      <text class="oneline-text__desc">Study dashboard</text>
     </view>
   </button>
 

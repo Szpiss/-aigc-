@@ -50,6 +50,7 @@ export interface IAppOption {
   routes: IRoutes
   events: IEvents
   $loginAsync?: $loginAsync
+  learningStartTime?: Date | null
   initEnv: () => Promise<void>
   initUiGlobal: () => void
   login: () => $loginAsync

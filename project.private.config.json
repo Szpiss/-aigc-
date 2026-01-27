@@ -1,76 +1,36 @@
 {
-  "setting": {},
-  "condition": {
-    "miniprogram": {
-      "list": [
-        {
-          "name": "创建好友对战房间",
-          "pathName": "pages/combat/combat",
-          "query": "state=create&type=friend",
-          "scene": null
-        },
-        {
-          "name": "加入好友创建房间",
-          "pathName": "pages/combat/combat",
-          "query": "id=54ad1eea61cc8652018a1c3305857e88&type=friend&state=ready",
-          "scene": null
-        },
-        {
-          "name": "开始对局调试",
-          "pathName": "pages/combat/combat",
-          "query": "id=5b049cc861da956a03ae865634a49426&debug=true",
-          "scene": null
-        },
-        {
-          "name": "对战结束调试",
-          "pathName": "pages/combat/combat",
-          "query": "id=54ad1eea61e2b034074afbe727bc1247&debug=true",
-          "scene": null
-        },
-        {
-          "name": "随机匹配",
-          "pathName": "pages/combat/combat",
-          "query": "type=random",
-          "scene": null
-        },
-        {
-          "name": "对战结果分享战绩",
-          "pathName": "pages/combat/combat",
-          "query": "id=41ae62ef61f14caa00e9e8c404a32a18&share_result=true",
-          "scene": null
-        },
-        {
-          "name": "每日词汇",
-          "pathName": "pages/learning/learning",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "生词本",
-          "pathName": "pages/review/review",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "排行榜",
-          "pathName": "pages/ranking/ranking",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "设置页",
-          "pathName": "pages/setting/setting",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "关于",
-          "pathName": "pages/about/about",
-          "query": "",
-          "scene": null
-        }
-      ]
-    }
-  },
-  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html"
+	"setting": {
+		"urlCheck": true,
+		"coverView": true,
+		"lazyloadPlaceholderEnable": false,
+		"skylineRenderEnable": false,
+		"preloadBackgroundData": false,
+		"autoAudits": false,
+		"useApiHook": true,
+		"showShadowRootInWxmlPanel": true,
+		"useStaticServer": false,
+		"useLanDebug": false,
+		"showES6CompileOption": false,
+		"compileHotReLoad": true,
+		"checkInvalidKey": true,
+		"ignoreDevUnusedFiles": true,
+		"bigPackageSizeSupport": false,
+		"useIsolateContext": true
+	},
+	"condition": {
+		"miniprogram": {
+			"list": [
+				{
+					"name": "pages/statistics/statistics",
+					"pathName": "pages/statistics/statistics",
+					"query": "",
+					"scene": null,
+					"launchMode": "default"
+				}
+			]
+		}
+	},
+	"description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+	"libVersion": "3.9.2",
+	"projectname": "cihunaigc"
 }
