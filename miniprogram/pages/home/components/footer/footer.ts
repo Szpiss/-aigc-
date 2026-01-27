@@ -12,9 +12,6 @@ App.Component({
     onToRanking () {
       void app.routes.pages.ranking.go({})
     },
-    onToStatistics () {
-      void app.routes.pages.statistics.go({})
-    },
     onAbout () {
       void app.routes.pages.about.go({})
     }

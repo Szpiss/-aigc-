@@ -21,11 +21,18 @@
 		"miniprogram": {
 			"list": [
 				{
-					"name": "pages/statistics/statistics",
-					"pathName": "pages/statistics/statistics",
+					"name": "pages/home/home",
+					"pathName": "pages/home/home",
 					"query": "",
 					"scene": null,
 					"launchMode": "default"
+				},
+				{
+					"name": "pages/statistics/statistics",
+					"pathName": "pages/statistics/statistics",
+					"query": "",
+					"launchMode": "default",
+					"scene": null
 				}
 			]
 		}

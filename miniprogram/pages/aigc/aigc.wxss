@@ -1,1 +1,29 @@
-/* pages/chatBot/chatBot.wxss */
+.page {
+  position: relative;
+  min-height: 100vh;
+  background: #f6f7fb;
+}
+
+.back {
+  position: absolute;
+  top: 24rpx;
+  left: 20rpx;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 10rpx 16rpx;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999rpx;
+  box-shadow: 0 8rpx 18rpx rgba(26, 32, 54, 0.12);
+}
+
+.back-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.back-text {
+  margin-left: 8rpx;
+  font-size: 22rpx;
+  color: #2d2f4a;
+}

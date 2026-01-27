@@ -151,110 +151,89 @@ var LearningDataController = base_1.default({
     /**
      * 获取学习报告数据
      */
-    getLearningReport: function (_a) {
+    getLearningReport: async function (_a) {
         var type = _a.type, date = _a.date;
-        var _this = this;
-        return __awaiter(void 0, void 0, void 0, function () {
-            var learningDataModel, d, week, year, data, summary, _i, _b, item, totalCorrect, totalWrong, totalWins, totalCombats, totalScore;
-            return __generator(_this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        learningDataModel = new learningData_1.default();
-                        if (type === 'week') {
-                            d = new Date(date);
-                            week = learningDataModel.getWeekNumber(d);
-                            year = d.getFullYear();
-                            return [4 /*yield*/, learningDataModel.getWeekData(week, year)];
-                        }
-                        else if (type === 'month') {
-                            d = new Date(date);
-                            return [4 /*yield*/, learningDataModel.getMonthData(d.getMonth() + 1, d.getFullYear())];
-                        }
-                        else {
-                            return [4 /*yield*/, learningDataModel.model.where({
-                                    _openid: _this.openid,
-                                    date: new Date(date)
-                                }).get()];
-                        }
-                    case 1:
-                        data = _c.sent();
-                        summary = {
-                            totalStudyTime: 0,
-                            totalWordsCount: 0,
-                            correctRate: 0,
-                            winRate: 0,
-                            avgScore: 0,
-                            combatCount: 0,
-                            learningCount: 0,
-                            reviewCount: 0
-                        };
-                        if (data.data && data.data.length > 0) {
-                            for (_i = 0, _b = data.data; _i < _b.length; _i++) {
-                                item = _b[_i];
-                                summary.totalStudyTime += item.totalStudyTime || 0;
-                                summary.totalWordsCount += item.totalWordsCount || 0;
-                                summary.combatCount += item.combatCount || 0;
-                                summary.learningCount += item.learningCount || 0;
-                                summary.reviewCount += item.reviewCount || 0;
-                            }
-                            totalCorrect = data.data.reduce(function (sum, item) { return sum + (item.correctCount || 0); }, 0);
-                            totalWrong = data.data.reduce(function (sum, item) { return sum + (item.wrongCount || 0); }, 0);
-                            summary.correctRate = totalCorrect / (totalCorrect + totalWrong);
-                            totalWins = data.data.reduce(function (sum, item) { return sum + (item.winCount || 0); }, 0);
-                            totalCombats = data.data.reduce(function (sum, item) { return sum + (item.combatCount || 0); }, 0);
-                            summary.winRate = totalCombats > 0 ? totalWins / totalCombats : 0;
-                            totalScore = data.data.reduce(function (sum, item) { return sum + (item.avgScore || 0); }, 0);
-                            summary.avgScore = data.data.length > 0 ? totalScore / data.data.length : 0;
-                        }
-                        return [2 /*return*/, _this.success({
-                                daily: data.data || [],
-                                summary: summary
-                            })];
-                }
-            });
+        var learningDataModel = new learningData_1.default();
+        var data;
+        if (type === 'week') {
+            var d = new Date(date);
+            var week = learningDataModel.getWeekNumber(d);
+            var year = d.getFullYear();
+            data = await learningDataModel.getWeekData(week, year);
+        }
+        else if (type === 'month') {
+            var d = new Date(date);
+            data = await learningDataModel.getMonthData(d.getMonth() + 1, d.getFullYear());
+        }
+        else {
+            data = await learningDataModel.model.where({
+                _openid: this.openid,
+                date: new Date(date)
+            }).get();
+        }
+        var summary = {
+            totalStudyTime: 0,
+            totalWordsCount: 0,
+            correctRate: 0,
+            winRate: 0,
+            avgScore: 0,
+            combatCount: 0,
+            learningCount: 0,
+            reviewCount: 0
+        };
+        if (data.data && data.data.length > 0) {
+            for (var _i = 0, _b = data.data; _i < _b.length; _i++) {
+                var item = _b[_i];
+                summary.totalStudyTime += item.totalStudyTime || 0;
+                summary.totalWordsCount += item.totalWordsCount || 0;
+                summary.combatCount += item.combatCount || 0;
+                summary.learningCount += item.learningCount || 0;
+                summary.reviewCount += item.reviewCount || 0;
+            }
+            var totalCorrect = data.data.reduce(function (sum, item) { return sum + (item.correctCount || 0); }, 0);
+            var totalWrong = data.data.reduce(function (sum, item) { return sum + (item.wrongCount || 0); }, 0);
+            summary.correctRate = totalCorrect / (totalCorrect + totalWrong);
+            var totalWins = data.data.reduce(function (sum, item) { return sum + (item.winCount || 0); }, 0);
+            var totalCombats = data.data.reduce(function (sum, item) { return sum + (item.combatCount || 0); }, 0);
+            summary.winRate = totalCombats > 0 ? totalWins / totalCombats : 0;
+            var totalScore = data.data.reduce(function (sum, item) { return sum + (item.avgScore || 0); }, 0);
+            summary.avgScore = data.data.length > 0 ? totalScore / data.data.length : 0;
+        }
+        return this.success({
+            daily: data.data || [],
+            summary: summary
         });
     },
     /**
      * 获取学习趋势数据(用于图表)
      */
-    getLearningTrend: function (_a) {
+    getLearningTrend: async function (_a) {
         var _b = _a.days === void 0 ? 30 : _a.days, days = _b;
-        var _this = this;
-        return __awaiter(void 0, void 0, void 0, function () {
-            var startDate, data, trend, _i, _b_1, item, formattedDate, learningDataModel, _c, item, formattedDate;
-            return __generator(_this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        startDate = new Date();
-                        startDate.setDate(startDate.getDate() - days);
-                        startDate.setHours(0, 0, 0, 0);
-                        learningDataModel = new learningData_1.default();
-                        return [4 /*yield*/, learningDataModel.model.where({
-                                _openid: _this.openid,
-                                date: learningDataModel.command.gte(startDate)
-                            }).orderBy('date', 'asc').get()];
-                    case 1:
-                        data = _c.sent();
-                        trend = {
-                            dates: [],
-                            studyTimes: [],
-                            correctRates: [],
-                            wordCounts: []
-                        };
-                        if (data.data && data.data.length > 0) {
-                            for (_i = 0, _b_1 = data.data; _i < _b_1.length; _i++) {
-                                item = _b_1[_i];
-                                formattedDate = _this.formatDate(item.date);
-                                trend.dates.push(formattedDate);
-                                trend.studyTimes.push(Math.round((item.totalStudyTime || 0) / 60));
-                                trend.correctRates.push(Math.round((item.correctRate || 0) * 100));
-                                trend.wordCounts.push(item.totalWordsCount || 0);
-                            }
-                        }
-                        return [2 /*return*/, _this.success(trend)];
-                }
-            });
-        });
+        var startDate = new Date();
+        startDate.setDate(startDate.getDate() - days);
+        startDate.setHours(0, 0, 0, 0);
+        var learningDataModel = new learningData_1.default();
+        var data = await learningDataModel.model.where({
+            _openid: this.openid,
+            date: learningDataModel.command.gte(startDate)
+        }).orderBy('date', 'asc').get();
+        var trend = {
+            dates: [],
+            studyTimes: [],
+            correctRates: [],
+            wordCounts: []
+        };
+        if (data.data && data.data.length > 0) {
+            for (var _i = 0, _c = data.data; _i < _c.length; _i++) {
+                var item = _c[_i];
+                var formattedDate = this.formatDate(item.date);
+                trend.dates.push(formattedDate);
+                trend.studyTimes.push(Math.round((item.totalStudyTime || 0) / 60));
+                trend.correctRates.push(Math.round((item.correctRate || 0) * 100));
+                trend.wordCounts.push(item.totalWordsCount || 0);
+            }
+        }
+        return this.success(trend);
     },
     /**
      * 格式化日期为 MM/DD
