@@ -79,6 +79,8 @@ Component({
     article: {},
     windowInfo: wx.getWindowInfo(),
     bot: {},
+    input: "",
+    aiAnswer: "",
     inputValue: "",
     output: "",
     chatRecords: [],
@@ -876,8 +878,8 @@ Component({
         isShowFeedback: true,
         feedbackRecordId: feedbackrecordid,
         feedbackType: feedbacktype,
-        aiAnswer: answerRecord.content,
-        input: inputRecord.content,
+        aiAnswer: (answerRecord && answerRecord.content) ? answerRecord.content : "",
+        input: (inputRecord && inputRecord.content) ? inputRecord.content : "",
       });
     },
     closefeedback: function () {

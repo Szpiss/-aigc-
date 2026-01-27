@@ -47,10 +47,92 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var cloud = require("wx-server-sdk");
 var base_1 = require("./base");
 var learningData_1 = require("../model/learningData");
 var combatRecord_1 = require("../model/combatRecord");
 var learningRecord_1 = require("../model/learningRecord");
+var wordMastery_1 = require("../model/wordMastery");
+var learningPlan_1 = require("../model/learningPlan");
+
+var getDb = function () { return cloud.database(); };
+
+var normalizeDate = function (date) {
+    var d = date ? new Date(date) : new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+};
+
+var calcMasteryScore = function (wrongCount, totalCount, tipCount, avgResponseTime) {
+    var wrongRate = totalCount > 0 ? wrongCount / totalCount : 0;
+    var tipRate = totalCount > 0 ? tipCount / totalCount : 0;
+    var responsePenalty = Math.min(1, (avgResponseTime || 0) / 5000);
+    var score = 1 - (wrongRate * 0.6 + tipRate * 0.3 + responsePenalty * 0.1);
+    if (score < 0)
+        return 0;
+    if (score > 1)
+        return 1;
+    return Number(score.toFixed(4));
+};
+
+var upsertWordMastery = async function (bookId, word) {
+    var masteryModel = new wordMastery_1.default();
+    var wordId = word.wordId;
+    var responseTime = Number(word.responseTime) || 0;
+    var isTip = !!word.isTip;
+    var existing = await masteryModel.model.where({
+        _openid: masteryModel.openid,
+        wordId: wordId
+    }).get();
+    if (existing.data && existing.data.length > 0) {
+        var item = existing.data[0];
+        var prevTotal = item.totalCount || 0;
+        var totalCount = prevTotal + 1;
+        var wrongCount = (item.wrongCount || 0) + 1;
+        var tipCount = (item.tipCount || 0) + (isTip ? 1 : 0);
+        var avgResponseTime = Math.round(((item.avgResponseTime || 0) * prevTotal + responseTime) / totalCount);
+        var masteryScore = calcMasteryScore(wrongCount, totalCount, tipCount, avgResponseTime);
+        return masteryModel.model.doc(item._id).update({
+            data: {
+                wordId: wordId,
+                word: word.word || item.word,
+                bookId: bookId || item.bookId,
+                wrongCount: wrongCount,
+                totalCount: totalCount,
+                tipCount: tipCount,
+                avgResponseTime: avgResponseTime,
+                masteryScore: masteryScore,
+                lastSeen: new Date(),
+                _updateTime: new Date()
+            }
+        });
+    }
+    var totalCount = 1;
+    var wrongCount = 1;
+    var tipCount = isTip ? 1 : 0;
+    var avgResponseTime = responseTime;
+    var masteryScore = calcMasteryScore(wrongCount, totalCount, tipCount, avgResponseTime);
+    return masteryModel.addMastery({
+        wordId: wordId,
+        word: word.word || '',
+        bookId: bookId || '',
+        wrongCount: wrongCount,
+        totalCount: totalCount,
+        tipCount: tipCount,
+        avgResponseTime: avgResponseTime,
+        masteryScore: masteryScore,
+        lastSeen: new Date()
+    });
+};
+
+var updateWordMasteryFromCombat = async function (bookId, wrongWords) {
+    if (!wrongWords || wrongWords.length === 0) {
+        return;
+    }
+    for (var i = 0; i < wrongWords.length; i++) {
+        await upsertWordMastery(bookId, wrongWords[i]);
+    }
+};
 var LearningDataController = base_1.default({
     /**
      * 记录对战数据
@@ -100,6 +182,12 @@ var LearningDataController = base_1.default({
             });
             console.log('upsertDaily 返回结果:', upsertResult);
             console.log('upsertDaily 完成');
+            try {
+                await updateWordMasteryFromCombat(bookId, wrongWords);
+            }
+            catch (error) {
+                console.log('更新掌握度失败', error);
+            }
             return this.success(true);
         }
         catch (error_1) {
@@ -147,6 +235,89 @@ var LearningDataController = base_1.default({
             console.log('记录学习数据失败', error_2);
             return this.fail("记录学习数据失败,请稍后重试: ".concat((error_2 === null || error_2 === void 0 ? void 0 : error_2.message) || error_2));
         }
+    },
+    /**
+     * 生成当日学习计划（CDS 自适应调度）
+     */
+    generateLearningPlan: async function (_a) {
+        var date = _a.date, _b = _a.size, size = _b === void 0 ? 20 : _b, bookId = _a.bookId;
+        var planDate = normalizeDate(date);
+        var planModel = new learningPlan_1.default();
+        var masteryModel = new wordMastery_1.default();
+        var planSize = Number(size) || 20;
+        var weakCount = Math.max(1, Math.round(planSize * 0.5));
+        var reinforceCount = Math.max(0, Math.round(planSize * 0.3));
+        var newCount = Math.max(0, planSize - weakCount - reinforceCount);
+        var masteryWhere = { _openid: masteryModel.openid };
+        if (bookId) {
+            masteryWhere.bookId = bookId;
+        }
+        var masteryRes = await masteryModel.model.where(masteryWhere).orderBy('masteryScore', 'asc').limit(500).get();
+        var masteryList = masteryRes.data || [];
+        var weakList = masteryList.slice(0, weakCount);
+        var reinforceList = masteryList.slice(weakCount, weakCount + reinforceCount);
+        var selectedIds = weakList.concat(reinforceList).map(function (item) { return item.wordId; }).filter(Boolean);
+        var newWords = [];
+        if (newCount > 0) {
+            var db = getDb();
+            var wordWhere = {};
+            if (bookId && bookId !== 'random') {
+                wordWhere.bookId = bookId;
+            }
+            var sampleRes = await db.collection('word').aggregate().match(wordWhere).limit(999999).sample({ size: newCount }).end();
+            newWords = (sampleRes.list || []).map(function (item) { return item._id; });
+        }
+        var planWords = selectedIds.concat(newWords).slice(0, planSize);
+        var planData = {
+            date: planDate,
+            bookId: bookId || '',
+            words: planWords,
+            total: planWords.length,
+            source: {
+                weak: weakList.map(function (item) { return item.wordId; }),
+                reinforce: reinforceList.map(function (item) { return item.wordId; }),
+                new: newWords
+            }
+        };
+        var existing = await planModel.model.where({ _openid: planModel.openid, date: planDate, bookId: planData.bookId }).get();
+        if (existing.data && existing.data.length > 0) {
+            var _id = existing.data[0]._id;
+            await planModel.model.doc(_id).update({
+                data: __assign(__assign({}, planData), { _updateTime: new Date() })
+            });
+        }
+        else {
+            await planModel.addPlan(planData);
+        }
+        return this.success(planData);
+    },
+    /**
+     * 获取当日学习计划
+     */
+    getLearningPlan: async function (_a) {
+        var date = _a.date, bookId = _a.bookId;
+        var planDate = normalizeDate(date);
+        var planModel = new learningPlan_1.default();
+        var where = { _openid: planModel.openid, date: planDate };
+        if (bookId) {
+            where.bookId = bookId;
+        }
+        var data = await planModel.model.where(where).orderBy('_updateTime', 'desc').limit(1).get();
+        var plan = data.data && data.data.length > 0 ? data.data[0] : null;
+        return this.success(plan);
+    },
+    /**
+     * 获取弱词列表（掌握度最低）
+     */
+    getWordMasteryTop: async function (_a) {
+        var _b = _a.limit, limit = _b === void 0 ? 10 : _b, bookId = _a.bookId;
+        var masteryModel = new wordMastery_1.default();
+        var where = { _openid: masteryModel.openid };
+        if (bookId) {
+            where.bookId = bookId;
+        }
+        var data = await masteryModel.model.where(where).orderBy('masteryScore', 'asc').limit(Number(limit) || 10).get();
+        return this.success(data.data || []);
     },
     /**
      * 获取学习报告数据

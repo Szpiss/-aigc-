@@ -1,4 +1,4 @@
-﻿import { IAppOption } from './../../app'
+import { IAppOption, store } from './../../app'
 
 const app = getApp<IAppOption>()
 const db = wx.cloud.database()
@@ -37,6 +37,7 @@ App.Page({
     },
     trendBars: [] as Array<{ label: string; minutes: number; height: number }>,
     dailyList: [] as Array<{ label: string; learningMinutes: number; correctRate: number; wordCount: number }>,
+    weakWords: [] as Array<{ word: string; masteryScore: number }>,
     combatSummary: {
       total: 0,
       winRate: 0,
@@ -78,6 +79,7 @@ App.Page({
     this.setData({ loading: true })
     await Promise.all([
       this.fetchLearningSummary(),
+      this.fetchWeakWords(),
       this.fetchCombatRecords()
     ])
     this.setData({ loading: false })
@@ -139,8 +141,8 @@ App.Page({
 
       this.setData({ trendBars: barItems, dailyList })
     } catch (error) {
-      console.error('获取学习数据失败', error)
-      void wx.showToast({ title: '学习数据获取失败', icon: 'none', duration: 1500 })
+      console.error('鑾峰彇瀛︿範鏁版嵁澶辫触', error)
+      void wx.showToast({ title: '瀛︿範鏁版嵁鑾峰彇澶辫触', icon: 'none', duration: 1500 })
     }
   },
 
@@ -186,7 +188,7 @@ App.Page({
       const winRate = total > 0 ? Math.round((win / total) * 100) : 0
 
       const list = records.map((item) => ({
-        bookName: item.bookName || '未知词书',
+        bookName: item.bookName || '鏈煡璇嶄功',
         typeLabel: this.formatCombatType(item.combatType),
         isWin: !!item.isWin,
         score: item.score || 0,
@@ -204,16 +206,41 @@ App.Page({
         combatRecords: list
       })
     } catch (error) {
-      console.error('获取对战记录失败', error)
-      void wx.showToast({ title: '对战数据获取失败', icon: 'none', duration: 1500 })
+      console.error('鑾峰彇瀵规垬璁板綍澶辫触', error)
+      void wx.showToast({ title: '瀵规垬鏁版嵁鑾峰彇澶辫触', icon: 'none', duration: 1500 })
+    }
+  },
+
+  async fetchWeakWords () {
+    try {
+      const bookId = store.$state.book?._id || ''
+      const res = await wx.cloud.callFunction({
+        name: 'server',
+        data: {
+          url: 'learningData/getWordMasteryTop',
+          limit: 8,
+          bookId
+        }
+      })
+      const result = res.result as { state: number; data?: Array<{ word?: string; masteryScore?: number }> }
+      if (!result || result.state !== 0) {
+        return
+      }
+      const list = (result.data || []).map(item => ({
+        word: item.word || '',
+        masteryScore: Math.round((item.masteryScore || 0) * 100)
+      }))
+      this.setData({ weakWords: list })
+    } catch (error) {
+      console.warn('鑾峰彇寮辫瘝鍒楄〃澶辫触', error)
     }
   },
 
   formatCombatType (type?: string) {
-    if (type === 'friend') return '好友'
-    if (type === 'random') return '随机'
-    if (type === 'npc') return '人机'
-    return '对战'
+    if (type === 'friend') return '濂藉弸'
+    if (type === 'random') return '闅忔満'
+    if (type === 'npc') return '浜烘満'
+    return '瀵规垬'
   },
 
   formatDate (date?: string | number | Date) {
@@ -232,3 +259,4 @@ App.Page({
     return `${month}/${day} ${hour}:${minute}`
   }
 })
+

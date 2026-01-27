@@ -376,7 +376,7 @@
     </view>
   </view>
   <feedback input="{{input}}" aiAnswer="{{aiAnswer}}" isShowFeedback="{{isShowFeedback}}" bind:close="closefeedback"
-    feedbackRecordId="{{feedbackRecordId}}" feedbackType="{{feedbackType}}" botId="{{bot.botId}}"></feedback>
+    feedbackRecordId="{{feedbackRecordId}}" feedbackType="{{feedbackType}}" botId="{{bot.botId ? bot.botId : agentConfig.botId}}"></feedback>
   <!-- 底部操作菜单弹窗 -->
   <view class="action-menu-modal" wx:if="{{showActionMenu}}" bind:tap="hideActionMenu">
     <view class="action-menu" catchtap="">

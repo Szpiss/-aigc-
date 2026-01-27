@@ -47,14 +47,115 @@ App.Page({
   async loadWordsData () {
     const userinfo = store.$state.user
 
-    // NOTE: 1. 获取单词数据
-    const words = await wordModel.getRandomWords(userinfo.bookId, config.learningPageSize * config.learningOptionNumber)
+    const planWords = await this.getPlanWords(userinfo.bookId)
 
-    // NOTE: 2. 格式化单词数据
-    const wordList = formatWordList(words, config.learningOptionNumber)
+    let wordList = []
+    if (planWords.length > 0) {
+      const distractorSize = planWords.length * (config.learningOptionNumber - 1)
+      const distractors = await wordModel.getRandomWords(userinfo.bookId, distractorSize)
+      wordList = this.buildLearningQuestions(planWords, distractors, config.learningOptionNumber)
+    } else {
+      // NOTE: 1. 获取单词数据
+      const words = await wordModel.getRandomWords(userinfo.bookId, config.learningPageSize * config.learningOptionNumber)
+      // NOTE: 2. 格式化单词数据
+      wordList = formatWordList(words, config.learningOptionNumber)
+    }
 
     // NOTE: 3. 本地 store 的数据增加网络上获取的最新数据
     store.setState({ learning: { ...store.$state.learning!, wordList: store.$state.learning!.wordList.concat(wordList) } })
+  },
+
+  async getPlanWords (bookId: string) {
+    const date = new Date().toISOString()
+    try {
+      const planRes = await wx.cloud.callFunction({
+        name: 'server',
+        data: {
+          url: 'learningData/getLearningPlan',
+          date,
+          bookId
+        }
+      })
+
+      const planResult = planRes.result as { state: number; data?: { words?: string[] } | null }
+      if (planResult?.state === 0 && planResult.data?.words?.length) {
+        return await wordModel.getWordsByIds(planResult.data.words)
+      }
+
+      const generateRes = await wx.cloud.callFunction({
+        name: 'server',
+        data: {
+          url: 'learningData/generateLearningPlan',
+          date,
+          size: config.learningPageSize,
+          bookId
+        }
+      })
+
+      const genResult = generateRes.result as { state: number; data?: { words?: string[] } }
+      if (genResult?.state === 0 && genResult.data?.words?.length) {
+        return await wordModel.getWordsByIds(genResult.data.words)
+      }
+    } catch (error) {
+      console.warn('获取学习计划失败，使用随机词表', error)
+    }
+
+    return []
+  },
+
+  buildLearningQuestions (targets: Array<{ _id: string; word: string; usphone: string; trans: Array<{ tranCn: string; pos: string }> }>, distractors: Array<{ _id: string; word: string; usphone: string; trans: Array<{ tranCn: string; pos: string }> }>, optionNumber: number) {
+    const questions = []
+    const used = new Set<string>()
+    let poolIndex = 0
+
+    const formatOption = (word) => {
+      const trans = (word.trans || []).slice().sort(() => Math.random() - 0.5)[0]
+      if (!trans) {
+        return word.word
+      }
+      return trans.pos ? `${trans.pos}.${trans.tranCn}` : trans.tranCn
+    }
+
+    targets.forEach((target) => {
+      const options = []
+      const optionWords = []
+
+      optionWords.push(target)
+      while (optionWords.length < optionNumber && poolIndex < distractors.length) {
+        const candidate = distractors[poolIndex]
+        poolIndex++
+        if (!candidate || String(candidate._id) === String(target._id)) {
+          continue
+        }
+        if (used.has(String(candidate._id))) {
+          continue
+        }
+        used.add(String(candidate._id))
+        optionWords.push(candidate)
+      }
+
+      while (optionWords.length < optionNumber) {
+        optionWords.push(target)
+      }
+
+      const correctIndex = Math.floor(Math.random() * optionNumber)
+      const shuffled = optionWords.slice()
+      const targetWord = optionWords[0]
+      shuffled[0] = shuffled[correctIndex]
+      shuffled[correctIndex] = targetWord
+
+      shuffled.forEach((word) => options.push(formatOption(word)))
+
+      questions.push({
+        options,
+        correctIndex,
+        word: target.word,
+        wordId: target._id,
+        usphone: target.usphone
+      })
+    })
+
+    return questions
   },
 
   onBack () {

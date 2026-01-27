@@ -35,6 +35,22 @@ class WordModel extends Base {
       throw error
     }
   }
+
+  /**
+   * 根据 id 列表获取单词
+   */
+  async getWordsByIds (ids: string[]): Promise<Word[]> {
+    if (!ids || ids.length === 0) {
+      return []
+    }
+    const res = await this.model.where({
+      _id: this.db.command.in(ids)
+    }).get()
+
+    const list = res.data || []
+    const map = new Map(list.map(item => [String(item._id), item]))
+    return ids.map(id => map.get(String(id))).filter(Boolean) as Word[]
+  }
 }
 
 export default new WordModel()

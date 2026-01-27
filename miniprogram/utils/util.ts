@@ -10,6 +10,8 @@ WechatMiniprogram.IAnyObject,
 { show: (text?: string, duration?: number, width?: number, toastId?: string) => Promise<string>, hide: (toastId?: string) => void }
 >
 
+import config from './config'
+
 function getLoaingComponent (): ILoading | null {
   const page = getCurrentPages()
   if (!page.length) { return null }
@@ -85,10 +87,14 @@ export function playAudio (src: string): void {
 }
 
 export function playPronunciation (word: string): void {
-  // NOTE: 网上可以搜到很多的单词发音接口，搜索「单词发音接口」，自行修改下方 src 链接
-  const src = ''
+  const baseUrl = config.pronunciation?.baseUrl || ''
+  const safeWord = encodeURIComponent((word || '').trim())
+  const src = baseUrl && safeWord ? `${baseUrl}${safeWord}` : ''
 
-  !src && console.log(`playPronunciation -> ${word}，请网上自行找一个「单词发音接口」从而实现单词发音功能`)
+  if (!src) {
+    console.log(`playPronunciation -> ${word}，请在 config.pronunciation.baseUrl 配置发音接口`)
+    return
+  }
 
-  src && playAudio(src)
+  playAudio(src)
 }

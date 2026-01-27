@@ -270,3 +270,29 @@ page {
   color: #98a0bf;
   padding: 24rpx 0;
 }
+
+.weak-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.weak-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14rpx 18rpx;
+  border-radius: 14rpx;
+  background: #f6f7ff;
+  font-size: 22rpx;
+  color: #4a5475;
+}
+
+.weak-word {
+  font-weight: 600;
+  color: #2d3558;
+}
+
+.weak-score {
+  color: #7a84a6;
+}

@@ -4,10 +4,55 @@
   background: #f6f7fb;
 }
 
+.action-panel {
+  margin: 16rpx 24rpx 0;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #e7f1ff 0%, #f1e8ff 100%);
+  border-radius: 18rpx;
+  box-shadow: 0 10rpx 22rpx rgba(122, 134, 255, 0.18);
+}
+
+.action-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2d2f4a;
+}
+
+.action-subtitle {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #6b6f8f;
+}
+
+.action-buttons {
+  margin-top: 16rpx;
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-btn {
+  flex: 1;
+  background: #8dd8ff;
+  color: #ffffff;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+}
+
+.action-btn-secondary {
+  background: #7b8bff;
+}
+
 .back {
   position: absolute;
   top: 24rpx;
-  left: 20rpx;
+  right: 20rpx;
   z-index: 10;
   display: flex;
   align-items: center;

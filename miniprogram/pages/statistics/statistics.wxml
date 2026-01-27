@@ -63,6 +63,17 @@
       </view>
       <view class="empty" wx:else>暂无学习数据</view>
     </view>
+
+    <view class="detail-card">
+      <view class="detail-title">弱词榜（掌握度）</view>
+      <view class="weak-list" wx:if="{{weakWords.length}}">
+        <view class="weak-item" wx:for="{{weakWords}}" wx:key="word">
+          <text class="weak-word">{{item.word}}</text>
+          <text class="weak-score">{{item.masteryScore}}%</text>
+        </view>
+      </view>
+      <view class="empty" wx:else>暂无弱词数据</view>
+    </view>
   </view>
 
   <view class="section" wx:if="{{activeTab === 'combat'}}">
