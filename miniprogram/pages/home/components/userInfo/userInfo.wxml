@@ -1,27 +1,42 @@
-<view class="user">
-
-  <!-- 主页头像信息，state 中有则显示 state 中数据，否则使用 open-data 显示用户头像 -->
-  <image wx:if="{{$state.user.avatar}}" class="user-avatar" src="{{$state.user.avatar}}" />
-  <image wx:else class="user-avatar" src="./../../../../images/combat-default-avatar.png"></image>
-
-  <view class="user-info">
-    <!-- 主页用户昵称信息，state 中的显示优先级大于 opendata 优先级 -->
-    <text wx:if="{{$state.user.nickname}}" class="user-info__nickname">{{$state.user.nickname}}</text>
-    <text wx:else class="user-info__nickname" catchtap="onGetUserInfo">单词天天斗 (点击登录)</text>
- 
-    <view class="user-info__grade">
-      <image class="grade-icon" src="./../../../../images/home-grade.png" />
-      <text class="grade-text">词力值： {{$state.user.experience}}</text>
+<view class="user-card">
+  <view class="user-card__hero">
+    <view class="user-card__avatar-wrap">
+      <!-- 主页头像信息，state 中有则显示 state 中数据，否则使用默认头像 -->
+      <image wx:if="{{$state.user.avatar}}" class="user-avatar" src="{{$state.user.avatar}}" />
+      <image wx:else class="user-avatar" src="./../../../../images/combat-default-avatar.png"></image>
     </view>
-    <view class="user-info__fight-info">
-      <view class="fight-info__pvp">
-        <image class="pvp-icon" src="./../../../../images/home-pvp.png" />
-        <text class="pvp-text">对战：{{$state.user.totalGames}}局</text>
+
+    <view class="user-info">
+      <view class="user-info__headline">
+        <!-- 主页用户昵称信息，state 中的显示优先级大于 opendata 优先级 -->
+        <text wx:if="{{$state.user.nickname}}" class="user-info__nickname">{{$state.user.nickname}}</text>
+        <view wx:else class="user-info__login" catchtap="onGetUserInfo">
+          <text class="user-info__nickname">单词天天斗</text>
+          <text class="user-info__login-text">点击登录同步学习进度</text>
+        </view>
+
+        <view class="user-info__badge">
+          <text class="user-info__badge-text">今日练习</text>
+        </view>
       </view>
-      <view class="fight-info__win">
-        <image class="win-icon" src="./../../../../images/home-win.png" />
-        <text class="win-text">胜利：{{$state.user.winGames}}局</text>
+
+      <text class="user-info__summary">轻量复习、对战闯关、持续积累你的词力值</text>
+
+      <view class="user-info__score">
+        <text class="user-info__score-label">词力值</text>
+        <text class="user-info__score-value">{{$state.user.experience}}</text>
       </view>
+    </view>
+  </view>
+
+  <view class="user-card__stats">
+    <view class="stat-card">
+      <text class="stat-card__label">总对战</text>
+      <text class="stat-card__value">{{$state.user.totalGames}} 局</text>
+    </view>
+    <view class="stat-card stat-card--accent">
+      <text class="stat-card__label">累计胜利</text>
+      <text class="stat-card__value">{{$state.user.winGames}} 局</text>
     </view>
   </view>
 </view>

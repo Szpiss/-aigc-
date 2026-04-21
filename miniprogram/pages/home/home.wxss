@@ -3,13 +3,58 @@ page {
   overflow-y: scroll;
   overflow-x: hidden;
   min-height: 100vh;
+  background: linear-gradient(180deg, #f4f9ff 0%, #eef5ff 36%, #f8fbff 100%);
+}
+
+.home-page {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 64rpx;
+  box-sizing: border-box;
+}
+
+.home-shell {
+  position: relative;
+  z-index: 1;
+  padding: 18rpx 24rpx 48rpx;
+  box-sizing: border-box;
+}
+
+.home-section {
+  margin-top: 24rpx;
+}
+
+.home-section--hero {
+  margin-top: 8rpx;
+}
+
+.home-section--main {
+  margin-top: 28rpx;
+}
+
+.home-section--footer {
+  margin-top: 20rpx;
+}
+
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 32rpx;
 }
 
 .header-title {
-  font-size: 34rpx;
+  font-size: 42rpx;
   font-weight: 700;
-  color: rgba(51, 51, 51, 1);
-  letter-spacing: 8rpx;
-  margin-left: 32rpx;
+  color: #1a2b49;
+  letter-spacing: 4rpx;
+  line-height: 1.1;
 }
 
+.header-subtitle {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  letter-spacing: 2rpx;
+  color: #7a8ca8;
+}

@@ -1,19 +1,32 @@
-<header><text slot="content" class="header-title">词魂</text></header>
-
-<!-- 用户信息展示 -->
-<user-info />
-
-<!-- 提示卡、单词书选择 -->
-<tool-bar />
-
-<!-- 好友对战、随机匹配、每日词汇、生词本 -->
-<main />
-
-<!-- 排行榜、建议反馈、打赏作者 -->
-<footer />
-
 <!-- 背景、设置入口 -->
 <background />
+
+<view class="home-page">
+  <header>
+    <view slot="content" class="header-brand">
+      <text class="header-title">词魂</text>
+      <text class="header-subtitle">English Battle Lab</text>
+    </view>
+  </header>
+
+  <view class="home-shell">
+    <view class="home-section home-section--hero">
+      <user-info />
+    </view>
+
+    <view class="home-section">
+      <tool-bar />
+    </view>
+
+    <view class="home-section home-section--main">
+      <main />
+    </view>
+
+    <view class="home-section home-section--footer">
+      <footer />
+    </view>
+  </view>
+</view>
 
 <!-- 单词书切换选择 -->
 <book-select id="book-select" />
