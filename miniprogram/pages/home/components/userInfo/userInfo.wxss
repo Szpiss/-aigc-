@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 36rpx 32rpx 28rpx;
+  padding: 28rpx 26rpx 22rpx;
   box-sizing: border-box;
-  border-radius: 36rpx;
+  border-radius: 30rpx;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 250, 255, 0.94) 100%);
   box-shadow: 0 20rpx 40rpx rgba(65, 107, 173, 0.12);
   border: 2rpx solid rgba(255, 255, 255, 0.8);
@@ -17,18 +17,18 @@
 
 .user-card__avatar-wrap {
   position: relative;
-  width: 156rpx;
-  height: 156rpx;
+  width: 138rpx;
+  height: 138rpx;
   flex-shrink: 0;
   border-radius: 50%;
-  padding: 6rpx;
+  padding: 5rpx;
   box-sizing: border-box;
   background: linear-gradient(145deg, rgba(120, 181, 255, 0.24), rgba(255, 255, 255, 0.92));
 }
 
 .user-avatar {
-  width: 144rpx;
-  height: 144rpx;
+  width: 128rpx;
+  height: 128rpx;
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 0 10rpx 24rpx rgba(77, 123, 194, 0.18);
@@ -38,7 +38,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  margin-left: 28rpx;
+  margin-left: 22rpx;
 }
 
 .user-info__headline {
@@ -53,20 +53,46 @@
 }
 
 .user-info__login-text {
-  margin-top: 8rpx;
-  font-size: 22rpx;
+  margin-top: 6rpx;
+  font-size: 20rpx;
   color: #4d7bc2;
 }
 
-.user-info__badge {
+.user-info__rank-btn {
   flex-shrink: 0;
-  margin-left: 16rpx;
-  padding: 10rpx 18rpx;
+  display: flex;
+  align-items: center;
+  height: 54rpx;
+  margin-left: 12rpx;
+  padding: 0 14rpx;
+  box-sizing: border-box;
+  border: 0;
   border-radius: 999rpx;
+  outline: none;
   background: rgba(103, 163, 255, 0.12);
 }
 
-.user-info__badge-text {
+.user-info__rank-btn::after {
+  border: 0;
+}
+
+.user-info__rank-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40rpx;
+  height: 28rpx;
+  padding: 0 8rpx;
+  box-sizing: border-box;
+  border-radius: 999rpx;
+  background: rgba(74, 125, 207, 0.14);
+  font-size: 16rpx;
+  font-weight: 700;
+  color: #3d71bf;
+}
+
+.user-info__rank-text {
+  margin-left: 8rpx;
   font-size: 20rpx;
   font-weight: 600;
   color: #3d71bf;
@@ -75,7 +101,7 @@
 .user-info__nickname {
   max-width: 320rpx;
   line-height: 1.2;
-  font-size: 38rpx;
+  font-size: 34rpx;
   font-weight: 700;
   color: #1a2b49;
   overflow: hidden;
@@ -84,48 +110,48 @@
 }
 
 .user-info__summary {
-  margin-top: 18rpx;
-  font-size: 24rpx;
-  line-height: 1.6;
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  line-height: 1.45;
   color: #6f8098;
 }
 
 .user-info__score {
   display: flex;
   align-items: baseline;
-  margin-top: 18rpx;
+  margin-top: 12rpx;
 }
 
 .user-info__score-label {
-  font-size: 24rpx;
+  font-size: 22rpx;
   font-weight: 500;
   color: #6f8098;
 }
 
 .user-info__score-value {
-  margin-left: 14rpx;
-  font-size: 42rpx;
+  margin-left: 12rpx;
+  font-size: 38rpx;
   font-weight: 700;
   color: #2f63b4;
 }
 
 .user-card__stats {
   display: flex;
-  margin-top: 28rpx;
+  margin-top: 18rpx;
 }
 
 .stat-card {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 24rpx;
-  border-radius: 26rpx;
+  padding: 18rpx;
+  border-radius: 22rpx;
   background: rgba(246, 249, 255, 0.95);
   border: 1rpx solid rgba(130, 170, 228, 0.14);
 }
 
 .stat-card + .stat-card {
-  margin-left: 20rpx;
+  margin-left: 14rpx;
 }
 
 .stat-card--accent {
@@ -133,13 +159,13 @@
 }
 
 .stat-card__label {
-  font-size: 22rpx;
+  font-size: 20rpx;
   color: #7b8aa3;
 }
 
 .stat-card__value {
-  margin-top: 10rpx;
-  font-size: 30rpx;
+  margin-top: 6rpx;
+  font-size: 27rpx;
   font-weight: 700;
   color: #22395d;
 }

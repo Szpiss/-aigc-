@@ -1,7 +1,6 @@
 <view class="main">
   <view class="main__header">
     <text class="main__title">核心功能</text>
-    <text class="main__subtitle">围绕练、战、复盘组织首页入口，首屏信息更完整也更容易开始</text>
   </view>
 
   <!-- 单词对战模块 -->

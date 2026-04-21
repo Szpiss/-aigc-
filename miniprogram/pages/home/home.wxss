@@ -9,42 +9,42 @@ page {
 .home-page {
   position: relative;
   min-height: 100vh;
-  padding-bottom: 64rpx;
+  padding-bottom: 24rpx;
   box-sizing: border-box;
 }
 
 .home-shell {
   position: relative;
   z-index: 1;
-  padding: 18rpx 24rpx 48rpx;
+  padding: 10rpx 20rpx 20rpx;
   box-sizing: border-box;
 }
 
 .home-section {
-  margin-top: 24rpx;
+  margin-top: 16rpx;
 }
 
 .home-section--hero {
-  margin-top: 8rpx;
+  margin-top: 4rpx;
 }
 
 .home-section--main {
-  margin-top: 28rpx;
+  margin-top: 18rpx;
 }
 
 .home-section--footer {
-  margin-top: 20rpx;
+  margin-top: 12rpx;
 }
 
 .header-brand {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 32rpx;
+  padding-left: 28rpx;
 }
 
 .header-title {
-  font-size: 42rpx;
+  font-size: 40rpx;
   font-weight: 700;
   color: #1a2b49;
   letter-spacing: 4rpx;
@@ -52,8 +52,8 @@ page {
 }
 
 .header-subtitle {
-  margin-top: 8rpx;
-  font-size: 22rpx;
+  margin-top: 4rpx;
+  font-size: 20rpx;
   font-weight: 500;
   letter-spacing: 2rpx;
   color: #7a8ca8;

@@ -1,7 +1,6 @@
 <view class="toolbar">
   <view class="toolbar__header">
     <text class="toolbar__title">学习准备</text>
-    <text class="toolbar__subtitle">开始练习前，先确认你的卡片和词书设置</text>
   </view>
 
   <view class="toolbar__grid">
