@@ -1,12 +1,25 @@
-<block wx:for="{{wordsList}}" wx:key="_id" wx:for-index="index" wx:for-item="userWord">
-  <word-item index="{{index}}" userWord="{{userWord}}" bind:delete="onDeleteWord" />
-</block>
+<view class="review-page app-page">
+  <view class="app-shell">
+    <view class="review-hero app-hero-card">
+      <text class="review-hero__kicker">Review Words</text>
+      <text class="review-hero__title app-hero-title">生词本</text>
+      <text class="review-hero__subtitle app-hero-subtitle">集中回收薄弱词，点击卡片查看释义，长按切换删除或发音。</text>
+    </view>
 
-<text class="onBottom" wx:if="{{!nextPage && wordsList.length}}">👻 没有更多数据 👻</text>
+    <view class="review-list" wx:if="{{wordsList.length}}">
+      <block wx:for="{{wordsList}}" wx:key="_id" wx:for-index="index" wx:for-item="userWord">
+        <word-item index="{{index}}" userWord="{{userWord}}" bind:delete="onDeleteWord" />
+      </block>
+    </view>
 
-<view wx:if="{{(wordsList.length ===0 && !nextPage)}}" class="blank">
-  <image class="blank-img" src="./../../images/message-logo.png" />
-  <text class="blank-text">还没有生词需要复习哦</text>
+    <text class="onBottom" wx:if="{{!nextPage && wordsList.length}}">没有更多数据</text>
+
+    <view wx:if="{{(wordsList.length ===0 && !nextPage)}}" class="blank app-empty">
+      <image class="blank-img" src="./../../images/message-logo.png" />
+      <text class="blank-text">还没有生词需要复习</text>
+      <text class="blank-desc">继续每日词汇或对战，系统会在这里沉淀需要回看的单词。</text>
+    </view>
+  </view>
 </view>
 
 <!-- 加载 -->

@@ -1,3 +1,16 @@
-<view class="rich-content">
-  <rich-text nodes="{{$state.appConfig.about}}" />
+<view class="about-page app-page">
+  <view class="app-shell">
+    <view class="about-hero app-hero-card">
+      <text class="about-hero__kicker">English Battle Lab</text>
+      <text class="about-hero__title app-hero-title">词魂</text>
+      <text class="about-hero__subtitle app-hero-subtitle">把单词学习、对战练习和智能复盘放在同一个轻量小程序里。</text>
+    </view>
+
+    <view class="about-card app-card">
+      <text class="about-card__title">项目介绍</text>
+      <view class="rich-content">
+        <rich-text nodes="{{$state.appConfig.about}}" />
+      </view>
+    </view>
+  </view>
 </view>
