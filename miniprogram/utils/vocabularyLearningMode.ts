@@ -36,13 +36,13 @@ export const getVocabularyLearningModeDesc = (mode: VocabularyLearningMode): str
 }
 
 export const getVocabularyLearningMode = (): VocabularyLearningMode => {
-  const cloudMode = store.$state.user?.config?.vocabularyLearningMode
-  if (cloudMode) {
-    return normalizeVocabularyLearningMode(cloudMode)
+  const storageMode = wx.getStorageSync(VOCABULARY_LEARNING_MODE_STORAGE_KEY) as string | undefined
+  if (storageMode) {
+    return normalizeVocabularyLearningMode(storageMode)
   }
 
-  const storageMode = wx.getStorageSync(VOCABULARY_LEARNING_MODE_STORAGE_KEY) as string | undefined
-  return normalizeVocabularyLearningMode(storageMode)
+  const cloudMode = store.$state.user?.config?.vocabularyLearningMode
+  return normalizeVocabularyLearningMode(cloudMode)
 }
 
 export const setVocabularyLearningMode = (mode: VocabularyLearningMode): VocabularyLearningMode => {

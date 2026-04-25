@@ -178,7 +178,7 @@ App.Page({
   },
 
   onChangeMode () {
-    void app.routes.pages.setting.go({})
+    void app.routes.pages.home.redirectTo({})
   },
 
   onShow () {

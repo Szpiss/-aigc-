@@ -62,17 +62,8 @@ page {
   align-items: center;
 }
 
-.card-item--stacked {
-  min-height: 118rpx;
-}
-
 .card-item:not(:first-child) {
   border-top: 1rpx solid rgba(124, 170, 232, 0.10);
-}
-
-.card-item__copy {
-  flex: 1;
-  min-width: 0;
 }
 
 .card-item__title {
@@ -87,17 +78,6 @@ page {
   color: #203554;
 }
 
-.card-item--stacked .card-item__title {
-  height: 52rpx;
-}
-
-.card-item__hint {
-  display: block;
-  font-size: 22rpx;
-  line-height: 32rpx;
-  color: #7a8ca8;
-}
-
 .card-item--danger .card-item__title {
   color: #d64d5b;
 }
@@ -108,11 +88,6 @@ page {
   color: #7a8ca8;
   min-width: 70rpx;
   text-align: right;
-}
-
-.card-item__desc--mode {
-  max-width: 190rpx;
-  line-height: 34rpx;
 }
 
 .card-item__icon {

@@ -3,6 +3,7 @@
   "usingComponents": {
     "user-info": "components/userInfo/userInfo",
     "tool-bar": "components/toolBar/toolBar",
+    "learning-mode-switch": "components/learningModeSwitch/learningModeSwitch",
     "main": "components/main/main",
     "footer": "components/footer/footer",
     "background": "components/background/background",

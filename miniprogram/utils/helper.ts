@@ -80,6 +80,12 @@ export const refreshUserInfo = async (source = 'manual'): Promise<UserInfoState 
       user: latestUser,
       book: nextBook
     }, resolve))
+    const app = getApp<{globalData?: {userInfo?: UserInfoState}}>()
+    app.globalData = {
+      ...(app.globalData || {}),
+      userInfo: latestUser
+    }
+    wx.setStorageSync('userInfo', latestUser)
 
     console.log('[user-sync] refreshed user info', source, {
       experience: latestUser.experience,
