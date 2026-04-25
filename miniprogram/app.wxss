@@ -77,3 +77,178 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Modern UI foundation shared by the miniprogram pages. */
+.app-page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #f4f9ff 0%, #eef5ff 38%, #f8fbff 100%);
+  color: #1a2b49;
+}
+
+.app-shell {
+  position: relative;
+  box-sizing: border-box;
+  padding: 20rpx 24rpx 48rpx;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+}
+
+.app-header-icon {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.app-header-title {
+  margin-left: 16rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1a2b49;
+}
+
+.app-header-spacer {
+  flex: 1;
+}
+
+.app-section {
+  margin-top: 24rpx;
+}
+
+.app-section-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1a2b49;
+}
+
+.app-section-subtitle {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  line-height: 1.5;
+  color: #7a8ca8;
+}
+
+.app-card,
+.app-list-card {
+  box-sizing: border-box;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1rpx solid rgba(124, 170, 232, 0.14);
+  box-shadow: 0 16rpx 34rpx rgba(65, 107, 173, 0.10);
+}
+
+.app-card {
+  padding: 28rpx;
+}
+
+.app-card-soft {
+  box-sizing: border-box;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1rpx solid rgba(124, 170, 232, 0.12);
+  box-shadow: 0 12rpx 28rpx rgba(65, 107, 173, 0.08);
+}
+
+.app-hero-card {
+  box-sizing: border-box;
+  border-radius: 30rpx;
+  padding: 30rpx 28rpx;
+  background: linear-gradient(135deg, #e4f0ff 0%, #f2eaff 100%);
+  border: 1rpx solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 18rpx 36rpx rgba(80, 120, 200, 0.14);
+}
+
+.app-hero-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1a2b49;
+}
+
+.app-hero-subtitle {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  line-height: 1.5;
+  color: #6f8098;
+}
+
+.app-primary-btn,
+.app-secondary-btn,
+.app-danger-btn {
+  box-sizing: border-box;
+  border: 0;
+  outline: none;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.app-primary-btn::after,
+.app-secondary-btn::after,
+.app-danger-btn::after {
+  border: 0;
+}
+
+.app-primary-btn {
+  background: linear-gradient(135deg, #69a8ff 0%, #6676ee 100%);
+  color: #ffffff;
+  box-shadow: 0 14rpx 28rpx rgba(72, 119, 201, 0.22);
+}
+
+.app-secondary-btn {
+  background: rgba(255, 255, 255, 0.92);
+  color: #2f63b4;
+  border: 1rpx solid rgba(100, 150, 220, 0.18);
+}
+
+.app-danger-btn {
+  background: rgba(255, 112, 112, 0.12);
+  color: #d64d5b;
+}
+
+.app-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  background: rgba(103, 163, 255, 0.12);
+  color: #3d71bf;
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.app-stat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.app-stat-card {
+  box-sizing: border-box;
+  width: 48%;
+  padding: 22rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1rpx solid rgba(124, 170, 232, 0.12);
+  box-shadow: 0 12rpx 26rpx rgba(65, 107, 173, 0.08);
+}
+
+.app-empty {
+  box-sizing: border-box;
+  margin: 32rpx 24rpx;
+  padding: 56rpx 32rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.80);
+  color: #7a8ca8;
+  text-align: center;
+  font-size: 26rpx;
+  box-shadow: 0 12rpx 28rpx rgba(65, 107, 173, 0.08);
+}
