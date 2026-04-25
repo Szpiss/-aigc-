@@ -5,6 +5,7 @@ import { store, events, IAppOption } from './../../../../app'
 import userWordModel from './../../../../models/userWord'
 import userModel from './../../../../models/user'
 import { recordLearningData } from './../../../../utils/learningDataRecorder'
+import { refreshUserInfo } from './../../../../utils/helper'
 
 type SelectEvent = WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {index: number, useTip?: boolean} >
 
@@ -157,16 +158,31 @@ App.Component({
         const experience = store.$state.learning?.experience ?? 0
         if (experience) {
           void userModel.incExperience(experience, false, 'learning').then(res => {
-            res && store.setState({ // 更新用户的词力值
-              user: {
-                ...store.$state.user,
-                experience: store.$state.user.experience + experience
-              },
+            if (!res) { return }
+
+            const beforeExperience = store.$state.user.experience
+            const nextUser = {
+              ...store.$state.user,
+              experience: beforeExperience + experience
+            }
+
+            store.setState({ // 更新用户的词力值
+              user: nextUser,
               learning: {
                 ...store.$state.learning!,
                 experience: 0 // 清空待增加的词力值，答题后下轮结束答题再结算剩余词力值
               }
             })
+
+            console.log('[user-sync] learning experience updated', {
+              beforeExperience,
+              incExperience: experience,
+              afterExperience: nextUser.experience
+            })
+
+            void refreshUserInfo('learning.finish')
+          }).catch(error => {
+            console.warn('[user-sync] learning experience update failed', error)
           })
         }
 

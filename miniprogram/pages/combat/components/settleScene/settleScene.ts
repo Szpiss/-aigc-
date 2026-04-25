@@ -2,7 +2,7 @@ import combatModel from './../../../../models/combat'
 import userModel from './../../../../models/user'
 import { store, IAppOption } from './../../../../app'
 import { COMBAT_TYPE } from './../../../../../typings/model'
-import { getUserInfo, formatCombatInfo } from './../../../../utils/helper'
+import { getUserInfo, formatCombatInfo, refreshUserInfo } from './../../../../utils/helper'
 import { throttle, loading, sleep } from './../../../../utils/util'
 import { recordCombatData } from './../../../../utils/learningDataRecorder'
 
@@ -50,21 +50,53 @@ App.Component({
       isOwner && combatModel.end(_id)
 
       // NOTE: 对战结算出现 users 长度 < 2 的情况，可能是用户逃离、异常，做兜底处理
-      const otherUserGradeTotal = (users.length >1 && users[1].gradeTotal) ? users[1].gradeTotal : 0
+      const otherUserGradeTotal = (users.length > 1 && users[1].gradeTotal) ? users[1].gradeTotal : 0
       const isWin = isOwner ? users[0]?.gradeTotal >= otherUserGradeTotal : otherUserGradeTotal >= users[0]?.gradeTotal
 
       // NOTE: 云端增加词力值
-      await userModel.incExperience(incExperience, isWin)
+      let userStatsUpdated = false
+      try {
+        userStatsUpdated = await userModel.incExperience(incExperience, isWin)
+      } catch (error) {
+        console.warn('[user-sync] combat stats update failed', error)
+      }
 
-      // NOTE: 本地增加词力值
-      store.setState({
-        user: {
+      if (userStatsUpdated) {
+        const beforeStats = {
+          experience: store.$state.user.experience,
+          winGames: store.$state.user.winGames,
+          totalGames: store.$state.user.totalGames
+        }
+        const nextUser = {
           ...store.$state.user,
           experience: store.$state.user.experience + incExperience,
           winGames: store.$state.user.winGames + (isWin ? 1 : 0),
           totalGames: store.$state.user.totalGames + 1
         }
-      })
+
+        // NOTE: 本地先乐观同步，随后从云端刷新一次，保证首页拿到数据库最终值
+        store.setState({
+          user: nextUser
+        })
+
+        console.log('[user-sync] combat stats updated', {
+          before: beforeStats,
+          incExperience,
+          isWin,
+          after: {
+            experience: nextUser.experience,
+            winGames: nextUser.winGames,
+            totalGames: nextUser.totalGames
+          }
+        })
+
+        void refreshUserInfo('combat.settle')
+      } else {
+        console.warn('[user-sync] combat stats update skipped: database update failed', {
+          incExperience,
+          isWin
+        })
+      }
 
       // 记录对战数据
       const combat = store.$state.combat
