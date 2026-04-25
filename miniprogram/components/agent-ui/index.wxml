@@ -1,5 +1,5 @@
 <!-- agent ui 组件根容器 -->
-<view class="agent-ui" bind:tap="onTapPage">
+<view class="agent-ui" style="height: {{layoutHeight}};" bind:tap="onTapPage">
   <!-- 左侧抽屉，只在 bot 模式下展示 -->
   <view wx-if="{{chatMode==='bot'&&!isAgent}}" class="drawer-mask {{isDrawerShow ? 'show' : ''}}" bindtap="closeDrawer"></view>
   <view wx-if="{{chatMode==='bot'&&!isAgent}}" class="drawer {{isDrawerShow ? 'show' : ''}}">

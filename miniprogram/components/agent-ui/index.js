@@ -19,6 +19,10 @@ Component({
       type: String,
       value: "",
     },
+    layoutHeight: {
+      type: String,
+      value: "100vh",
+    },
     agentConfig: {
       type: Object,
       value: {

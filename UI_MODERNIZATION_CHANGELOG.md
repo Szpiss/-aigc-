@@ -54,6 +54,8 @@ The home page is the design source for this round. The shared direction is:
 | `miniprogram/pages/about/about.wxss` | Style | Added about page background, hero, content card, and rich text typography. | No |
 | `miniprogram/pages/statistics/statistics.wxml` | Structure | Wrapped dashboard content with shared shell/hero classes while preserving tab and data bindings. | No |
 | `miniprogram/pages/statistics/statistics.wxss` | Style | Unified dashboard cards, tabs, trend chart, daily list, weak word list, combat record list, and empty states. | No |
+| `miniprogram/components/agent-ui/index.js` | Display prop | Added `layoutHeight` so pages can size the embedded chat UI without changing Agent behavior. | No |
+| `miniprogram/components/agent-ui/index.wxml` | Structure | Applied the optional `layoutHeight` value to the component root height. | No |
 | `miniprogram/pages/aigc/aigc.wxml` | Structure | Wrapped assistant entry actions and `agent-ui` in a modern assistant page layout. | No |
 | `miniprogram/pages/aigc/aigc.wxss` | Style | Modernized assistant hero, action buttons, back control, and agent result card. | No |
 
@@ -115,9 +117,9 @@ The home page is the design source for this round. The shared direction is:
 
 ### aigc
 
-- Visual structure: Kept the `agent-ui` component and existing action handlers; wrapped it with a modern hero and result card.
-- Style changes: Assistant action buttons, back control, and agent area now match the home page card/button language.
-- Logic changes: No Agent config, cloud function calls, context payload building, or message sending logic was changed.
+- Visual structure: Kept the `agent-ui` component and existing action handlers; adjusted the page into a compact top action panel plus a full-width chat host so the Agent header, message area, and input remain visible.
+- Style changes: Assistant action buttons, back control, and chat host now match the home page card/button language without double-wrapping the Agent UI.
+- Logic changes: No Agent config, cloud function calls, context payload building, or message sending logic was changed. A display-only `layoutHeight` prop was added to `agent-ui` so this page can size the chat component safely.
 
 ## 5. Validation
 

@@ -1,10 +1,10 @@
 <view class="page app-page">
-  <view class="app-shell aigc-shell">
-    <view class="action-panel app-hero-card">
+  <view class="aigc-top">
+    <view class="action-panel">
       <view class="action-copy">
         <view class="action-kicker">AI Coach</view>
-        <view class="action-title app-hero-title">ADAL 智能学习助手</view>
-        <view class="action-subtitle app-hero-subtitle">基于学习计划、弱词和对战数据生成建议。</view>
+        <view class="action-title">ADAL 智能学习助手</view>
+        <view class="action-subtitle">基于学习计划、弱词和对战数据生成建议。</view>
       </view>
       <view class="action-buttons">
         <button class="action-btn action-btn-primary" hover-class="touch-s" catchtap="onGenerateLearningAdvice">生成学习建议</button>
@@ -16,10 +16,10 @@
       <image class="back-icon" src="./../../images/combat-back.png" />
       <text class="back-text">返回首页</text>
     </view>
+  </view>
 
-    <view class="agent-card">
-      <agent-ui id="agent-ui" agentConfig="{{agentConfig}}" showBotAvatar="{{showBotAvatar}}" chatMode="{{chatMode}}" modelConfig="{{modelConfig}}" envShareConfig="{{envShareConfig}}">
-      </agent-ui>
-    </view>
+  <view class="agent-host">
+    <agent-ui id="agent-ui" layoutHeight="calc(100vh - 286rpx)" agentConfig="{{agentConfig}}" showBotAvatar="{{showBotAvatar}}" chatMode="{{chatMode}}" modelConfig="{{modelConfig}}" envShareConfig="{{envShareConfig}}">
+    </agent-ui>
   </view>
 </view>
