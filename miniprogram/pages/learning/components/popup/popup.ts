@@ -58,7 +58,7 @@ App.Component({
   },
   lifetimes: {
     ready () {
-      moreHealthPoint = [...defaultMoreHealthPoint] // 每次进入每日词汇重置机会 (浅拷贝)
+      moreHealthPoint = [...defaultMoreHealthPoint] // 每次进入词汇学习重置机会 (浅拷贝)
       events.on('showLearningPopup', this.show.bind(this))
     },
     detached () {

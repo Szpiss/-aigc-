@@ -17,15 +17,15 @@ type IEvents = Emitter<{
   npcSelect: unknown
   /** 自动人机选择倒计时 */
   autoNPCSelect: unknown
-  /** 播放每日词汇的单词发音 */
+  /** 播放词汇学习的单词发音 */
   playLearningPronunciation: unknown
-  /** 播放每日词汇的背景音乐 */
+  /** 播放词汇学习的背景音乐 */
   playLearningBgm: boolean
-  /** 每日词汇使用提示卡 */
+  /** 词汇学习使用提示卡 */
   onGetLearningTip: unknown
-  /** 每日词汇展示「复活」、「再来一局」弹窗，true: 显示 false: 隐藏 */
+  /** 词汇学习展示「复活」、「再来一局」弹窗，true: 显示 false: 隐藏 */
   showLearningPopup: boolean
-  /** 每日词汇切换下一题 (通过 popup 途径) */
+  /** 词汇学习切换下一题 (通过 popup 途径) */
   learningNextWord: string
 }>
 

@@ -41,9 +41,9 @@ export interface User {
   /** 用户配置 */
   config: UserConfig
 
-  /** 每日词汇最高分数 */
+  /** 词汇学习最高分数 */
   learning: {
-    /** 每日词汇的最高分数值 */
+    /** 词汇学习的最高分数值 */
     maxScore: number
     /** 获得最高分数时的单词书缩写 */
     bookShortName: string

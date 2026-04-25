@@ -47,19 +47,19 @@ export default {
   /** 对战模式分享战绩赠送的提示卡数目 */
   combatShareAddTotalTip: 5,
 
-  /** 每日词汇每次加载的词汇数目 */
+  /** 词汇学习每次加载的词汇数目 */
   learningPageSize: 20,
 
-  /** 每日词汇每道题目的选项数目 */
+  /** 词汇学习每道题目的选项数目 */
   learningOptionNumber: 4,
 
-  /** 每日词汇每局的默认生命值 */
+  /** 词汇学习每局的默认生命值 */
   learningHealthPoint: 3,
 
-  /** 每日词汇每题的倒计时，单位 s */
+  /** 词汇学习每题的倒计时，单位 s */
   learningCountDown: 30,
 
-  /** 每日词汇剩余多少题目没回答时进行下页题目的预请求加载 */
+  /** 词汇学习剩余多少题目没回答时进行下页题目的预请求加载 */
   learningWordsSurplusPreload: 5,
 
   /** 对战设置每局的对战单词数目 */

@@ -12,7 +12,7 @@
         <text class="quick-card__value">{{$state.user.totalTip}} 张</text>
       </view>
       <text class="quick-card__title">提示卡</text>
-      <text class="quick-card__desc">可用于对战和每日词汇，帮你稳住关键题目</text>
+      <text class="quick-card__desc">可用于对战和词汇学习，帮你稳住关键题目</text>
     </view>
 
     <view class="quick-card" catchtap="onSelectBook">

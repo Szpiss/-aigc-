@@ -1,6 +1,6 @@
 /**
  * 学习数据记录工具
- * 用于对战和每日词汇学习数据的采集和上报
+ * 用于对战和词汇学习数据的采集和上报
  */
 
 import { store } from './../app'
@@ -68,7 +68,7 @@ export async function recordCombatData(options: {
 }
 
 /**
- * 记录每日词汇学习数据
+ * 记录词汇学习数据
  */
 export async function recordLearningData(options: {
   bookId: string
@@ -150,4 +150,3 @@ export async function recordLearningData(options: {
     // 不阻塞用户操作，静默失败
   }
 }
-

@@ -28,7 +28,7 @@ App.Component({
       }, 500),
 
     /**
-     * 每日词汇
+     * 词汇学习
      */
     async onChallengeWord () {
       await getUserInfo()

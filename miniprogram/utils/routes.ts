@@ -44,7 +44,7 @@ export interface IRoutes {
   pages: {
     /** 首页 */
     home: Route<{}>
-    /** 每日词汇 */
+    /** 词汇学习 */
     learning: Route<{}>
     /** 生词本 */
     review: Route<{}>

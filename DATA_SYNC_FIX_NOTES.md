@@ -2,7 +2,7 @@
 
 ## Problem
 
-首页个人信息区展示的是全局 `store.$state.user` 中的成长数据。用户完成每日词汇或对战后，数据库中的词力值、总局数、胜利次数可能已经更新，但返回首页时首页没有主动重新拉取最新用户数据，导致个人信息区仍展示旧缓存。
+首页个人信息区展示的是全局 `store.$state.user` 中的成长数据。用户完成词汇学习或对战后，数据库中的词力值、总局数、胜利次数可能已经更新，但返回首页时首页没有主动重新拉取最新用户数据，导致个人信息区仍展示旧缓存。
 
 ## Root Cause
 
@@ -30,7 +30,7 @@
 
 ### 学习完成后的用户数据更新逻辑
 
-- 每日词汇结算时继续使用现有 `userModel.incExperience(experience, false, 'learning')`。
+- 词汇学习结算时继续使用现有 `userModel.incExperience(experience, false, 'learning')`。
 - 数据库更新成功后，先把 `experience` 同步到本地 store，并清空本轮待结算 `learning.experience`。
 - 随后调用 `refreshUserInfo('learning.finish')`，用数据库最终值校准首页展示数据。
 
@@ -64,7 +64,7 @@
 - 需要在依赖正常安装的环境中再次执行 `npm run lint`。
 - 需要在微信开发者工具中检查：
   - 首页返回时是否触发 `[user-sync] refreshed user info home.onShow`。
-  - 每日词汇结算后返回首页，`experience` 是否立即更新。
+  - 词汇学习结算后返回首页，`experience` 是否立即更新。
   - 对战结算后返回首页，`experience / totalGames / winGames` 是否立即更新。
   - 胜利时 `winGames` 增加，失败时只增加 `totalGames`。
 

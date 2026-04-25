@@ -44,7 +44,7 @@ export interface LearningState {
   /** 题目选择倒计时 */
   countdown: number
 
-  /** 本局每日词汇剩余未增加的词力值，在答题结束时进行结算，每答对一题增加一次分数 */
+  /** 本局词汇学习剩余未增加的词力值，在答题结束时进行结算，每答对一题增加一次分数 */
   experience: number
 }
 
@@ -61,7 +61,7 @@ export interface State {
   /** 对战模式数据 */
   combat: CombatState | null
 
-  /** 每日词汇数据 */
+  /** 词汇学习数据 */
   learning: LearningState | null
 
   appConfig: AppConfig
