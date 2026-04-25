@@ -196,7 +196,7 @@ var LearningDataController = base_1.default({
         }
     },
     /**
-     * 记录每日词汇学习数据
+     * 记录词汇学习数据
      */
     recordLearning: async function (_a) {
         var bookId = _a.bookId, bookName = _a.bookName, score = _a.score, maxScore = _a.maxScore, wordsCount = _a.wordsCount, correctCount = _a.correctCount, wrongCount = _a.wrongCount, tipCount = _a.tipCount, reviveUsed = _a.reviveUsed, wrongWords = _a.wrongWords, startTime = _a.startTime, endTime = _a.endTime, duration = _a.duration;

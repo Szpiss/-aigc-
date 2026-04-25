@@ -73,7 +73,7 @@ var LearningRecordModel = /** @class */ (function (_super) {
         return _super.call(this, LearningRecordModel) || this;
     }
     /**
-     * 添加每日词汇学习记录
+     * 添加词汇学习记录
      */
     LearningRecordModel.prototype.addLearningRecord = function (data) {
         return this.model.add({
