@@ -4,6 +4,11 @@ import { store, IAppOption, events } from './../../app'
 import { formatWordList } from './../../utils/helper'
 import { loading, toast } from './../../utils/util'
 import { recordLearningData } from './../../utils/learningDataRecorder'
+import {
+  getVocabularyLearningMode,
+  getVocabularyLearningModeLabel,
+  VocabularyLearningMode
+} from './../../utils/vocabularyLearningMode'
 
 const app = getApp<IAppOption>()
 
@@ -11,12 +16,17 @@ const app = getApp<IAppOption>()
 let isShareBack = false
 
 App.Page({
+  data: {
+    learningModeLabel: getVocabularyLearningModeLabel('choice')
+  },
   async onLoad () {
     await app.$loginAsync
-    await this.initPageData()
+    const mode = getVocabularyLearningMode()
+    this.setData({ learningModeLabel: getVocabularyLearningModeLabel(mode) })
+    await this.initPageData(mode)
   },
 
-  async initPageData () {
+  async initPageData (mode: VocabularyLearningMode = 'choice') {
     if (!store.$state.user?.bookId) {
       toast.show('获取用户数据失败，请重试', 1200).finally(() => { this.onBack() })
       return
@@ -24,10 +34,11 @@ App.Page({
 
     loading.show('加载中 ...')
 
-    void wx.setNavigationBarTitle({ title: store.$state.book.name })
+    void wx.setNavigationBarTitle({ title: '词汇学习' })
 
     await new Promise(resolve => store.setState({
       learning: {
+        mode,
         wordsIndex: 0,
         score: 0,
         healthPoint: config.learningHealthPoint,
@@ -164,6 +175,10 @@ App.Page({
     } else {
       void app.router.navigateBack({ delta: 1 })
     }
+  },
+
+  onChangeMode () {
+    void app.routes.pages.setting.go({})
   },
 
   onShow () {

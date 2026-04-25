@@ -1,4 +1,12 @@
 <view class="learning-page">
+  <view class="learning-mode">
+    <view class="learning-mode__copy">
+      <text class="learning-mode__label">当前模式</text>
+      <text class="learning-mode__value">{{learningModeLabel}}</text>
+    </view>
+    <button class="learning-mode__btn" hover-class="touch-s" catchtap="onChangeMode">更改模式</button>
+  </view>
+
   <top-bar />
 
   <problem wordItem="{{$state.learning.wordList[$state.learning.wordsIndex]}}" bind:loadMoreWords="loadWordsData" />

@@ -87,6 +87,11 @@ App.Component({
         rank = '未上榜'
       }
 
+      if (store.$state.learning?.mode === 'recognition') {
+        this.setData({ show: true, content: defaultMoreHealthPoint[defaultMoreHealthPoint.length - 1], rank })
+        return
+      }
+
       if (moreHealthPoint.length > 0) {
         const content = moreHealthPoint.length === 1 ? moreHealthPoint[0] : moreHealthPoint.shift() // 除了最后一个再来一局，其他每展现一次即 pop 一次
 

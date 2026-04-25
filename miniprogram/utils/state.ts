@@ -1,5 +1,6 @@
 import { User, Book, Combat, CombatWord } from './../../typings/model'
 import { AppConfig } from './../models/kv'
+import type { VocabularyLearningMode } from './vocabularyLearningMode'
 
 interface UiState {
   statusBarHeight: number
@@ -29,6 +30,9 @@ export interface CombatState extends Combat {
 export type LearningWord = CombatWord
 
 export interface LearningState {
+  /** 当前词汇学习模式 */
+  mode: VocabularyLearningMode
+
   /** 当前分数 */
   score: number
 

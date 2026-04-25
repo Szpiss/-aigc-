@@ -8,6 +8,7 @@ import { recordLearningData } from './../../../../utils/learningDataRecorder'
 import { refreshUserInfo } from './../../../../utils/helper'
 
 type SelectEvent = WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {index: number, useTip?: boolean} >
+type RecognitionEvent = WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {known: boolean | string} >
 
 interface IProblem {
   properties: {
@@ -17,9 +18,11 @@ interface IProblem {
   next: () => void
   onSelectCorrect: (useTip: boolean, wordId: string) => void
   onSelectWrong: (wordId: string) => boolean
+  finishLearningSession: () => void
   triggerEvent: WechatMiniprogram.Component.InstanceMethods<{}>['triggerEvent']
   data: {
     canSelect: boolean
+    recognitionRevealed: boolean
   }
 }
 
@@ -37,7 +40,8 @@ App.Component({
   data: {
     selectIndex: OptionIndex.notSelect,
     optionsAnimation: {},
-    canSelect: true
+    canSelect: true,
+    recognitionRevealed: false
   },
   options: {
     addGlobalClass: true
@@ -86,16 +90,51 @@ App.Component({
       this.next()
     }, 500),
 
+    onRevealRecognition () {
+      this.setData({ recognitionRevealed: true })
+    },
+
+    onSelectRecognition: throttle(async function (this: IProblem, event: RecognitionEvent) {
+      if (!this.data.canSelect) {
+        void wx.showToast({ title: '点击太快，请稍等', icon: 'none', duration: 1200 })
+        return
+      }
+      this.data.canSelect = false
+
+      const known = event.currentTarget.dataset.known === true || event.currentTarget.dataset.known === 'true'
+      const { wordId } = this.properties.wordItem
+
+      if (known) {
+        this.onSelectCorrect(false, wordId)
+      } else {
+        void userWordModel.add(wordId)
+        void wx.showToast({ title: '已加入复习，之后会重点练这个词', icon: 'none', duration: 1200 })
+      }
+
+      await this.next()
+    }, 500),
+
     async next () {
+      const learning = store.$state.learning!
+      const isRecognitionMode = learning.mode === 'recognition'
+      const nextWordsIndex = learning.wordsIndex + 1
+
       // NOTE: 当本地题目接近最后的 learningWordsSurplusPreload 时，进行下一页题目预加载
-      if (store.$state.learning!.wordList.length - store.$state.learning!.wordsIndex <= config.learningWordsSurplusPreload) {
+      if (!isRecognitionMode && learning.wordList.length - learning.wordsIndex <= config.learningWordsSurplusPreload) {
         this.triggerEvent('loadMoreWords')
       }
 
       await sleep(800)
+
+      if (isRecognitionMode && nextWordsIndex >= learning.wordList.length) {
+        store.setState({ learning: { ...store.$state.learning!, wordsIndex: nextWordsIndex } })
+        this.finishLearningSession()
+        return
+      }
+
       void this.clearStateInit()
       await sleep(220) // NOTE: 延迟一小会，等选项动画开始切换了，再切换题目
-      store.setState({ learning: { ...store.$state.learning!, wordsIndex: store.$state.learning!.wordsIndex + 1 } })
+      store.setState({ learning: { ...store.$state.learning!, wordsIndex: nextWordsIndex } })
     },
 
     onSelectCorrect (useTip: boolean, wordId: string) {
@@ -136,75 +175,78 @@ App.Component({
       store.setState({ learning: { ...store.$state.learning!, healthPoint: healthPoint - 1 } })
 
       if (healthPoint <= 1) {
-        events.emit('showLearningPopup', true) // 显示得分排名弹窗，继续/再来一局
-
-        // NOTE: 当数据库中的最大分数小于本地得分时，更新数据库中的历史最高分数
-        const score = store.$state.learning?.score ?? 0
-        if (store.$state.user.learning.maxScore <= score) {
-          const book = store.$state.book.shortName
-          void userModel.updateLearing(score, book).then((res) => {
-            res && store.setState({ // 更新本地历史最大得分
-              user: {
-                ...store.$state.user,
-                learning: {
-                  maxScore: score,
-                  bookShortName: book
-                }
-              }
-            })
-          })
-        }
-
-        const experience = store.$state.learning?.experience ?? 0
-        if (experience) {
-          void userModel.incExperience(experience, false, 'learning').then(res => {
-            if (!res) { return }
-
-            const beforeExperience = store.$state.user.experience
-            const nextUser = {
-              ...store.$state.user,
-              experience: beforeExperience + experience
-            }
-
-            store.setState({ // 更新用户的词力值
-              user: nextUser,
-              learning: {
-                ...store.$state.learning!,
-                experience: 0 // 清空待增加的词力值，答题后下轮结束答题再结算剩余词力值
-              }
-            })
-
-            console.log('[user-sync] learning experience updated', {
-              beforeExperience,
-              incExperience: experience,
-              afterExperience: nextUser.experience
-            })
-
-            void refreshUserInfo('learning.finish')
-          }).catch(error => {
-            console.warn('[user-sync] learning experience update failed', error)
-          })
-        }
-
-        const book = store.$state.book
-        const learningStartTime = app.learningStartTime ?? undefined
-        if (book && learningStartTime) {
-          void recordLearningData({
-            bookId: book._id,
-            bookName: book.name,
-            startTime: learningStartTime.toISOString(),
-            endTime: new Date().toISOString()
-          })
-          app.learningStartTime = null
-        }
-
-        clearInterval(countdownTimer)
-        events.emit('playLearningBgm', false) // 停止背景音乐的播放
-
+        this.finishLearningSession()
         return false
       }
 
       return true
+    },
+
+    finishLearningSession () {
+      events.emit('showLearningPopup', true) // 显示得分排名弹窗，继续/再来一局
+
+      // NOTE: 当数据库中的最大分数小于本地得分时，更新数据库中的历史最高分数
+      const score = store.$state.learning?.score ?? 0
+      if (store.$state.user.learning.maxScore <= score) {
+        const book = store.$state.book.shortName
+        void userModel.updateLearing(score, book).then((res) => {
+          res && store.setState({ // 更新本地历史最大得分
+            user: {
+              ...store.$state.user,
+              learning: {
+                maxScore: score,
+                bookShortName: book
+              }
+            }
+          })
+        })
+      }
+
+      const experience = store.$state.learning?.experience ?? 0
+      if (experience) {
+        void userModel.incExperience(experience, false, 'learning').then(res => {
+          if (!res) { return }
+
+          const beforeExperience = store.$state.user.experience
+          const nextUser = {
+            ...store.$state.user,
+            experience: beforeExperience + experience
+          }
+
+          store.setState({ // 更新用户的词力值
+            user: nextUser,
+            learning: {
+              ...store.$state.learning!,
+              experience: 0 // 清空待增加的词力值，答题后下轮结束答题再结算剩余词力值
+            }
+          })
+
+          console.log('[user-sync] learning experience updated', {
+            beforeExperience,
+            incExperience: experience,
+            afterExperience: nextUser.experience
+          })
+
+          void refreshUserInfo('learning.finish')
+        }).catch(error => {
+          console.warn('[user-sync] learning experience update failed', error)
+        })
+      }
+
+      const book = store.$state.book
+      const learningStartTime = app.learningStartTime ?? undefined
+      if (book && learningStartTime) {
+        void recordLearningData({
+          bookId: book._id,
+          bookName: book.name,
+          startTime: learningStartTime.toISOString(),
+          endTime: new Date().toISOString()
+        })
+        app.learningStartTime = null
+      }
+
+      clearInterval(countdownTimer)
+      events.emit('playLearningBgm', false) // 停止背景音乐的播放
     },
 
     playOptionsAnimation () {
@@ -216,10 +258,22 @@ App.Component({
 
     async clearStateInit (playAnimation = true) {
       playAnimation && this.playOptionsAnimation()
-      this.setData({ selectIndex: OptionIndex.notSelect })
+      this.setData({
+        selectIndex: OptionIndex.notSelect,
+        recognitionRevealed: false
+      })
       store.setState({ learning: { ...store.$state.learning!, countdown: config.learningCountDown } })
 
       clearInterval(countdownTimer) // NOTE: 不继续本题的倒计时了
+
+      if (store.$state.learning?.mode === 'recognition') {
+        wx.nextTick(async () => {
+          await sleep(300)
+          this.playPronunciation()
+          this.data.canSelect = true
+        })
+        return
+      }
 
       // 延迟等待选项动画接近完成，再开始倒计时、解除选择锁定
       wx.nextTick(async () => {

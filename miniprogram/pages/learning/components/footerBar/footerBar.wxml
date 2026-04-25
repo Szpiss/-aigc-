@@ -5,7 +5,7 @@
     <text class="item-text">背景音乐</text>
   </view>
 
-  <view class="footer-item touch-m" catchtap="onGetTip">
+  <view class="footer-item touch-m" wx:if="{{$state.learning.mode === 'choice'}}" catchtap="onGetTip">
     <image class="item-icon" src="./../../../../images/word-tip.png" />
     <text class="item-text">提示卡 x {{$state.user.totalTip}}</text>
   </view>
