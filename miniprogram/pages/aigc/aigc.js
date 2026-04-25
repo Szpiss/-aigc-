@@ -86,7 +86,7 @@ Page({
       modelProvider: "deepseek",
       quickResponseModel: "deepseek-v3.2",
       logo: "",
-      welcomeMsg: "👋 欢迎使用英语学习助手！我可以帮你翻译、背单词、检查语法，随时提问哦～",
+      welcomeMsg: "欢迎来到词魂 AIGC 学习助手。我会结合词汇学习、弱词和对战记录，生成今日学习建议或对战复盘。",
     },
   },
 
@@ -102,15 +102,29 @@ Page({
   },
 
   async onGenerateLearningAdvice() {
-    const payload = await this.buildContextPayload();
-    const prompt = `请基于以下学习计划和弱词信息生成一份今日学习建议，要求：1) 先总结当前薄弱点；2) 给出3条具体复习策略；3) 列出3个重点词并解释记忆法。\n\n${payload}`;
-    this.sendToAgent(prompt);
+    wx.showLoading({ title: "生成中" });
+    try {
+      const payload = await this.buildContextPayload();
+      const prompt = `你是“词魂”英语词汇学习对战小程序的 AIGC 学习教练。请基于以下学习计划、弱词和学习报告生成“今日学习建议”。要求：1) 先总结当前薄弱点；2) 给出3条具体复习策略；3) 列出3个重点词并解释记忆法；4) 最后给出一个10分钟执行计划。\n\n${payload}`;
+      this.sendToAgent(prompt);
+    } catch (error) {
+      wx.showToast({ title: "学习建议生成失败", icon: "none", duration: 1500 });
+    } finally {
+      wx.hideLoading();
+    }
   },
 
   async onGenerateCombatReview() {
-    const payload = await this.buildContextPayload(true);
-    const prompt = `请基于以下对战与学习数据生成对战复盘，要求：1) 给出胜率和得分结论；2) 解释主要失误类型；3) 给出下一局可执行的训练建议。\n\n${payload}`;
-    this.sendToAgent(prompt);
+    wx.showLoading({ title: "复盘中" });
+    try {
+      const payload = await this.buildContextPayload(true);
+      const prompt = `你是“词魂”英语词汇学习对战小程序的 AIGC 对战复盘教练。请基于以下学习、弱词和最近对战数据生成“对战复盘”。要求：1) 给出胜率和得分结论；2) 解释主要失误类型；3) 关联弱词给出训练重点；4) 给出下一局可执行的对战策略。\n\n${payload}`;
+      this.sendToAgent(prompt);
+    } catch (error) {
+      wx.showToast({ title: "对战复盘生成失败", icon: "none", duration: 1500 });
+    } finally {
+      wx.hideLoading();
+    }
   },
 
   async buildContextPayload(includeCombat = false) {
@@ -118,24 +132,15 @@ Page({
     const date = new Date().toISOString();
 
     const [planRes, weakRes, reportRes, combatRes] = await Promise.all([
-      wx.cloud.callFunction({
-        name: "server",
-        data: { url: "learningData/getLearningPlan", date, bookId },
-      }),
-      wx.cloud.callFunction({
-        name: "server",
-        data: { url: "learningData/getWordMasteryTop", limit: 8, bookId },
-      }),
-      wx.cloud.callFunction({
-        name: "server",
-        data: { url: "learningData/getLearningReport", type: "week", date },
-      }),
+      this.safeServerCall({ url: "learningData/getLearningPlan", date, bookId }),
+      this.safeServerCall({ url: "learningData/getWordMasteryTop", limit: 8, bookId }),
+      this.safeServerCall({ url: "learningData/getLearningReport", type: "week", date }),
       includeCombat ? this.getCombatSummary() : Promise.resolve(null),
     ]);
 
-    const plan = planRes?.result?.data || null;
-    const weakRaw = weakRes?.result?.data || [];
-    const summary = reportRes?.result?.data?.summary || {};
+    const plan = planRes?.data || null;
+    const weakRaw = weakRes?.data || [];
+    const summary = reportRes?.data?.summary || {};
 
     const planWords = plan?.words || [];
     const planIds = planWords.map((id) => String(id));
@@ -153,14 +158,28 @@ Page({
     });
 
     const combatText = combatRes ? `对战：场次${combatRes.total}，胜率${combatRes.winRate}%，均分${combatRes.avgScore}` : "无";
+    const hasLearningSignal = planWords.length > 0 || weakWords.length > 0 || (summary.learningCount || 0) > 0;
 
     return [
+      `数据状态: ${hasLearningSignal ? "已有学习数据" : "暂无充分学习数据，请给出适合新用户的启动建议"}`,
       `单词书: ${bookId || "未选择"}`,
       `学习计划词汇(前12): ${planText}`,
       `弱词榜: ${weakWords.join(", ") || "无"}`,
       `学习汇总: 学习次数${summary.learningCount || 0}，学习时长${Math.round((summary.totalStudyTime || 0) / 60)}分钟，正确率${Math.round((summary.correctRate || 0) * 100)}%`,
       combatText,
     ].join("\n");
+  },
+
+  async safeServerCall(data) {
+    try {
+      const res = await wx.cloud.callFunction({
+        name: "server",
+        data,
+      });
+      return res?.result || { state: -1, data: null };
+    } catch (error) {
+      return { state: -1, data: null };
+    }
   },
 
   async fetchWordMap(ids) {

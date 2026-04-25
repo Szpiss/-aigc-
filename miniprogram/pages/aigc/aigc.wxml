@@ -3,11 +3,21 @@
     <view class="action-panel">
       <view class="action-copy">
         <view class="action-kicker">AI Coach</view>
-        <view class="action-title">ADAL 智能学习助手</view>
-        <view class="action-subtitle">基于学习计划、弱词和对战数据生成建议。</view>
+        <view class="action-title">AIGC 学习建议与对战复盘</view>
+        <view class="action-subtitle">围绕学习—对战—数据采集—自适应调度闭环，生成可执行建议。</view>
+      </view>
+      <view class="scenario-list">
+        <view class="scenario-card">
+          <text class="scenario-title">今日学习建议</text>
+          <text class="scenario-desc">结合学习计划、弱词榜和近 7 天表现。</text>
+        </view>
+        <view class="scenario-card">
+          <text class="scenario-title">对战复盘</text>
+          <text class="scenario-desc">结合最近对战、胜率、得分和薄弱词。</text>
+        </view>
       </view>
       <view class="action-buttons">
-        <button class="action-btn action-btn-primary" hover-class="touch-s" catchtap="onGenerateLearningAdvice">生成学习建议</button>
+        <button class="action-btn action-btn-primary" hover-class="touch-s" catchtap="onGenerateLearningAdvice">生成今日学习建议</button>
         <button class="action-btn action-btn-secondary" hover-class="touch-s" catchtap="onGenerateCombatReview">生成对战复盘</button>
       </view>
     </view>
