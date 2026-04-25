@@ -1,8 +1,10 @@
 <view class="mode-card touch-s" catchtap="onSwitchMode">
   <view class="mode-card__left">
-    <text class="mode-card__kicker">词汇学习模式</text>
-    <text class="mode-card__title">当前模式：{{modeLabel}}</text>
-    <text class="mode-card__desc">{{modeDesc}}，点击切换背词方式</text>
+    <view class="mode-card__main">
+      <text class="mode-card__kicker">词汇学习模式</text>
+      <text class="mode-card__title">当前：{{modeLabel}}</text>
+    </view>
+    <text class="mode-card__desc">{{modeDesc}}</text>
   </view>
   <view class="mode-card__pill">
     <text class="mode-card__pill-text">切换</text>

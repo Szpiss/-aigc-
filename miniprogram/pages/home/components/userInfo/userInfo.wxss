@@ -47,6 +47,13 @@
   justify-content: space-between;
 }
 
+.user-info__actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-left: 12rpx;
+}
+
 .user-info__login {
   display: flex;
   flex-direction: column;
@@ -59,11 +66,9 @@
 }
 
 .user-info__rank-btn {
-  flex-shrink: 0;
   display: flex;
   align-items: center;
   height: 54rpx;
-  margin-left: 12rpx;
   padding: 0 14rpx;
   box-sizing: border-box;
   border: 0;
@@ -74,6 +79,32 @@
 
 .user-info__rank-btn::after {
   border: 0;
+}
+
+.user-info__setting-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 66rpx;
+  height: 54rpx;
+  margin-left: 10rpx;
+  padding: 0 14rpx;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 999rpx;
+  outline: none;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 8rpx 18rpx rgba(65, 107, 173, 0.10);
+}
+
+.user-info__setting-btn::after {
+  border: 0;
+}
+
+.user-info__setting-text {
+  font-size: 20rpx;
+  font-weight: 700;
+  color: #52657f;
 }
 
 .user-info__rank-label {
@@ -99,7 +130,7 @@
 }
 
 .user-info__nickname {
-  max-width: 320rpx;
+  max-width: 250rpx;
   line-height: 1.2;
   font-size: 34rpx;
   font-weight: 700;

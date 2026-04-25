@@ -37,22 +37,3 @@
   right: -160rpx;
   background: radial-gradient(circle, rgba(160, 146, 255, 0.18) 0%, rgba(160, 146, 255, 0) 74%);
 }
-
-.home-setting {
-  position: absolute;
-  right: 28rpx;
-  top: 178rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 84rpx;
-  height: 84rpx;
-  border-radius: 24rpx;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 16rpx 30rpx rgba(65, 107, 173, 0.12);
-}
-
-.home-setting__icon {
-  width: 36rpx;
-  height: 36rpx;
-}
