@@ -39,6 +39,17 @@
         </view>
       </view>
 
+      <view class="effect-card">
+        <view class="detail-title">学习成效洞察</view>
+        <view class="effect-list">
+          <view class="effect-item" wx:for="{{learningEffectCards}}" wx:key="label">
+            <text class="effect-label">{{item.label}}</text>
+            <text class="effect-value">{{item.value}}</text>
+            <text class="effect-desc">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+
       <view class="chart-card">
         <view class="chart-header">
           <text class="chart-title">近7天学习时长</text>
@@ -63,7 +74,7 @@
             <view class="detail-meta">词数 {{item.wordCount}}</view>
           </view>
         </view>
-        <view class="empty" wx:else>暂无学习数据</view>
+        <view class="empty" wx:else>暂无学习数据，先完成一轮词汇学习即可生成趋势。</view>
       </view>
 
       <view class="detail-card">
@@ -74,7 +85,7 @@
             <text class="weak-score">{{item.masteryScore}}%</text>
           </view>
         </view>
-        <view class="empty" wx:else>暂无弱词数据</view>
+        <view class="empty" wx:else>暂无弱词数据，系统会在学习和对战后自动沉淀。</view>
       </view>
     </view>
 
@@ -85,6 +96,10 @@
           <text class="card-value">{{combatSummary.total}}</text>
         </view>
         <view class="card">
+          <text class="card-label">胜利次数</text>
+          <text class="card-value">{{combatSummary.win}}</text>
+        </view>
+        <view class="card">
           <text class="card-label">胜率</text>
           <text class="card-value">{{combatSummary.winRate}}<text class="card-unit">%</text></text>
         </view>
@@ -92,9 +107,16 @@
           <text class="card-label">平均得分</text>
           <text class="card-value">{{combatSummary.avgScore}}</text>
         </view>
-        <view class="card">
-          <text class="card-label">平均耗时</text>
-          <text class="card-value">{{combatSummary.avgMinutes}}<text class="card-unit">分</text></text>
+      </view>
+
+      <view class="effect-card">
+        <view class="detail-title">对战成效洞察</view>
+        <view class="effect-list">
+          <view class="effect-item" wx:for="{{combatEffectCards}}" wx:key="label">
+            <text class="effect-label">{{item.label}}</text>
+            <text class="effect-value">{{item.value}}</text>
+            <text class="effect-desc">{{item.desc}}</text>
+          </view>
         </view>
       </view>
 
@@ -113,7 +135,7 @@
             <view class="record-badge {{item.isWin ? 'badge-win' : 'badge-lose'}}">{{item.isWin ? '胜' : '负'}}</view>
           </view>
         </view>
-        <view class="empty" wx:else>暂无对战记录</view>
+        <view class="empty" wx:else>暂无对战记录，完成单词对战后会展示最近表现。</view>
       </view>
     </view>
   </view>
