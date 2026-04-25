@@ -1,8 +1,10 @@
-<top-bar />
+<view class="learning-page">
+  <top-bar />
 
-<problem wordItem="{{$state.learning.wordList[$state.learning.wordsIndex]}}" bind:loadMoreWords="loadWordsData" />
+  <problem wordItem="{{$state.learning.wordList[$state.learning.wordsIndex]}}" bind:loadMoreWords="loadWordsData" />
 
-<footer-bar />
+  <footer-bar />
+</view>
 
 <!-- 加载 -->
 <loading id="loading" />

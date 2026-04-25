@@ -3,6 +3,8 @@
   display: flex;
   justify-content: space-between;
   margin-top: 24rpx;
+  box-sizing: border-box;
+  padding: 0 24rpx;
 }
 
 .left, .right {
@@ -14,20 +16,21 @@
 
 .left-avatar,
 .right-avatar {
-  width: 170rpx;
-  height: 140rpx;
+  width: 172rpx;
+  height: 136rpx;
   position: absolute;
+  box-shadow: 0 12rpx 28rpx rgba(65, 107, 173, 0.12);
 }
 
 .left-avatar {
-  background: rgba(193, 234, 251, 1);
-  border-radius: 0 70rpx 70rpx 0;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 32rpx;
   left: 0;
 }
 
 .right-avatar {
-  background:rgba(249,219,235,1);
-  border-radius: 70rpx 0 0 70rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 32rpx;
   right: 0;
 }
 .left-avatar__img,
@@ -50,10 +53,11 @@
 
 .left-nickName,
 .right-nickName {
-  font-size: 34rpx;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 1);
-  margin-top: 152rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1a2b49;
+  margin-top: 148rpx;
+  max-width: 260rpx;
 }
 
 .left-nickName {

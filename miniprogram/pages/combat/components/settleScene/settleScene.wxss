@@ -30,8 +30,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 130rpx;
-  margin-bottom: 20rpx;
+  min-height: 130rpx;
+  margin: 18rpx 24rpx 20rpx;
+  padding: 18rpx 24rpx;
+  box-sizing: border-box;
+  border-radius: 30rpx;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 16rpx 34rpx rgba(65, 107, 173, 0.10);
 }
 
 .bar-item {
@@ -48,7 +53,7 @@
 
 .bar-item__experience {
   font-size: 28rpx;
-  color: rgba(0,0,0,0.8);
+  color: #7a8ca8;
 }
 
 .bar-item:first-child > .bar-item__gradeTotal {
@@ -65,11 +70,12 @@
   width: 710rpx;
   height: 40vh;
   margin: 0rpx auto;
-  background:rgba(255,255,255,0.6);
-  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 28rpx;
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 16rpx 34rpx rgba(65, 107, 173, 0.10);
 }
 
 .words::before,
@@ -158,8 +164,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #7ECEF7;
+  background: linear-gradient(135deg, #69a8ff 0%, #6676ee 100%);
   color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 14rpx 28rpx rgba(72, 119, 201, 0.22);
 }
 
 .button-disable {
@@ -187,6 +195,5 @@
 
 .tip-text {
   font-size: 28rpx;
-  color:rgba(66,66,66,1);
+  color: #6f8098;
 }
-

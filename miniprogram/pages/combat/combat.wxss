@@ -1,27 +1,7 @@
 page {
   position: relative;
   min-height: 100vh;
-}
-
-page::before,
-page::after {
-  display: block;
-  content: "";
-  position: fixed;
-  top: 0;
-  width: 50%;
-  height: 100vh;
-  z-index: -1;
-}
-
-page::before {
-  background-color: #2844e2de;
-  left: 0;
-}
-
-page::after {
-  background-color: #a3a3afd0;
-  right: 0;
+  background: linear-gradient(180deg, #f4f9ff 0%, #eef5ff 38%, #f8fbff 100%);
 }
 
 .header {
@@ -29,26 +9,27 @@ page::after {
   display: flex;
   align-items: center;
   width: 750rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
 }
 
 .header-icon {
-  width: 37rpx;
-  height: 38rpx;
-  margin-left: 48rpx;
+  width: 44rpx;
+  height: 44rpx;
 }
 
 .header-title {
   font-size: 34rpx;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 1);
-  margin-left: 24rpx;
+  font-weight: 700;
+  color: #1a2b49;
+  margin-left: 16rpx;
 }
 
 .header-bgm-setting {
-  height: 55rpx;
-  width: 54rpx;
+  height: 48rpx;
+  width: 48rpx;
   position: absolute;
   top: 50%;
-  transform: translateY(-27rpx);
-  right: 108px;
+  transform: translateY(-24rpx);
+  right: 48rpx;
 }

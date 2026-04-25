@@ -2,4 +2,13 @@ page {
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: linear-gradient(180deg, #f4f9ff 0%, #eef5ff 38%, #f8fbff 100%);
+}
+
+.learning-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 16rpx 0 20rpx;
 }
