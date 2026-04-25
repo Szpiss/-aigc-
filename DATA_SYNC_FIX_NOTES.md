@@ -26,7 +26,7 @@
 
 - 新增 `refreshUserInfo(source)` 作为统一刷新入口。
 - 首页 `onShow` 等待登录完成后调用 `refreshUserInfo('home.onShow')`。
-- 刷新成功后更新 `store.user` 和当前选中 `book`，个人信息组件会继续通过 `$state.user` 自动展示最新值。
+- 刷新成功后更新 `store.user` 和当前选中 `book`，同时同步 `getApp().globalData.userInfo` 与 `wx.setStorageSync('userInfo')`，个人信息组件会继续通过 `$state.user` 自动展示最新值。
 
 ### 学习完成后的用户数据更新逻辑
 
@@ -46,7 +46,8 @@
 
 ### 本地缓存 / globalData 同步逻辑
 
-- 当前项目使用 `wxministore` 的 `store` 作为页面共享状态，本次没有新增 `wx.setStorageSync('userInfo')`，避免引入第二套用户缓存。
+- 当前项目使用 `wxministore` 的 `store` 作为页面共享状态。
+- 为满足重新进入和跨页面同步场景，`refreshUserInfo()` 会同步 `globalData.userInfo` 与 `storage.userInfo`。
 - 数据库仍是最终真实来源，首页显示时会重新同步到全局 store。
 
 ### 云函数或数据库更新逻辑

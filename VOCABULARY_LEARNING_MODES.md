@@ -9,23 +9,24 @@
 - `recognition`：认识 / 不认识，适合快速过词、复习和筛出生词。
 - `choice`：选项练习，沿用原有选项答题流程，适合通过释义选择巩固记忆。
 
-模式选择放在设置页，避免 learning 页面变成入口选择页。learning 页面只读取当前配置并直接进入对应学习流程。
+模式选择放在首页上方的轻量卡片中，避免 learning 页面变成入口选择页，也避免设置页承载高频学习决策。learning 页面只读取当前配置并直接进入对应学习流程。
 
 ## User-facing Changes
 
 - 首页入口从“每日词汇”改为“词汇学习”。
 - 生词本、提示卡、文档等用户可见描述统一使用“词汇学习”。
-- 设置页新增“词汇学习模式”设置项。
-- learning 页面顶部轻量展示当前模式，并提供“更改模式”入口跳转设置页。
+- 首页上方新增“词汇学习模式”卡片，可直接切换模式。
+- setting 页面不承载词汇学习模式设置。
+- learning 页面顶部轻量展示当前模式，并提供“回首页切换”入口。
 - learning 页面不会展示完整模式选择卡片。
 
 ## Mode Configuration
 
-- 配置入口：`pages/setting/setting`。
+- 配置入口：`pages/home/home` 上方的“词汇学习模式”卡片。
 - 默认模式：`choice`，即“选项练习”。
 - 本地 storage key：`vocabularyLearningMode`。
 - 可选值：`recognition` / `choice`。
-- 读取优先级：云端用户配置 `user.config.vocabularyLearningMode`、本地 storage、默认 `choice`。
+- 读取优先级：本地 storage、云端用户配置 `user.config.vocabularyLearningMode`、默认 `choice`。
 - 当前实现以本地 storage 为主；没有新增数据库字段，也没有改云函数保存逻辑。类型层面兼容可选云端字段，后续如果已有 profile 配置同步能力，可以无痛接入。
 
 ## Files Changed
@@ -33,9 +34,8 @@
 | File | Change | Logic Changed |
 | --- | --- | --- |
 | `miniprogram/utils/vocabularyLearningMode.ts` | 新增学习模式读取、保存、文案映射工具 | Yes |
-| `miniprogram/pages/setting/setting.ts` | 新增词汇学习模式 action sheet 和 storage 保存 | Yes |
-| `miniprogram/pages/setting/setting.wxml` | 新增设置项展示当前模式和说明 | No |
-| `miniprogram/pages/setting/setting.wxss` | 新增设置项样式 | No |
+| `miniprogram/pages/home/components/learningModeSwitch/*` | 新增首页词汇学习模式切换卡片 | Yes |
+| `miniprogram/pages/setting/setting.*` | 移除词汇学习模式和关于入口，保持设置页简洁 | Yes |
 | `miniprogram/pages/learning/learning.ts` | 进入页面时读取模式并写入 learning state | Yes |
 | `miniprogram/pages/learning/learning.wxml` | 顶部展示当前模式和更改入口 | No |
 | `miniprogram/pages/learning/learning.wxss` | 新增顶部模式条样式 | No |
@@ -97,11 +97,11 @@
 建议手动验证：
 
 1. 首页入口显示“词汇学习”。
-2. 设置页出现“词汇学习模式”。
+2. 首页上方出现“词汇学习模式”。
 3. 默认显示“选项练习”。
 4. 可以切换到“认识 / 不认识”。
 5. 选择结果保存到 `vocabularyLearningMode` storage。
-6. 重新进入设置页，选择结果仍然存在。
+6. 重新进入首页，选择结果仍然存在。
 7. 首页点击“词汇学习”后直接进入当前设置模式。
 8. learning 页面不显示完整模式选择卡片。
 9. recognition 模式单词、查看释义、认识、不认识、下一词正常。
