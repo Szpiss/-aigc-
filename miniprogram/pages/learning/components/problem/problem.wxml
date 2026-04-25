@@ -5,16 +5,21 @@
   <text class="problem-usphone {{!wordItem.usphone && 'problem-usphone__hidden'}}">/{{wordItem.usphone}}/</text>
 
   <block wx:if="{{$state.learning.mode === 'recognition'}}">
-    <view class="recognition-meaning {{!recognitionRevealed ? 'recognition-meaning--hidden' : ''}}">
-      <text class="recognition-meaning__label">中文释义</text>
-      <text class="recognition-meaning__text">{{wordItem.options[wordItem.correctIndex]}}</text>
+    <text class="recognition-mode-tag">认识 / 不认识</text>
+
+    <view class="recognition-meaning {{!showMeaning ? 'recognition-meaning--placeholder' : ''}}">
+      <block wx:if="{{showMeaning}}">
+        <text class="recognition-meaning__label">中文释义</text>
+        <text class="recognition-meaning__text">{{wordItem.options[wordItem.correctIndex]}}</text>
+      </block>
+      <text wx:else class="recognition-meaning__placeholder">点击“查看释义”后显示中文释义</text>
     </view>
 
-    <button wx:if="{{!recognitionRevealed}}" class="recognition-reveal touch-s" hover-class="touch-s" catchtap="onRevealRecognition">
-      查看释义
+    <button class="recognition-reveal {{showMeaning ? 'recognition-reveal--shown' : ''}} touch-s" hover-class="touch-s" catchtap="onRevealRecognition">
+      {{showMeaning ? '已显示释义' : '查看释义'}}
     </button>
 
-    <view class="recognition-actions" wx:else>
+    <view class="recognition-actions">
       <button class="recognition-btn recognition-btn--known touch-s" hover-class="touch-s" data-known="{{true}}" catchtap="onSelectRecognition">认识</button>
       <button class="recognition-btn recognition-btn--unknown touch-s" hover-class="touch-s" data-known="{{false}}" catchtap="onSelectRecognition">不认识</button>
     </view>

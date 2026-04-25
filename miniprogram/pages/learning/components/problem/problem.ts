@@ -22,7 +22,7 @@ interface IProblem {
   triggerEvent: WechatMiniprogram.Component.InstanceMethods<{}>['triggerEvent']
   data: {
     canSelect: boolean
-    recognitionRevealed: boolean
+    showMeaning: boolean
   }
 }
 
@@ -41,7 +41,7 @@ App.Component({
     selectIndex: OptionIndex.notSelect,
     optionsAnimation: {},
     canSelect: true,
-    recognitionRevealed: false
+    showMeaning: false
   },
   options: {
     addGlobalClass: true
@@ -91,7 +91,7 @@ App.Component({
     }, 500),
 
     onRevealRecognition () {
-      this.setData({ recognitionRevealed: true })
+      this.setData({ showMeaning: true })
     },
 
     onSelectRecognition: throttle(async function (this: IProblem, event: RecognitionEvent) {
@@ -260,7 +260,7 @@ App.Component({
       playAnimation && this.playOptionsAnimation()
       this.setData({
         selectIndex: OptionIndex.notSelect,
-        recognitionRevealed: false
+        showMeaning: false
       })
       store.setState({ learning: { ...store.$state.learning!, countdown: config.learningCountDown } })
 
