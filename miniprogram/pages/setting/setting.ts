@@ -3,12 +3,41 @@ import userModel from './../../models/user'
 import userWordModel from './../../models/userWord'
 import { store, IAppOption } from './../../app'
 import { getUserInfo } from './../../utils/helper'
+import {
+  getVocabularyLearningMode,
+  getVocabularyLearningModeDesc,
+  getVocabularyLearningModeLabel,
+  setVocabularyLearningMode,
+  vocabularyLearningModeOptions
+} from './../../utils/vocabularyLearningMode'
 
 const app = getApp<IAppOption>()
 
 App.Page({
-  onSelect (event: WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {type: 'combatQuestionNumber' | 'backgroundMusic' | 'pronounce' | 'vibrate'} >) {
+  data: {
+    vocabularyLearningModeLabel: getVocabularyLearningModeLabel('choice'),
+    vocabularyLearningModeDesc: getVocabularyLearningModeDesc('choice')
+  },
+  onLoad () {
+    this.refreshVocabularyLearningMode()
+  },
+  onShow () {
+    this.refreshVocabularyLearningMode()
+  },
+  refreshVocabularyLearningMode () {
+    const mode = getVocabularyLearningMode()
+    this.setData({
+      vocabularyLearningModeLabel: getVocabularyLearningModeLabel(mode),
+      vocabularyLearningModeDesc: getVocabularyLearningModeDesc(mode)
+    })
+  },
+  onSelect (event: WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {type: 'combatQuestionNumber' | 'backgroundMusic' | 'pronounce' | 'vibrate' | 'vocabularyLearningMode'} >) {
     const { type } = event.currentTarget.dataset
+
+    if (type === 'vocabularyLearningMode') {
+      this.onSelectVocabularyLearningMode()
+      return
+    }
 
     const itemList = type === 'combatQuestionNumber' ? config.combatQuestionNumbers.map(n => String(n)) : ['开启', '关闭']
 
@@ -33,6 +62,23 @@ App.Page({
 
         void userModel.updateConfig(type, value)
         store.setState({ user })
+      }
+    })
+  },
+  onSelectVocabularyLearningMode () {
+    wx.showActionSheet({
+      itemList: vocabularyLearningModeOptions.map(item => item.label),
+      success: (res) => {
+        const selected = vocabularyLearningModeOptions[res.tapIndex]
+        if (!selected) { return }
+
+        setVocabularyLearningMode(selected.value)
+        this.refreshVocabularyLearningMode()
+        void wx.showToast({
+          title: `已切换为${selected.label}`,
+          icon: 'none',
+          duration: 1200
+        })
       }
     })
   },

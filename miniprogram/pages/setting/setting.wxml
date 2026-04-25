@@ -14,6 +14,14 @@
           <text class="card-item__desc">{{$state.user.config.combatQuestionNumber}}</text>
           <image class="card-item__icon" src="./../../images/setting-right.png" />
         </view>
+        <view class="card-item card-item--stacked" catchtap="onSelect" data-type="vocabularyLearningMode">
+          <view class="card-item__copy">
+            <button class="card-item__title" hover-class="none">词汇学习模式</button>
+            <text class="card-item__hint">{{vocabularyLearningModeDesc}}</text>
+          </view>
+          <text class="card-item__desc card-item__desc--mode">{{vocabularyLearningModeLabel}}</text>
+          <image class="card-item__icon" src="./../../images/setting-right.png" />
+        </view>
         <view class="card-item" catchtap="onSelect" data-type="backgroundMusic">
           <button class="card-item__title" hover-class="none">游戏背景音乐</button>
           <text class="card-item__desc">{{$state.user.config.backgroundMusic ? '开启' : '关闭'}}</text>

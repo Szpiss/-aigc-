@@ -12,6 +12,9 @@ interface UserConfig {
 
   /** 单词选择错误时，是否震动 */
   vibrate: boolean
+
+  /** 词汇学习模式，本地配置优先生效；旧用户可能没有该字段 */
+  vocabularyLearningMode?: 'recognition' | 'choice'
 }
 
 export interface User {
