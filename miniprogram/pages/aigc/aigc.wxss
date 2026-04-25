@@ -1,42 +1,38 @@
 .page {
   position: relative;
   min-height: 100vh;
-  background: #f6f7fb;
 }
 
 .action-panel {
-  margin: 16rpx 24rpx 0;
-  padding: 20rpx 24rpx;
-  background: linear-gradient(135deg, #e7f1ff 0%, #f1e8ff 100%);
-  border-radius: 18rpx;
-  box-shadow: 0 10rpx 22rpx rgba(122, 134, 255, 0.18);
+  position: relative;
+  margin-top: 8rpx;
+}
+
+.action-kicker {
+  margin-bottom: 8rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  color: #3d71bf;
 }
 
 .action-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #2d2f4a;
 }
 
 .action-subtitle {
-  margin-top: 6rpx;
-  font-size: 22rpx;
-  color: #6b6f8f;
 }
 
 .action-buttons {
-  margin-top: 16rpx;
+  margin-top: 22rpx;
   display: flex;
-  gap: 16rpx;
+  justify-content: space-between;
 }
 
 .action-btn {
-  flex: 1;
-  background: #8dd8ff;
-  color: #ffffff;
+  width: 49% !important;
   border-radius: 999rpx;
   font-size: 24rpx;
-  font-weight: 600;
+  font-weight: 700;
   height: 72rpx;
   display: flex;
   align-items: center;
@@ -45,19 +41,33 @@
   border: 0;
 }
 
+.action-btn::after {
+  border: 0;
+}
+
+.action-btn-primary {
+  background: linear-gradient(135deg, #69a8ff 0%, #6676ee 100%);
+  color: #ffffff;
+  box-shadow: 0 14rpx 28rpx rgba(72, 119, 201, 0.22);
+}
+
 .action-btn-secondary {
-  background: #7b8bff;
+  background: rgba(255, 255, 255, 0.88);
+  color: #2f63b4;
+  border: 1rpx solid rgba(100, 150, 220, 0.18);
 }
 
 .back {
-  position: absolute;
-  top: 24rpx;
-  right: 20rpx;
+  position: relative;
+  width: 188rpx;
   z-index: 10;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 10rpx 16rpx;
-  background: rgba(255, 255, 255, 0.85);
+  margin: 18rpx 0 0 auto;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.88);
   border-radius: 999rpx;
   box-shadow: 0 8rpx 18rpx rgba(26, 32, 54, 0.12);
 }
@@ -71,4 +81,14 @@
   margin-left: 8rpx;
   font-size: 22rpx;
   color: #2d2f4a;
+}
+
+.agent-card {
+  margin-top: 18rpx;
+  min-height: 64vh;
+  border-radius: 28rpx;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1rpx solid rgba(124, 170, 232, 0.14);
+  box-shadow: 0 16rpx 34rpx rgba(65, 107, 173, 0.10);
 }
