@@ -21,7 +21,7 @@
             <text class="user-info__rank-text">排行榜</text>
           </button>
           <button class="user-info__setting-btn" hover-class="touch-s" catchtap="onToSetting">
-            <text class="user-info__setting-text">设置</text>
+            <image class="user-info__setting-icon" src="./../../../../images/home-setting.png" />
           </button>
         </view>
       </view>
