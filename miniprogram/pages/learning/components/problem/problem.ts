@@ -19,6 +19,7 @@ interface IProblem {
   onSelectCorrect: (useTip: boolean, wordId: string) => void
   onSelectWrong: (wordId: string) => boolean
   finishLearningSession: () => void
+  recordLearningResult: (result: { correct: boolean; known?: boolean; wordId: string }) => void
   triggerEvent: WechatMiniprogram.Component.InstanceMethods<{}>['triggerEvent']
   data: {
     canSelect: boolean
@@ -83,8 +84,8 @@ App.Component({
       if (selectIndex === correctIndex) { // 选择正确
         this.onSelectCorrect(useTip, wordId)
       } else {
-        const healthPoint = this.onSelectWrong(wordId)
-        if (!healthPoint) { return } // 当没有生命值了，不再继续下一题
+        const canContinue = this.onSelectWrong(wordId)
+        if (!canContinue) { return } // 检测模式没有生命值了，不再继续下一题
       }
 
       this.next()
@@ -108,6 +109,7 @@ App.Component({
         this.onSelectCorrect(false, wordId)
       } else {
         void userWordModel.add(wordId)
+        this.recordLearningResult({ correct: false, known: false, wordId })
         void wx.showToast({ title: '已加入复习，之后会重点练这个词', icon: 'none', duration: 1200 })
       }
 
@@ -120,13 +122,13 @@ App.Component({
       const nextWordsIndex = learning.wordsIndex + 1
 
       // NOTE: 当本地题目接近最后的 learningWordsSurplusPreload 时，进行下一页题目预加载
-      if (!isRecognitionMode && learning.wordList.length - learning.wordsIndex <= config.learningWordsSurplusPreload) {
+      if (learning.sessionType === 'test' && !isRecognitionMode && learning.wordList.length - learning.wordsIndex <= config.learningWordsSurplusPreload) {
         this.triggerEvent('loadMoreWords')
       }
 
       await sleep(800)
 
-      if (isRecognitionMode && nextWordsIndex >= learning.wordList.length) {
+      if (nextWordsIndex >= learning.wordList.length) {
         store.setState({ learning: { ...store.$state.learning!, wordsIndex: nextWordsIndex } })
         this.finishLearningSession()
         return
@@ -159,6 +161,12 @@ App.Component({
           experience: store.$state.learning!.experience + 1 // 词力值 + 1，答题结束后弹窗时进行结算并清空
         }
       })
+
+      this.recordLearningResult({
+        correct: true,
+        known: store.$state.learning?.mode === 'recognition' ? true : undefined,
+        wordId
+      })
     },
 
     /**
@@ -169,6 +177,12 @@ App.Component({
       void userWordModel.add(wordId)
       playAudio(config.audios.selectWrong)
       store.$state.user.config.vibrate && wx.vibrateShort({ type: 'light' })
+
+      this.recordLearningResult({ correct: false, wordId })
+
+      if (store.$state.learning?.sessionType === 'daily') {
+        return true
+      }
 
       const healthPoint = store.$state.learning!.healthPoint ? store.$state.learning!.healthPoint : 1 // 使用弹窗复活的次数兜底，最小剩余机会不能 < 0
 
@@ -182,9 +196,28 @@ App.Component({
       return true
     },
 
-    finishLearningSession () {
-      events.emit('showLearningPopup', true) // 显示得分排名弹窗，继续/再来一局
+    recordLearningResult (result: { correct: boolean; known?: boolean; wordId: string }) {
+      const learning = store.$state.learning!
+      const current = this.properties.wordItem
+      const wordEntry = {
+        wordId: result.wordId,
+        word: current?.word || ''
+      }
 
+      const nextLearning = {
+        ...learning,
+        correctCount: learning.correctCount + (result.correct ? 1 : 0),
+        wrongCount: learning.wrongCount + (!result.correct ? 1 : 0),
+        knownCount: learning.knownCount + (result.known === true ? 1 : 0),
+        unknownCount: learning.unknownCount + (result.known === false ? 1 : 0),
+        wrongWords: result.correct ? learning.wrongWords : learning.wrongWords.concat(wordEntry),
+        unknownWords: result.known === false ? learning.unknownWords.concat(wordEntry) : learning.unknownWords
+      }
+
+      store.setState({ learning: nextLearning })
+    },
+
+    finishLearningSession () {
       // NOTE: 当数据库中的最大分数小于本地得分时，更新数据库中的历史最高分数
       const score = store.$state.learning?.score ?? 0
       if (store.$state.user.learning.maxScore <= score) {
@@ -247,6 +280,7 @@ App.Component({
 
       clearInterval(countdownTimer)
       events.emit('playLearningBgm', false) // 停止背景音乐的播放
+      this.triggerEvent('sessionFinish')
     },
 
     playOptionsAnimation () {
@@ -282,7 +316,9 @@ App.Component({
         // 600 > 220 播放发音时的 wordsIndex 在 onSelectOption 已经 + 1
         this.playPronunciation()
         this.data.canSelect = true
-        this.countdown()
+        if (store.$state.learning?.sessionType === 'test') {
+          this.countdown()
+        }
       })
     },
 

@@ -5,7 +5,7 @@
   <text class="problem-usphone {{!wordItem.usphone && 'problem-usphone__hidden'}}">/{{wordItem.usphone}}/</text>
 
   <block wx:if="{{$state.learning.mode === 'recognition'}}">
-    <text class="recognition-mode-tag">认识 / 不认识</text>
+    <text class="recognition-mode-tag">{{$state.learning.sessionType === 'daily' ? '日常练习' : '词汇检测'}} · 认识 / 不认识</text>
 
     <view class="recognition-meaning {{!showMeaning ? 'recognition-meaning--placeholder' : ''}}">
       <block wx:if="{{showMeaning}}">

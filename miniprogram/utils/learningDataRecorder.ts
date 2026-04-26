@@ -89,23 +89,23 @@ export async function recordLearningData(options: {
   const { wordsIndex, score, healthPoint } = learning
 
   // 计算实际学习的单词数
-  const wordsCount = wordsIndex
+  const resultCount = (learning.correctCount || 0) + (learning.wrongCount || 0)
+  const wordsCount = Math.max(wordsIndex, resultCount)
 
   // 统计答题情况
   let correctCount = 0
   let wrongCount = 0
   let tipCount = 0
-  const wrongWords: Array<{wordId: string, word: string, isTip: boolean, responseTime: number}> = []
+  const wrongWords: Array<{wordId: string, word: string, isTip: boolean, responseTime: number}> = (learning.wrongWords || []).map(item => ({
+    wordId: item.wordId,
+    word: item.word,
+    isTip: false,
+    responseTime: 0
+  }))
 
-  // 遍历已学习的单词（从记录的答题情况统计）
-  // 注意：这里需要从其他地方获取答题详情，简化处理
-  // 我们可以通过 wordList 和 score 来估算
-  correctCount = score // 每答对一题得分+1，所以score就是正确数
-  wrongCount = wordsCount - correctCount
+  correctCount = learning.correctCount ?? score
+  wrongCount = learning.wrongCount ?? (wordsCount - correctCount)
   tipCount = 0 // 需要从其他地方统计
-
-  // 错误的单词（需要从 userWord 或其他地方获取）
-  // 这里先传空数组，后续可以优化
 
   // 计算学习时长
   const duration = Math.floor((new Date(options.endTime).getTime() - new Date(options.startTime).getTime()) / 1000)
