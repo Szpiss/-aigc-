@@ -19,15 +19,19 @@
 
 .footer__grid {
   display: flex;
+  align-items: stretch;
   margin-top: 12rpx;
 }
 
 .footer-item {
-  width: 100% !important;
+  flex: 1;
+  width: auto !important;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   min-height: 94rpx;
+  margin: 0;
   padding: 0 18rpx;
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.82);
@@ -35,6 +39,10 @@
   border-radius: 22rpx;
   outline: none;
   box-shadow: 0 14rpx 28rpx rgba(65, 107, 173, 0.08);
+}
+
+.footer-item + .footer-item {
+  margin-left: 16rpx;
 }
 
 .footer-item::after {
@@ -55,6 +63,10 @@
 
 .footer-item__icon--feedback {
   background: rgba(92, 197, 192, 0.12);
+}
+
+.footer-item__icon--setting {
+  background: rgba(103, 132, 255, 0.12);
 }
 
 .footer-item__icon-text {

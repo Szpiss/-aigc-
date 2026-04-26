@@ -12,5 +12,14 @@
         <text class="footer-item__title">建议反馈</text>
       </view>
     </button>
+
+    <button class="footer-item" hover-class="touch-s" catchtap="onToSetting">
+      <view class="footer-item__icon footer-item__icon--setting">
+        <text class="footer-item__icon-text">SET</text>
+      </view>
+      <view class="footer-item__content">
+        <text class="footer-item__title">设置</text>
+      </view>
+    </button>
   </view>
 </view>
