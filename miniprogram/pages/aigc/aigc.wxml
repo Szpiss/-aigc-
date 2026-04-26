@@ -1,35 +1,58 @@
-<view class="page app-page">
-  <view class="aigc-top">
-    <view class="action-panel">
-      <view class="action-copy">
-        <view class="action-kicker">AI Coach</view>
-        <view class="action-title">AIGC 学习建议与对战复盘</view>
-        <view class="action-subtitle">围绕学习—对战—数据采集—自适应调度闭环，生成可执行建议。</view>
+<scroll-view class="page app-page" scroll-y="{{true}}" enable-flex="{{true}}">
+  <view class="agent-shell">
+    <view class="agent-hero app-hero-card">
+      <view class="agent-hero__content">
+        <text class="agent-hero__kicker">ADAL Agent</text>
+        <text class="agent-hero__title">AI 学习助手</text>
+        <text class="agent-hero__subtitle">根据学习记录、对战表现和词汇掌握情况，生成个性化学习建议与复盘分析。</text>
       </view>
-      <view class="scenario-list">
-        <view class="scenario-card">
-          <text class="scenario-title">今日学习建议</text>
-          <text class="scenario-desc">结合学习计划、弱词榜和近 7 天表现。</text>
-        </view>
-        <view class="scenario-card">
-          <text class="scenario-title">对战复盘</text>
-          <text class="scenario-desc">结合最近对战、胜率、得分和薄弱词。</text>
-        </view>
-      </view>
-      <view class="action-buttons">
-        <button class="action-btn action-btn-primary" hover-class="touch-s" catchtap="onGenerateLearningAdvice">生成今日学习建议</button>
-        <button class="action-btn action-btn-secondary" hover-class="touch-s" catchtap="onGenerateCombatReview">生成对战复盘</button>
+      <button class="agent-back" hover-class="touch-s" catchtap="onBack">返回首页</button>
+    </view>
+
+    <view class="summary-grid">
+      <view class="summary-card" wx:for="{{summaryCards}}" wx:key="label">
+        <text class="summary-card__label">{{item.label}}</text>
+        <text class="summary-card__value">{{item.value}}</text>
+        <text class="summary-card__desc">{{item.desc}}</text>
       </view>
     </view>
 
-    <view class="back" catchtap="onBack">
-      <image class="back-icon" src="./../../images/combat-back.png" />
-      <text class="back-text">返回首页</text>
+    <view class="context-error" wx:if="{{contextError}}">
+      <text>{{contextError}}</text>
+      <button hover-class="touch-s" catchtap="refreshAgentContext">重试同步</button>
     </view>
-  </view>
 
-  <view class="agent-host">
-    <agent-ui id="agent-ui" layoutHeight="calc(100vh - 286rpx)" agentConfig="{{agentConfig}}" showBotAvatar="{{showBotAvatar}}" chatMode="{{chatMode}}" modelConfig="{{modelConfig}}" envShareConfig="{{envShareConfig}}">
-    </agent-ui>
+    <view class="agent-workbench app-card">
+      <view class="workbench-header">
+        <view>
+          <text class="workbench-kicker">Agent Workspace</text>
+          <text class="workbench-title">和词汇训练 Agent 对话</text>
+          <text class="workbench-subtitle">你可以直接提问，也可以点下方快捷问题，让 Agent 结合当前学习与对战数据分析。</text>
+        </view>
+        <view class="workbench-status {{contextLoading ? 'workbench-status--loading' : ''}}">{{contextLoading ? '同步数据中' : '数据已接入'}}</view>
+      </view>
+
+      <view class="prompt-list">
+        <button class="prompt-chip" wx:for="{{quickPrompts}}" wx:key="label" data-type="{{item.type}}" data-prompt="{{item.prompt}}" hover-class="touch-s" catchtap="onPromptTap">{{item.label}}</button>
+      </view>
+
+      <view class="agent-host">
+        <agent-ui id="agent-ui" layoutHeight="640rpx" agentConfig="{{agentConfig}}" showBotAvatar="{{showBotAvatar}}" chatMode="{{chatMode}}" modelConfig="{{modelConfig}}" envShareConfig="{{envShareConfig}}">
+        </agent-ui>
+      </view>
+    </view>
+
+    <agent-insight-cards
+      active-scene="{{activeScene}}"
+      loading="{{contextLoading}}"
+      learning-insight="{{learningInsight}}"
+      battle-insight="{{battleInsight}}"
+      weak-words="{{weakWordsPreview}}"
+      next-actions="{{nextActions}}"
+      bind:switchscene="onSwitchScene"
+      bind:generatelearning="onGenerateLearningAdvice"
+      bind:generatebattle="onGenerateCombatReview"
+      bind:startweak="onStartWeakTraining"
+    />
   </view>
-</view>
+</scroll-view>

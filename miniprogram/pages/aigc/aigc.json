@@ -1,6 +1,7 @@
 {
 	"usingComponents": {
-	  "agent-ui": "../../components/agent-ui/index"
+	  "agent-ui": "../../components/agent-ui/index",
+	  "agent-insight-cards": "./components/agentInsightCards/agentInsightCards"
 	},
 	"navigationBarTitleText": "英语学习助手"
   }

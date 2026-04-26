@@ -36,8 +36,8 @@ export interface ICombatRoute {
 
 // AIGC页面路由参数接口（如果需要传递参数）
 export interface IAIGCRoute {
-  // 可以添加AIGC页面需要的参数，如：
-  // from?: string  // 记录来源页面
+  /** 默认打开的 Agent 场景 */
+  scene?: 'learning' | 'battle'
 }
 
 export interface IRoutes {
