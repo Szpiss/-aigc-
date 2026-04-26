@@ -32,7 +32,7 @@ App.Component({
      */
     async onChallengeWord () {
       await getUserInfo()
-      void app.routes.pages.learning.go({})
+      void app.routes.pages.aigc.go({ module: 'vocabulary' })
     },
 
     /**

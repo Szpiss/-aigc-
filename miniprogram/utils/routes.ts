@@ -14,7 +14,8 @@ export const routesConfig = [
   { path: '/setting', route: '/pages/setting/setting' },
   { path: '/about', route: '/pages/about/about' },
   // 添加AIGC页面路由配置
-  { path: '/aigc', route: '/pages/aigc/aigc' }
+  { path: '/aigc', route: '/pages/aigc/aigc' },
+  { path: '/ai-agent', route: '/pages/aigc/aigc' }
 ]
 
 export interface ICombatRoute {
@@ -38,6 +39,8 @@ export interface ICombatRoute {
 export interface IAIGCRoute {
   /** 默认打开的 Agent 场景 */
   scene?: 'learning' | 'battle'
+  /** 默认打开的 Agent 工作台模块 */
+  module?: 'home' | 'vocabulary' | 'daily-practice' | 'vocab-test' | 'battle-review' | 'suggestions' | 'weak-words' | 'settings'
 }
 
 export interface IRoutes {

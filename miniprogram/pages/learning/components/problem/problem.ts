@@ -118,13 +118,7 @@ App.Component({
 
     async next () {
       const learning = store.$state.learning!
-      const isRecognitionMode = learning.mode === 'recognition'
       const nextWordsIndex = learning.wordsIndex + 1
-
-      // NOTE: 当本地题目接近最后的 learningWordsSurplusPreload 时，进行下一页题目预加载
-      if (learning.sessionType === 'test' && !isRecognitionMode && learning.wordList.length - learning.wordsIndex <= config.learningWordsSurplusPreload) {
-        this.triggerEvent('loadMoreWords')
-      }
 
       await sleep(800)
 

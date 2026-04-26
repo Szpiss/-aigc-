@@ -1,7 +1,10 @@
 {
 	"usingComponents": {
 	  "agent-ui": "../../components/agent-ui/index",
-	  "agent-insight-cards": "./components/agentInsightCards/agentInsightCards"
+	  "agent-insight-cards": "./components/agentInsightCards/agentInsightCards",
+    "top-bar": "../learning/components/topBar/topBar",
+    "problem": "../learning/components/problem/problem",
+    "footer-bar": "../learning/components/footerBar/footerBar"
 	},
 	"navigationBarTitleText": "英语学习助手"
   }
