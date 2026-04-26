@@ -68,7 +68,9 @@
 .user-info__rank-btn {
   display: flex;
   align-items: center;
+  min-width: 0;
   height: 54rpx;
+  margin: 0;
   padding: 0 14rpx;
   box-sizing: border-box;
   border: 0;
@@ -85,9 +87,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 76rpx;
+  min-width: 0;
+  width: 88rpx;
   height: 54rpx;
-  margin-left: 10rpx;
+  margin: 0 0 0 10rpx;
   padding: 0 16rpx 0 14rpx;
   box-sizing: border-box;
   border: 0;
