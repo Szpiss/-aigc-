@@ -1,139 +1,157 @@
 <view class="agent-page">
-  <view class="agent-workspace {{activeModule === 'vocabulary' || activeModule === 'daily-practice' || activeModule === 'vocab-test' ? 'agent-workspace--focus' : ''}}">
-    <view class="mobile-topbar">
-      <button class="icon-btn" hover-class="touch-s" catchtap="onToggleSidebar">☰</button>
-      <view class="mobile-title">
-        <text class="mobile-title__kicker">AI Agent</text>
-        <text class="mobile-title__text">{{moduleTitle}}</text>
+  <view class="agent-shell">
+    <view class="agent-topbar" style="{{topBarStyle}}">
+      <view class="agent-topbar__content" style="{{topBarContentStyle}}">
+        <button class="topbar-menu" hover-class="touch-s" catchtap="onToggleSidebar">☰</button>
+        <text class="topbar-title">{{moduleTitle}}</text>
+        <button class="topbar-home" hover-class="touch-s" catchtap="onBack">首页</button>
       </view>
-      <button class="mobile-back" hover-class="touch-s" catchtap="onBack">首页</button>
     </view>
 
-    <view class="agent-sidebar {{sidebarOpen ? 'agent-sidebar--open' : ''}}">
-      <view class="sidebar-brand">
-        <view class="brand-mark">AI</view>
-        <view class="brand-copy">
-          <text class="brand-kicker">English Agent</text>
-          <text class="brand-title">英语学习助手</text>
-        </view>
+    <view class="drawer-mask {{sidebarOpen ? 'drawer-mask--show' : ''}}" catchtap="onCloseSidebar"></view>
+    <view class="agent-drawer {{sidebarOpen ? 'agent-drawer--open' : ''}}" style="{{drawerStyle}}">
+      <view class="drawer-head">
+        <text class="drawer-kicker">AI Agent</text>
+        <text class="drawer-title">学习导航</text>
       </view>
-
-      <view class="sidebar-nav">
+      <view class="drawer-list">
         <button
           wx:for="{{navItems}}"
           wx:key="key"
-          class="nav-item {{activeModule === item.key ? 'nav-item--active' : ''}}"
+          class="drawer-item {{activeModule === item.key ? 'drawer-item--active' : ''}}"
           data-module="{{item.key}}"
           hover-class="touch-s"
           catchtap="onNavTap"
         >
-          <text class="nav-item__icon">{{item.icon}}</text>
-          <view class="nav-item__copy">
-            <text class="nav-item__label">{{item.label}}</text>
-            <text class="nav-item__desc">{{item.desc}}</text>
-          </view>
+          <text class="drawer-item__icon">{{item.icon}}</text>
+          <text class="drawer-item__label">{{item.label}}</text>
         </button>
       </view>
-
-      <button class="sidebar-back" hover-class="touch-s" catchtap="onBack">返回首页</button>
     </view>
 
-    <view class="sidebar-mask {{sidebarOpen ? 'sidebar-mask--show' : ''}}" catchtap="onToggleSidebar"></view>
+    <view class="context-error" wx:if="{{contextError}}">
+      <text>{{contextError}}</text>
+      <button hover-class="touch-s" catchtap="refreshAgentContext">重试</button>
+    </view>
 
-    <view class="agent-main">
-      <view class="main-head">
-        <view>
-          <text class="main-head__kicker">Learning Workspace</text>
-          <text class="main-head__title">{{moduleTitle}}</text>
+    <view class="agent-content">
+      <view wx:if="{{activeModule === 'home'}}" class="chat-page">
+        <view class="chat-host">
+          <agent-ui
+            id="agent-ui"
+            layoutHeight="{{agentLayoutHeight}}"
+            agentConfig="{{agentConfig}}"
+            showBotAvatar="{{showBotAvatar}}"
+            chatMode="{{chatMode}}"
+            modelConfig="{{modelConfig}}"
+            envShareConfig="{{envShareConfig}}"
+          ></agent-ui>
         </view>
-        <view class="main-status {{contextLoading ? 'main-status--loading' : ''}}">{{contextLoading ? '同步数据中' : '数据已接入'}}</view>
       </view>
 
-      <view class="context-error" wx:if="{{contextError}}">
-        <text>{{contextError}}</text>
-        <button hover-class="touch-s" catchtap="refreshAgentContext">重试</button>
-      </view>
-
-      <scroll-view class="main-scroll" scroll-y="{{true}}" enable-flex="{{true}}">
-        <view wx:if="{{activeModule === 'home'}}" class="chat-home">
-          <view class="chat-intro">
-            <text class="chat-intro__kicker">AI Learning Coach</text>
-            <text class="chat-intro__title">今天的英语学习，从这里开始。</text>
-            <text class="chat-intro__desc">我会结合词汇学习、薄弱词和对战记录，帮你安排训练、解释问题并复盘表现。</text>
+      <scroll-view wx:else class="module-scroll" scroll-y="{{true}}" enable-flex="{{true}}">
+        <view wx:if="{{activeModule === 'vocabulary'}}" class="module-page">
+          <view class="vocab-hero">
+            <text class="hero-kicker">Vocabulary Mode</text>
+            <text class="hero-title">选择词汇学习模式</text>
+            <text class="hero-subtitle">从日常练习到词汇检测，选择最适合当前节奏的一轮。</text>
           </view>
 
-          <view class="prompt-list">
-            <button class="prompt-chip" wx:for="{{quickPrompts}}" wx:key="label" data-type="{{item.type}}" data-prompt="{{item.prompt}}" hover-class="touch-s" catchtap="onPromptTap">{{item.label}}</button>
-          </view>
+          <view class="mode-list">
+            <button class="mode-button mode-daily" data-module="daily-practice" hover-class="touch-s" catchtap="onWorkspaceAction">
+              <view class="mode-icon-wrap">
+                <text class="mode-icon">练</text>
+              </view>
+              <view class="mode-text">
+                <text class="mode-title">日常练习</text>
+                <text class="mode-desc">按 25 / 50 / 100 词完成整轮练习</text>
+              </view>
+              <text class="mode-tag">练习</text>
+            </button>
 
-          <view class="agent-host">
-            <agent-ui id="agent-ui" layoutHeight="{{agentLayoutHeight}}" agentConfig="{{agentConfig}}" showBotAvatar="{{showBotAvatar}}" chatMode="{{chatMode}}" modelConfig="{{modelConfig}}" envShareConfig="{{envShareConfig}}">
-            </agent-ui>
-          </view>
-        </view>
-
-        <view wx:elif="{{activeModule === 'vocabulary'}}" class="module-panel">
-          <view class="module-hero module-hero--simple">
-            <text class="module-hero__title">词汇学习</text>
-            <text class="module-hero__desc">选择学习或检测方式，开始背单词。</text>
-          </view>
-
-          <view class="action-grid action-grid--simple">
-            <button class="action-card" wx:for="{{workspaceActions}}" wx:key="key" data-module="{{item.key}}" hover-class="touch-s" catchtap="onWorkspaceAction">
-              <text class="action-card__title">{{item.title}}</text>
-              <text class="action-card__desc">{{item.desc}}</text>
-              <text class="action-card__button">{{item.action}}</text>
+            <button class="mode-button mode-test" data-module="vocab-test" hover-class="touch-s" catchtap="onWorkspaceAction">
+              <view class="mode-icon-wrap">
+                <text class="mode-icon">测</text>
+              </view>
+              <view class="mode-text">
+                <text class="mode-title">词汇检测</text>
+                <text class="mode-desc">设置错误上限，完成词汇掌握检测</text>
+              </view>
+              <text class="mode-tag">检测</text>
             </button>
           </view>
         </view>
 
-        <view wx:elif="{{activeModule === 'daily-practice' || activeModule === 'vocab-test'}}" class="learning-module">
-          <view wx:if="{{agentLearningSummary}}" class="learning-summary-panel">
-            <text class="module-hero__title">{{agentLearningSummary.title}}</text>
-            <text class="module-hero__desc">{{agentLearningSummary.subtitle}}</text>
-            <view class="agent-summary-grid">
-              <view class="agent-summary-stat">
-                <text class="agent-summary-stat__label">总词数</text>
-                <text class="agent-summary-stat__value">{{agentLearningSummary.total}}</text>
+        <view wx:elif="{{activeModule === 'daily-practice' || activeModule === 'vocab-test'}}" class="module-page">
+          <view wx:if="{{agentLearningSummary}}" class="summary-card">
+            <text class="page-title">{{agentLearningSummary.title}}</text>
+            <text class="page-desc">{{agentLearningSummary.subtitle}}</text>
+
+            <view class="summary-grid">
+              <view class="summary-stat">
+                <text class="summary-stat__label">{{agentLearningType === 'test' ? '完成 / 选择' : '完成词数'}}</text>
+                <text wx:if="{{agentLearningType === 'test'}}" class="summary-stat__value">{{agentLearningSummary.total}} / {{agentLearningSummary.requested}}</text>
+                <text wx:else class="summary-stat__value">{{agentLearningSummary.total}}</text>
               </view>
-              <view class="agent-summary-stat">
-                <text class="agent-summary-stat__label">{{selectedLearningMode === 'recognition' ? '认识' : '正确'}}</text>
-                <text class="agent-summary-stat__value">{{agentLearningSummary.correct}}</text>
+              <view wx:if="{{agentLearningType === 'test'}}" class="summary-stat">
+                <text class="summary-stat__label">实际检测</text>
+                <text class="summary-stat__value">{{agentLearningSummary.actual}}</text>
               </view>
-              <view class="agent-summary-stat">
-                <text class="agent-summary-stat__label">{{selectedLearningMode === 'recognition' ? '不认识' : '错误'}}</text>
-                <text class="agent-summary-stat__value">{{agentLearningSummary.wrong}}</text>
+              <view class="summary-stat">
+                <text class="summary-stat__label">{{selectedLearningMode === 'recognition' ? '认识' : '正确'}}</text>
+                <text class="summary-stat__value">{{agentLearningSummary.correct}}</text>
               </view>
-              <view class="agent-summary-stat">
-                <text class="agent-summary-stat__label">{{selectedLearningMode === 'recognition' ? '认识率' : '正确率'}}</text>
-                <text class="agent-summary-stat__value">{{agentLearningSummary.rate}}%</text>
+              <view class="summary-stat">
+                <text class="summary-stat__label">{{selectedLearningMode === 'recognition' ? '不认识' : '错误'}}</text>
+                <text class="summary-stat__value">{{agentLearningSummary.wrong}}</text>
+              </view>
+              <view class="summary-stat">
+                <text class="summary-stat__label">{{selectedLearningMode === 'recognition' ? '认识率' : '正确率'}}</text>
+                <text class="summary-stat__value">{{agentLearningSummary.rate}}%</text>
               </view>
             </view>
+
+            <view wx:if="{{agentLearningType === 'test'}}" class="limit-note">本轮错误上限：{{agentLearningSummary.wrongLimit}} 个</view>
             <button class="primary-action" hover-class="touch-s" catchtap="onResetAgentLearning">{{agentLearningType === 'test' ? '再测一次' : '再练一轮'}}</button>
-            <button class="secondary-action" data-module="vocabulary" hover-class="touch-s" catchtap="onWorkspaceAction">返回词汇学习</button>
           </view>
 
-          <view wx:elif="{{!agentLearningStarted}}" class="learning-setup">
-            <text class="module-hero__title">{{activeModule === 'vocab-test' ? '词汇检测' : '日常练习'}}</text>
-            <text class="module-hero__desc">{{activeModule === 'vocab-test' ? '选择检测方式，按当前检测规则完成一轮词汇检测。' : '选择词数和背词方式，完成一轮日常练习。'}}</text>
+          <view wx:elif="{{!agentLearningStarted}}" class="setup-card">
+            <view class="page-head">
+              <text class="page-title">{{activeModule === 'vocab-test' ? '词汇检测' : '日常练习'}}</text>
+              <text class="page-desc">{{activeModule === 'vocab-test' ? '选择检测词数、检测模式和错误上限。' : '选择本轮词数和背词方式。'}}</text>
+            </view>
 
-            <view class="setup-section" wx:if="{{activeModule !== 'vocab-test'}}">
-              <text class="setup-label">训练词数</text>
+            <view class="setup-section">
+              <text class="setup-label">{{activeModule === 'vocab-test' ? '检测词数' : '选择词数'}}</text>
               <view class="segmented">
                 <button
                   wx:for="{{practiceCounts}}"
                   wx:key="*this"
-                  class="segment {{(activeModule === 'vocab-test' ? selectedTestCount : selectedPracticeCount) === item ? 'segment--active' : ''}}"
+                  class="segment {{(activeModule === 'vocab-test' ? selectedTestWordCount : selectedPracticeCount) === item ? 'segment--active' : ''}}"
                   data-count="{{item}}"
                   data-target="{{activeModule === 'vocab-test' ? 'test' : 'practice'}}"
                   hover-class="touch-s"
                   catchtap="onSelectCount"
-                >{{item}}</button>
+                >{{item}} 词</button>
+              </view>
+            </view>
+
+            <view class="setup-section" wx:if="{{activeModule === 'vocab-test'}}">
+              <text class="setup-label">错误上限</text>
+              <view class="segmented">
+                <button
+                  wx:for="{{wrongLimitOptions}}"
+                  wx:key="*this"
+                  class="segment {{selectedWrongLimit === item ? 'segment--active' : ''}}"
+                  data-limit="{{item}}"
+                  hover-class="touch-s"
+                  catchtap="onSelectWrongLimit"
+                >错 {{item}} 个结束</button>
               </view>
             </view>
 
             <view class="setup-section">
-              <text class="setup-label">答题模式</text>
+              <text class="setup-label">{{activeModule === 'vocab-test' ? '检测模式' : '学习方式'}}</text>
               <view class="mode-options">
                 <button
                   wx:for="{{vocabularyModeOptions}}"
@@ -156,26 +174,18 @@
           </view>
 
           <view wx:else class="embedded-learning">
-            <view class="embedded-learning__head">
-              <view>
-                <text class="embedded-learning__kicker">Agent Training</text>
-                <text class="embedded-learning__title">{{agentLearningTitle}}</text>
-              </view>
-              <button class="ghost-action" hover-class="touch-s" catchtap="onResetAgentLearning">重新选择</button>
-            </view>
-
             <top-bar />
-            <problem wordItem="{{$state.learning.wordList[$state.learning.wordsIndex]}}" bind:loadMoreWords="loadAgentMoreWords" bind:sessionFinish="onAgentSessionFinish" />
+            <problem wordItem="{{$state.learning.wordList[$state.learning.wordsIndex]}}" bind:sessionFinish="onAgentSessionFinish" />
             <footer-bar />
           </view>
         </view>
 
-        <view wx:elif="{{activeModule === 'battle-review'}}" class="module-panel">
-          <view class="module-hero module-hero--battle">
-            <text class="module-hero__kicker">Battle Review</text>
-            <text class="module-hero__title">对战复盘</text>
-            <text class="module-hero__desc">Agent 会把最近对战表现、错词和学习记录合并分析，给出下一局策略。</text>
+        <view wx:elif="{{activeModule === 'battle-review'}}" class="module-page">
+          <view class="page-head">
+            <text class="page-title">对战复盘</text>
+            <text class="page-desc">根据最近对战表现，总结失误原因和下一局策略。</text>
           </view>
+
           <view class="battle-summary">
             <view class="battle-summary__metric">
               <text>最近结果</text>
@@ -186,110 +196,32 @@
               <text class="battle-summary__value">{{battleInsight.accuracy}}</text>
             </view>
           </view>
+
           <view class="analysis-card">
-            <text class="analysis-card__title">复盘摘要</text>
+            <text class="analysis-card__title">复盘内容</text>
             <text class="analysis-card__body">{{battleInsight.summary}}</text>
             <text class="analysis-card__body">{{battleInsight.mistake}}</text>
           </view>
-          <view class="prompt-list">
-            <button class="prompt-chip" data-type="battle" data-prompt="为什么我这局错这么多？请结合最近对战数据解释。" hover-class="touch-s" catchtap="onPromptTap">为什么我这局错这么多？</button>
-            <button class="prompt-chip" data-type="battle" data-prompt="根据这次复盘给我安排训练。" hover-class="touch-s" catchtap="onPromptTap">根据复盘安排训练</button>
-            <button class="prompt-chip" data-type="battle" data-prompt="我下一次对战应该注意什么？" hover-class="touch-s" catchtap="onPromptTap">下一局注意什么？</button>
-          </view>
-          <button class="primary-action" hover-class="touch-s" catchtap="onGenerateCombatReview">生成完整复盘</button>
-          <button class="secondary-action" hover-class="touch-s" catchtap="onOpenCombatPage">进入单词对战</button>
+
+          <button class="primary-action" hover-class="touch-s" catchtap="onGenerateCombatReview">重新复盘</button>
         </view>
 
-        <view wx:elif="{{activeModule === 'suggestions'}}" class="module-panel">
-          <view class="module-hero">
-            <text class="module-hero__kicker">Smart Suggestions</text>
-            <text class="module-hero__title">AI 学习建议</text>
-            <text class="module-hero__desc">根据学习计划、近 7 天报告、薄弱词和对战样本生成下一步安排。</text>
+        <view wx:elif="{{activeModule === 'suggestions'}}" class="module-page">
+          <view class="page-head">
+            <text class="page-title">学习建议</text>
+            <text class="page-desc">根据学习记录和薄弱词，生成下一步练习安排。</text>
           </view>
+
           <view class="analysis-card">
             <text class="analysis-card__title">{{learningInsight.problem}}</text>
             <text class="analysis-card__body">{{learningInsight.reason}}</text>
             <text class="analysis-card__body">{{learningInsight.action}}</text>
           </view>
-          <view class="next-list">
-            <view class="next-item" wx:for="{{nextActions}}" wx:key="*this">
-              <text class="next-item__index">{{index + 1}}</text>
-              <text class="next-item__text">{{item}}</text>
-            </view>
-          </view>
-          <button class="primary-action" hover-class="touch-s" catchtap="onGenerateLearningAdvice">生成今日学习建议</button>
-        </view>
 
-        <view wx:elif="{{activeModule === 'weak-words'}}" class="module-panel">
-          <view class="module-hero">
-            <text class="module-hero__kicker">Weak Words</text>
-            <text class="module-hero__title">薄弱词汇分析</text>
-            <text class="module-hero__desc">优先处理低掌握度词汇，把错词回流到下一轮练习。</text>
-          </view>
-          <view class="weak-grid" wx:if="{{weakWordsPreview.length}}">
-            <view class="weak-tile" wx:for="{{weakWordsPreview}}" wx:key="word">
-              <text class="weak-tile__word">{{item.word}}</text>
-              <text class="weak-tile__score">掌握度 {{item.mastery}}%</text>
-            </view>
-          </view>
-          <view class="empty-state" wx:else>
-            <text class="empty-state__title">暂无明显薄弱词</text>
-            <text class="empty-state__desc">完成词汇学习或对战后，Agent 会自动整理需要复习的词。</text>
-          </view>
-          <button class="primary-action" data-module="daily-practice" hover-class="touch-s" catchtap="onWorkspaceAction">开始薄弱词训练</button>
-          <button class="secondary-action" hover-class="touch-s" catchtap="onOpenReviewPage">查看生词本</button>
-        </view>
-
-        <view wx:elif="{{activeModule === 'settings'}}" class="module-panel">
-          <view class="module-hero">
-            <text class="module-hero__kicker">Preferences</text>
-            <text class="module-hero__title">Agent 偏好</text>
-            <text class="module-hero__desc">设置默认词汇学习模式。小程序原有声音、题量等设置仍在系统设置页管理。</text>
-          </view>
-          <view class="mode-options">
-            <button
-              wx:for="{{vocabularyModeOptions}}"
-              wx:key="value"
-              class="mode-option {{selectedLearningMode === item.value ? 'mode-option--active' : ''}}"
-              data-mode="{{item.value}}"
-              hover-class="touch-s"
-              catchtap="onSelectLearningMode"
-            >
-              <text class="mode-option__title">{{item.label}}</text>
-              <text class="mode-option__desc">{{item.desc}}</text>
-            </button>
-          </view>
+          <button class="primary-action" hover-class="touch-s" catchtap="onGenerateLearningAdvice">重新生成</button>
         </view>
       </scroll-view>
     </view>
-
-    <scroll-view wx:if="{{activeModule !== 'vocabulary' && activeModule !== 'daily-practice' && activeModule !== 'vocab-test'}}" class="agent-insights" scroll-y="{{true}}" enable-flex="{{true}}">
-      <view class="insight-header">
-        <text class="insight-header__kicker">Insight Panel</text>
-        <text class="insight-header__title">学习状态</text>
-      </view>
-
-      <view class="summary-grid">
-        <view class="summary-card" wx:for="{{summaryCards}}" wx:key="label">
-          <text class="summary-card__label">{{item.label}}</text>
-          <text class="summary-card__value">{{item.value}}</text>
-          <text class="summary-card__desc">{{item.desc}}</text>
-        </view>
-      </view>
-
-      <agent-insight-cards
-        active-scene="{{activeScene}}"
-        loading="{{contextLoading}}"
-        learning-insight="{{learningInsight}}"
-        battle-insight="{{battleInsight}}"
-        weak-words="{{weakWordsPreview}}"
-        next-actions="{{nextActions}}"
-        bind:switchscene="onSwitchScene"
-        bind:generatelearning="onGenerateLearningAdvice"
-        bind:generatebattle="onGenerateCombatReview"
-        bind:startweak="onStartWeakTraining"
-      />
-    </scroll-view>
   </view>
 
   <loading id="loading" />

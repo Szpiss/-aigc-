@@ -107,6 +107,7 @@ Component({
     showToolCallDetail: true,
     showMultiConversation: true,
     showBotName: true,
+    hideQuestions: false,
     showVoice: true,
     useWebSearch: false,
     showFeatureList: false,
@@ -210,6 +211,7 @@ Component({
         allowMultiConversation,
         allowVoice,
         showBotName,
+        hideQuestions,
       } = this.data.agentConfig;
       allowWebSearch = allowWebSearch === undefined ? true : allowWebSearch;
       allowUploadFile = allowUploadFile === undefined ? true : allowUploadFile;
@@ -219,6 +221,7 @@ Component({
       allowMultiConversation = allowMultiConversation === undefined ? true : allowMultiConversation;
       allowVoice = allowVoice === undefined ? true : allowVoice;
       showBotName = showBotName === undefined ? true : showBotName;
+      hideQuestions = hideQuestions === undefined ? false : hideQuestions;
       this.setData({
         bot,
         questions,
@@ -231,6 +234,7 @@ Component({
         showMultiConversation: allowMultiConversation,
         showVoice: allowVoice,
         showBotName: showBotName,
+        hideQuestions: hideQuestions,
       });
       // 如果多会话开启，拉一次会话
       if (this.data.bot.multiConversationEnable) {

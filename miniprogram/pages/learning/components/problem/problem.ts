@@ -111,6 +111,12 @@ App.Component({
         void userWordModel.add(wordId)
         this.recordLearningResult({ correct: false, known: false, wordId })
         void wx.showToast({ title: '已加入复习，之后会重点练这个词', icon: 'none', duration: 1200 })
+        const learning = store.$state.learning!
+        const wrongLimit = learning.selectedWrongLimit || config.learningHealthPoint
+        if (learning.sessionType === 'test' && (learning.wrongCount || 0) >= wrongLimit) {
+          this.finishLearningSession()
+          return
+        }
       }
 
       await this.next()
@@ -178,11 +184,11 @@ App.Component({
         return true
       }
 
-      const healthPoint = store.$state.learning!.healthPoint ? store.$state.learning!.healthPoint : 1 // 使用弹窗复活的次数兜底，最小剩余机会不能 < 0
+      const learning = store.$state.learning!
+      const wrongLimit = learning.selectedWrongLimit || config.learningHealthPoint
+      const wrongCount = learning.wrongCount || 0
 
-      store.setState({ learning: { ...store.$state.learning!, healthPoint: healthPoint - 1 } })
-
-      if (healthPoint <= 1) {
+      if (wrongCount >= wrongLimit) {
         this.finishLearningSession()
         return false
       }

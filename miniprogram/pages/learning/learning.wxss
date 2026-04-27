@@ -126,10 +126,12 @@ page {
 }
 
 .scene-card__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 20rpx;
   width: 220rpx;
   height: 58rpx;
-  line-height: 58rpx;
   border-radius: 999rpx;
   text-align: center;
   background: linear-gradient(135deg, #69a8ff 0%, #6676ee 100%);
@@ -170,8 +172,11 @@ page {
 }
 
 .choice-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
-  height: 68rpx;
+  min-height: 68rpx;
   margin: 0;
   padding: 0;
   border: 0;
@@ -264,8 +269,11 @@ page {
 
 .setup-btn,
 .summary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
-  height: 76rpx;
+  min-height: 76rpx;
   margin: 0;
   padding: 0;
   border: 0;
@@ -339,6 +347,9 @@ page {
 }
 
 .learning-mode__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 112rpx;
   height: 58rpx;
   margin-left: 18rpx;

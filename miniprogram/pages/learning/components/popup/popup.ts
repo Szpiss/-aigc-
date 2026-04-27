@@ -106,16 +106,29 @@ App.Component({
           // TODO: 视频广告
           break
         case 'again':
+          if (this.isInAgentWorkspace()) {
+            void wx.redirectTo({ url: '/pages/aigc/aigc?module=daily-practice' })
+            break
+          }
           void app.routes.pages.learning.redirectTo({})
           break
       }
     },
     onToHome () {
+      if (this.isInAgentWorkspace()) {
+        this.hide()
+        return
+      }
       if (getCurrentPages().length === 1) {
         void app.routes.pages.home.redirectTo({})
       } else {
         void app.router.navigateBack({ delta: 1 })
       }
+    },
+    isInAgentWorkspace () {
+      const pages = getCurrentPages()
+      const current = pages[pages.length - 1]
+      return current?.route === 'pages/aigc/aigc'
     }
   }
 })

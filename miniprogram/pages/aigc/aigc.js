@@ -4,7 +4,6 @@ const LEARNING_MODE_STORAGE_KEY = "vocabularyLearningMode";
 const LEARNING_OPTION_NUMBER = 4;
 const LEARNING_HEALTH_POINT = 3;
 const LEARNING_COUNTDOWN = 30;
-const LEARNING_PRELOAD_THRESHOLD = 5;
 
 const moduleMap = {
   home: "home",
@@ -17,19 +16,17 @@ const moduleMap = {
   test: "vocab-test",
   "battle-review": "battle-review",
   suggestions: "suggestions",
-  "weak-words": "weak-words",
-  settings: "settings",
+  "weak-words": "vocabulary",
+  settings: "home",
 };
 
 const moduleTitles = {
-  home: "AI 助手首页",
+  home: "英语学习助手",
   vocabulary: "词汇学习",
   "daily-practice": "日常练习",
   "vocab-test": "词汇检测",
   "battle-review": "对战复盘",
   suggestions: "学习建议",
-  "weak-words": "薄弱词汇",
-  settings: "设置偏好",
 };
 
 const vocabularyModeOptions = [
@@ -40,26 +37,27 @@ const vocabularyModeOptions = [
 Page({
   data: {
     activeModule: "home",
-    moduleTitle: "AI 助手首页",
+    moduleTitle: "英语学习助手",
     sidebarOpen: false,
-    agentLayoutHeight: 760,
+    agentLayoutHeight: "100%",
+    topBarStyle: "",
+    topBarContentStyle: "",
+    drawerStyle: "",
     navItems: [
-      { key: "home", label: "AI 助手首页", icon: "AI", desc: "对话与计划" },
-      { key: "vocabulary", label: "词汇学习", icon: "VO", desc: "练习与检测" },
-      { key: "daily-practice", label: "日常练习", icon: "DP", desc: "25/50/100 词" },
-      { key: "vocab-test", label: "词汇检测", icon: "TS", desc: "三次机会" },
-      { key: "battle-review", label: "对战复盘", icon: "PK", desc: "最近表现" },
-      { key: "suggestions", label: "学习建议", icon: "AD", desc: "下一步计划" },
-      { key: "weak-words", label: "薄弱词汇", icon: "WK", desc: "低掌握度" },
-      { key: "settings", label: "设置偏好", icon: "ST", desc: "模式偏好" },
+      { key: "home", label: "英语学习助手", icon: "AI" },
+      { key: "vocabulary", label: "词汇学习", icon: "词" },
+      { key: "battle-review", label: "对战复盘", icon: "战" },
+      { key: "suggestions", label: "学习建议", icon: "荐" },
     ],
     workspaceActions: [
-      { key: "daily-practice", title: "日常练习", desc: "不设失败惩罚，适合长期刷词。", action: "开始学习" },
-      { key: "vocab-test", title: "词汇检测", desc: "保留挑战规则，用来检查掌握情况。", action: "开始检测" },
+      { key: "daily-practice", title: "日常练习", desc: "选择词数和模式，轻量背一轮。", action: "开始学习" },
+      { key: "vocab-test", title: "词汇检测", desc: "检查当前掌握情况。", action: "开始检测" },
     ],
     practiceCounts: [25, 50, 100],
+    wrongLimitOptions: [3, 5, 10],
     selectedPracticeCount: 25,
-    selectedTestCount: 4,
+    selectedTestWordCount: 25,
+    selectedWrongLimit: 3,
     selectedLearningMode: "choice",
     selectedLearningModeLabel: "选项练习",
     selectedLearningModeDesc: "四选一巩固词义辨析",
@@ -80,9 +78,10 @@ Page({
       allowPullRefresh: true,
       allowUploadImage: true,
       showToolCallDetail: true,
-      allowMultiConversation: true,
+      allowMultiConversation: false,
       allowVoice: true,
-      showBotName: true,
+      showBotName: false,
+      hideQuestions: true,
       tools: [
         {
           name: "get_learning_plan",
@@ -154,7 +153,7 @@ Page({
       modelProvider: "deepseek",
       quickResponseModel: "deepseek-v3.2",
       logo: "",
-      welcomeMsg: "欢迎来到词魂 AI 学习助手。我会结合词汇学习、弱词和对战记录，帮你分析学习状态、复盘对战表现，并给出下一步训练建议。",
+      welcomeMsg: "你好，我是你的英语学习助手。可以问我今天学什么、怎么练词，或让我复盘一次对战。",
     },
     activeScene: "learning",
     contextLoading: false,
@@ -164,12 +163,6 @@ Page({
       { label: "学习正确率", value: "待积累", desc: "根据近 7 天学习记录" },
       { label: "对战胜率", value: "待积累", desc: "根据最近对战记录" },
       { label: "薄弱词", value: "0 个", desc: "由学习和对战错词沉淀" },
-    ],
-    quickPrompts: [
-      { label: "今天我应该学什么？", type: "learning", prompt: "请结合我的学习记录，用简洁的方式分析我今天学得怎么样，并给出下一步建议。" },
-      { label: "帮我复盘最近一次对战", type: "battle", prompt: "请结合最近一次对战记录，帮我复盘得分、错误原因和下一局策略。" },
-      { label: "推荐一组薄弱词训练", type: "learning", prompt: "请结合弱词榜和学习计划，推荐一组薄弱词训练，并说明训练顺序。" },
-      { label: "根据我的学习记录制定计划", type: "learning", prompt: "请根据我的学习记录制定一个 10 分钟英语词汇学习计划。" },
     ],
     learningInsight: {
       problem: "学习数据正在同步",
@@ -187,14 +180,33 @@ Page({
   },
 
   onBack() {
-    wx.navigateBack({
-      delta: 1,
-      fail: () => {
-        wx.redirectTo({
-          url: "/pages/home/home",
-        });
-      },
-    });
+    wx.reLaunch({ url: "/pages/home/home" });
+  },
+
+  initTopBarMetrics() {
+    try {
+      const systemInfo = wx.getSystemInfoSync();
+      const menuRect = wx.getMenuButtonBoundingClientRect();
+      const statusBarHeight = systemInfo.statusBarHeight || 0;
+      const menuTop = menuRect?.top || statusBarHeight + 6;
+      const menuHeight = menuRect?.height || 32;
+      const menuLeft = menuRect?.left || systemInfo.windowWidth - 96;
+      const navGap = Math.max(menuTop - statusBarHeight, 6);
+      const navHeight = statusBarHeight + menuHeight + navGap * 2;
+      const rightSafe = Math.max(systemInfo.windowWidth - menuLeft + 8, 112);
+
+      this.setData({
+        topBarStyle: `height:${navHeight}px;padding-top:${statusBarHeight}px;`,
+        topBarContentStyle: `height:${menuHeight}px;padding-right:${rightSafe}px;`,
+        drawerStyle: `top:${navHeight + 10}px;bottom:${Math.max(systemInfo.safeArea ? systemInfo.windowHeight - systemInfo.safeArea.bottom : 0, 0) + 14}px;`,
+      });
+    } catch (error) {
+      this.setData({
+        topBarStyle: "height:92px;padding-top:44px;",
+        topBarContentStyle: "height:36px;padding-right:112px;",
+        drawerStyle: "top:102px;bottom:14px;",
+      });
+    }
   },
 
   async onGenerateLearningAdvice() {
@@ -521,6 +533,10 @@ Page({
     this.setData({ sidebarOpen: !this.data.sidebarOpen });
   },
 
+  onCloseSidebar() {
+    this.setData({ sidebarOpen: false });
+  },
+
   onNavTap(event) {
     const module = event.currentTarget.dataset.module;
     this.switchModule(module);
@@ -535,7 +551,7 @@ Page({
     const activeModule = moduleMap[module] || "home";
     const nextData = {
       activeModule,
-      moduleTitle: moduleTitles[activeModule] || "AI 助手首页",
+      moduleTitle: moduleTitles[activeModule] || "英语学习助手",
       sidebarOpen: false,
     };
 
@@ -551,7 +567,7 @@ Page({
     if (activeModule === "battle-review") {
       nextData.activeScene = "battle";
     }
-    if (["suggestions", "vocabulary", "daily-practice", "vocab-test", "weak-words", "settings"].includes(activeModule)) {
+    if (["suggestions", "vocabulary", "daily-practice", "vocab-test"].includes(activeModule)) {
       nextData.activeScene = "learning";
     }
 
@@ -560,12 +576,17 @@ Page({
 
   onSelectCount(event) {
     const count = Number(event.currentTarget.dataset.count) || 25;
-    const target = event.currentTarget.dataset.target || "practice";
+    const target = event.currentTarget.dataset.target === "test" ? "test" : "practice";
     if (target === "test") {
-      this.setData({ selectedTestCount: count });
+      this.setData({ selectedTestWordCount: count });
       return;
     }
     this.setData({ selectedPracticeCount: count });
+  },
+
+  onSelectWrongLimit(event) {
+    const limit = Number(event.currentTarget.dataset.limit) || 3;
+    this.setData({ selectedWrongLimit: limit });
   },
 
   onSelectLearningMode(event) {
@@ -604,7 +625,8 @@ Page({
 
   async startAgentLearning(type = "daily") {
     const mode = this.data.selectedLearningMode === "recognition" ? "recognition" : "choice";
-    const targetWordCount = type === "test" ? this.data.selectedTestCount : this.data.selectedPracticeCount;
+    const targetWordCount = type === "test" ? this.data.selectedTestWordCount : this.data.selectedPracticeCount;
+    const selectedWrongLimit = type === "test" ? this.data.selectedWrongLimit : undefined;
     this.setData({
       agentLearningLoading: true,
       agentLearningError: "",
@@ -624,15 +646,23 @@ Page({
       if (!wordList.length) {
         throw new Error("empty learning words");
       }
+      if (wordList.length < targetWordCount) {
+        wx.showToast({
+          title: `当前可用词汇仅 ${wordList.length} 个，本轮将练习 ${wordList.length} 个`,
+          icon: "none",
+          duration: 1800,
+        });
+      }
 
       await new Promise((resolve) => app.store.setState({
         learning: {
           mode,
           sessionType: type,
-        targetWordCount,
+          targetWordCount,
+          selectedWrongLimit,
           wordsIndex: 0,
           score: 0,
-          healthPoint: LEARNING_HEALTH_POINT,
+          healthPoint: selectedWrongLimit || LEARNING_HEALTH_POINT,
           wordList,
           countdown: LEARNING_COUNTDOWN,
           experience: 0,
@@ -659,20 +689,7 @@ Page({
   },
 
   async loadAgentMoreWords() {
-    const learning = app?.store?.$state?.learning;
-    if (!learning || learning.mode === "recognition") return;
-    if (learning.wordList.length - learning.wordsIndex > LEARNING_PRELOAD_THRESHOLD) return;
-    try {
-      const moreWords = await this.buildAgentLearningQuestions(20);
-      app.store.setState({
-        learning: {
-          ...learning,
-          wordList: learning.wordList.concat(moreWords),
-        },
-      });
-    } catch (error) {
-      // 预加载失败不打断当前练习。
-    }
+    // Agent 内词汇学习改为固定会话词表，避免日常练习被无限预加载干扰结束条件。
   },
 
   async buildAgentLearningQuestions(targetWordCount) {
@@ -695,13 +712,44 @@ Page({
       targets = [];
     }
 
-    if (!targets.length) {
-      targets = await this.getRandomWords(bookId, targetWordCount);
-    }
+    targets = await this.fillWordsToCount(bookId, targets, targetWordCount);
 
     const distractorSize = Math.max(targets.length * (LEARNING_OPTION_NUMBER - 1), LEARNING_OPTION_NUMBER * 4);
     const distractors = await this.getRandomWords(bookId, distractorSize);
     return this.buildLearningQuestions(targets.slice(0, targetWordCount), distractors, LEARNING_OPTION_NUMBER);
+  },
+
+  async fillWordsToCount(bookId, initialWords, targetWordCount) {
+    const result = [];
+    const used = new Set();
+    const pushUnique = (words = []) => {
+      (words || []).forEach((word) => {
+        const id = word?._id ? String(word._id) : "";
+        if (!id || used.has(id) || result.length >= targetWordCount) return;
+        used.add(id);
+        result.push(word);
+      });
+    };
+
+    pushUnique(initialWords);
+
+    let attempts = 0;
+    while (result.length < targetWordCount && attempts < 4) {
+      attempts += 1;
+      const remain = targetWordCount - result.length;
+      const sampleSize = Math.max(remain * 2, remain);
+      try {
+        const randomWords = await this.getRandomWords(bookId, sampleSize);
+        const before = result.length;
+        pushUnique(randomWords);
+        if (!randomWords.length || result.length === before) break;
+      } catch (error) {
+        console.warn("补齐词汇失败", error);
+        break;
+      }
+    }
+
+    return result.slice(0, targetWordCount);
   },
 
   async getRandomWords(bookId, size) {
@@ -793,10 +841,13 @@ Page({
       agentLearningSummary: {
         title: learning.sessionType === "test" ? "词汇检测报告" : "本轮练习总结",
         subtitle: learning.sessionType === "test" ? "检测已完成，下面是本轮掌握情况。" : "日常练习已完成，下面是本轮学习情况。",
+        requested: learning.targetWordCount || total,
+        actual: (learning.wordList || []).length,
         total,
         correct,
         wrong,
         rate,
+        wrongLimit: learning.selectedWrongLimit || this.data.selectedWrongLimit,
       },
     });
   },
@@ -810,6 +861,7 @@ Page({
   },
 
   onLoad(options) {
+    this.initTopBarMetrics();
     const storageMode = wx.getStorageSync(LEARNING_MODE_STORAGE_KEY);
     this.onSelectLearningMode({ currentTarget: { dataset: { mode: storageMode || "choice" } } });
     const queryModule = options?.module

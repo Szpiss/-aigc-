@@ -41,6 +41,9 @@ export interface LearningState {
   /** 本轮目标词数 */
   targetWordCount: number
 
+  /** 词汇检测错误上限，仅 test 场景使用 */
+  selectedWrongLimit?: number
+
   /** 当前分数 */
   score: number
 

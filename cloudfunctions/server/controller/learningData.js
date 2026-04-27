@@ -257,6 +257,8 @@ var LearningDataController = base_1.default({
         var weakList = masteryList.slice(0, weakCount);
         var reinforceList = masteryList.slice(weakCount, weakCount + reinforceCount);
         var selectedIds = weakList.concat(reinforceList).map(function (item) { return item.wordId; }).filter(Boolean);
+        // 当用户弱词/巩固词样本不足时，用新词补齐到请求词数，避免 25/50/100 被缩小成 4/10/20。
+        newCount = Math.max(newCount, planSize - selectedIds.length);
         var newWords = [];
         if (newCount > 0) {
             var db = getDb();

@@ -4,9 +4,9 @@
       <image class="top-icon" src="./../../../../images/learning-score.png" />
       <text class="top-text">{{$state.learning.sessionType === 'daily' ? '日常练习' : '词汇检测'}}：{{$state.learning.wordsIndex + 1}} / {{$state.learning.wordList.length}}</text>
     </view>
-    <view class="top-item" wx:if="{{$state.learning.sessionType === 'test' && $state.learning.mode === 'choice'}}">
+    <view class="top-item" wx:if="{{$state.learning.sessionType === 'test'}}">
       <image class="top-icon" src="./../../../../images/learning-hp.png" />
-      <text class="top-text">剩余机会：{{$state.learning.healthPoint}}</text>
+      <text class="top-text">错误数：{{$state.learning.wrongCount}} / {{$state.learning.selectedWrongLimit}}</text>
     </view>
   </view>
 

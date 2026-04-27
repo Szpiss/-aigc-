@@ -18,8 +18,8 @@
       <button class="scene-card scene-card--test" data-type="test" hover-class="touch-s" catchtap="onChooseSession">
         <view class="scene-card__badge scene-card__badge--test">TEST</view>
         <text class="scene-card__title">词汇检测</text>
-        <text class="scene-card__desc">保留机会和短流程机制，用来快速检查掌握情况。</text>
-        <view class="scene-card__meta">适合阶段测验 / 结果反馈</view>
+        <text class="scene-card__desc">选择错误上限，达到上限或词库完成后生成检测报告。</text>
+        <view class="scene-card__meta">可选错 3 / 5 / 10 个结束</view>
         <text class="scene-card__action">开始词汇检测</text>
       </button>
     </view>
@@ -35,18 +35,17 @@
         </view>
       </view>
 
-      <view class="setup-section" wx:if="{{selectedSessionType === 'daily'}}">
-        <text class="setup-section__title">本轮练习词数</text>
+      <view class="setup-section">
+        <text class="setup-section__title">{{selectedSessionType === 'daily' ? '本轮练习词数' : '检测词数'}}</text>
         <view class="choice-row">
-          <button wx:for="{{dailyWordCounts}}" wx:key="*this" data-count="{{item}}" class="choice-pill {{selectedWordCount === item ? 'choice-pill--active' : ''}}" hover-class="touch-s" catchtap="onSelectWordCount">{{item}} 词</button>
+          <button wx:for="{{dailyWordCounts}}" wx:key="*this" data-count="{{item}}" data-target="{{selectedSessionType === 'daily' ? 'daily' : 'test'}}" class="choice-pill {{(selectedSessionType === 'daily' ? selectedWordCount : selectedTestWordCount) === item ? 'choice-pill--active' : ''}}" hover-class="touch-s" catchtap="onSelectWordCount">{{item}} 词</button>
         </view>
       </view>
 
-      <view class="setup-section" wx:else>
-        <text class="setup-section__title">检测规则</text>
-        <view class="rule-card">
-          <text>单词选项：三次机会，答错扣机会。</text>
-          <text>认识 / 不认识：短流程掌握度检测，共 {{testWordCount}} 个进度。</text>
+      <view class="setup-section" wx:if="{{selectedSessionType === 'test'}}">
+        <text class="setup-section__title">错误上限</text>
+        <view class="choice-row">
+          <button wx:for="{{wrongLimitOptions}}" wx:key="*this" data-limit="{{item}}" class="choice-pill {{selectedWrongLimit === item ? 'choice-pill--active' : ''}}" hover-class="touch-s" catchtap="onSelectWrongLimit">错 {{item}} 个结束</button>
         </view>
       </view>
 
@@ -67,7 +66,6 @@
       <view class="setup-error" wx:if="{{loadError}}">{{loadError}}</view>
 
       <view class="setup-actions">
-        <button class="setup-btn setup-btn--ghost" hover-class="touch-s" catchtap="onBackToHome">返回</button>
         <button class="setup-btn setup-btn--primary" hover-class="touch-s" catchtap="onStartSession">{{selectedSessionType === 'daily' ? '开始日常练习' : '开始词汇检测'}}</button>
       </view>
     </view>
@@ -98,8 +96,13 @@
 
       <view class="summary-grid">
         <view class="summary-stat">
-          <text class="summary-stat__label">总词数</text>
-          <text class="summary-stat__value">{{summary.total}}</text>
+          <text class="summary-stat__label">{{selectedSessionType === 'test' ? '完成 / 选择' : '完成词数'}}</text>
+          <text wx:if="{{selectedSessionType === 'test'}}" class="summary-stat__value">{{summary.total}} / {{summary.requested}}</text>
+          <text wx:else class="summary-stat__value">{{summary.total}}</text>
+        </view>
+        <view wx:if="{{selectedSessionType === 'test'}}" class="summary-stat">
+          <text class="summary-stat__label">实际检测</text>
+          <text class="summary-stat__value">{{summary.actual}}</text>
         </view>
         <view class="summary-stat">
           <text class="summary-stat__label">{{selectedPracticeMode === 'recognition' ? '认识' : '正确'}}</text>

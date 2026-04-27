@@ -18,11 +18,14 @@ type SessionSummary = {
   title: string
   subtitle: string
   total: number
+  requested: number
+  actual: number
   correct: number
   wrong: number
   known: number
   unknown: number
   rate: number
+  wrongLimit?: number
   primaryLabel: string
   weakTitle: string
   weakWords: Array<{ wordId: string; word: string }>
@@ -38,8 +41,10 @@ App.Page({
     selectedPracticeMode: getVocabularyLearningMode(),
     selectedPracticeModeLabel: getVocabularyLearningModeLabel(getVocabularyLearningMode()),
     selectedWordCount: 25,
+    selectedTestWordCount: 25,
     dailyWordCounts: [25, 50, 100],
-    testWordCount: 4,
+    selectedWrongLimit: 3,
+    wrongLimitOptions: [3, 5, 10],
     actualWordCount: 0,
     loadError: '',
     sessionTitle: '',
@@ -66,13 +71,17 @@ App.Page({
       selectedSessionType: sessionType,
       selectedPracticeMode: defaultMode,
       selectedPracticeModeLabel: getVocabularyLearningModeLabel(defaultMode),
-      selectedWordCount: sessionType === 'daily' ? this.data.selectedWordCount : this.data.testWordCount,
       loadError: ''
     })
   },
 
-  onSelectWordCount (event: WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {count: number}>) {
+  onSelectWordCount (event: WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {count: number, target?: string}>) {
     const count = Number(event.currentTarget.dataset.count || 25)
+    const target = event.currentTarget.dataset.target === 'test' ? 'test' : 'daily'
+    if (target === 'test') {
+      this.setData({ selectedTestWordCount: count })
+      return
+    }
     this.setData({ selectedWordCount: count })
   },
 
@@ -84,6 +93,11 @@ App.Page({
     })
   },
 
+  onSelectWrongLimit (event: WechatMiniprogram.BaseEvent<WechatMiniprogram.IAnyObject, {limit: number}>) {
+    const limit = Number(event.currentTarget.dataset.limit || 3)
+    this.setData({ selectedWrongLimit: limit })
+  },
+
   onBackToHome () {
     this.setData({ phase: 'home', loadError: '' })
   },
@@ -93,15 +107,21 @@ App.Page({
     const mode = this.data.selectedPracticeMode
     const wordCount = sessionType === 'daily'
       ? this.data.selectedWordCount
-      : this.data.testWordCount
+      : this.data.selectedTestWordCount
 
-    await this.initPageData({ sessionType, mode, wordCount })
+    await this.initPageData({
+      sessionType,
+      mode,
+      wordCount,
+      selectedWrongLimit: sessionType === 'test' ? this.data.selectedWrongLimit : undefined
+    })
   },
 
   async initPageData (options: {
     sessionType: VocabularySessionType
     mode: VocabularyLearningMode
     wordCount: number
+    selectedWrongLimit?: number
   }) {
     if (!store.$state.user?.bookId) {
       toast.show('获取用户数据失败，请重试', 1200).finally(() => { this.onBack() })
@@ -116,9 +136,10 @@ App.Page({
         mode: options.mode,
         sessionType: options.sessionType,
         targetWordCount: options.wordCount,
+        selectedWrongLimit: options.selectedWrongLimit,
         wordsIndex: 0,
         score: 0,
-        healthPoint: config.learningHealthPoint,
+        healthPoint: options.selectedWrongLimit || config.learningHealthPoint,
         wordList: [],
         countdown: config.learningCountDown,
         experience: 0,
@@ -204,15 +225,23 @@ App.Page({
 
     if (result.length >= size) return result
 
-    try {
-      const randomWords = await wordModel.getRandomWords(bookId, size - result.length)
-      randomWords.forEach((word) => {
-        if (!word?._id || used.has(String(word._id)) || result.length >= size) return
-        used.add(String(word._id))
-        result.push(word)
-      })
-    } catch (error) {
-      console.warn('获取随机词失败', error)
+    let attempts = 0
+    while (result.length < size && attempts < 4) {
+      attempts += 1
+      try {
+        const remain = size - result.length
+        const randomWords = await wordModel.getRandomWords(bookId, Math.max(remain * 2, remain))
+        const before = result.length
+        randomWords.forEach((word) => {
+          if (!word?._id || used.has(String(word._id)) || result.length >= size) return
+          used.add(String(word._id))
+          result.push(word)
+        })
+        if (!randomWords.length || result.length === before) break
+      } catch (error) {
+        console.warn('获取随机词失败', error)
+        break
+      }
     }
 
     return result
@@ -319,8 +348,8 @@ App.Page({
     }
 
     return mode === 'choice'
-      ? '词汇检测保留三次机会机制，答错会扣机会，结束后生成检测报告。'
-      : '词汇检测使用短流程掌握度检查，适合快速判断当前状态。'
+      ? '词汇检测会在错误数达到所选上限，或词库完成后结束。'
+      : '词汇检测按自评结果统计掌握情况，错误数达到上限后结束。'
   },
 
   onSessionFinish () {
@@ -341,11 +370,14 @@ App.Page({
         ? '日常练习已完成，下面是本轮词汇吸收情况。'
         : '检测已结束，下面是本轮掌握情况反馈。',
       total,
+      requested: learning.targetWordCount,
+      actual: learning.wordList.length,
       correct,
       wrong,
       known: learning.knownCount,
       unknown: learning.unknownCount,
       rate,
+      wrongLimit: learning.selectedWrongLimit,
       primaryLabel: learning.sessionType === 'daily' ? '再练一轮' : '再测一次',
       weakTitle: isRecognition ? '不认识词列表' : '错词列表',
       weakWords: isRecognition ? learning.unknownWords : learning.wrongWords
