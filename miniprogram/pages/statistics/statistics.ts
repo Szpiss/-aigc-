@@ -80,12 +80,18 @@ App.Page({
 
   async refreshAll () {
     this.setData({ loading: true })
-    await Promise.all([
-      this.fetchLearningSummary(),
-      this.fetchWeakWords(),
-      this.fetchCombatRecords()
-    ])
-    this.setData({ loading: false })
+    try {
+      await Promise.all([
+        this.fetchLearningSummary(),
+        this.fetchWeakWords(),
+        this.fetchCombatRecords()
+      ])
+    } catch (error) {
+      console.warn('数据看板刷新失败', error)
+      void wx.showToast({ title: '数据看板加载失败', icon: 'none', duration: 1500 })
+    } finally {
+      this.setData({ loading: false })
+    }
   },
 
   async fetchLearningSummary () {

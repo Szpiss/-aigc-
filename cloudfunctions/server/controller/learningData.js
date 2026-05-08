@@ -78,8 +78,15 @@ var calcMasteryScore = function (wrongCount, totalCount, tipCount, avgResponseTi
 var upsertWordMastery = async function (bookId, word) {
     var masteryModel = new wordMastery_1.default();
     var wordId = word.wordId;
+    if (!wordId) {
+        return null;
+    }
     var responseTime = Number(word.responseTime) || 0;
     var isTip = !!word.isTip;
+    var hasResultFlag = typeof word.correct === 'boolean' || typeof word.isCorrect === 'boolean' || typeof word.known === 'boolean';
+    var isWrong = hasResultFlag
+        ? (word.correct === false || word.isCorrect === false || word.known === false)
+        : true;
     var existing = await masteryModel.model.where({
         _openid: masteryModel.openid,
         wordId: wordId
@@ -88,7 +95,7 @@ var upsertWordMastery = async function (bookId, word) {
         var item = existing.data[0];
         var prevTotal = item.totalCount || 0;
         var totalCount = prevTotal + 1;
-        var wrongCount = (item.wrongCount || 0) + 1;
+        var wrongCount = (item.wrongCount || 0) + (isWrong ? 1 : 0);
         var tipCount = (item.tipCount || 0) + (isTip ? 1 : 0);
         var avgResponseTime = Math.round(((item.avgResponseTime || 0) * prevTotal + responseTime) / totalCount);
         var masteryScore = calcMasteryScore(wrongCount, totalCount, tipCount, avgResponseTime);
@@ -108,7 +115,7 @@ var upsertWordMastery = async function (bookId, word) {
         });
     }
     var totalCount = 1;
-    var wrongCount = 1;
+    var wrongCount = isWrong ? 1 : 0;
     var tipCount = isTip ? 1 : 0;
     var avgResponseTime = responseTime;
     var masteryScore = calcMasteryScore(wrongCount, totalCount, tipCount, avgResponseTime);
@@ -131,6 +138,15 @@ var updateWordMasteryFromCombat = async function (bookId, wrongWords) {
     }
     for (var i = 0; i < wrongWords.length; i++) {
         await upsertWordMastery(bookId, wrongWords[i]);
+    }
+};
+var updateWordMasteryFromLearning = async function (bookId, learnedWords, wrongWords) {
+    var words = learnedWords && learnedWords.length > 0 ? learnedWords : wrongWords;
+    if (!words || words.length === 0) {
+        return;
+    }
+    for (var i = 0; i < words.length; i++) {
+        await upsertWordMastery(bookId, words[i]);
     }
 };
 var LearningDataController = base_1.default({
@@ -199,8 +215,10 @@ var LearningDataController = base_1.default({
      * 记录词汇学习数据
      */
     recordLearning: async function (_a) {
-        var bookId = _a.bookId, bookName = _a.bookName, score = _a.score, maxScore = _a.maxScore, wordsCount = _a.wordsCount, correctCount = _a.correctCount, wrongCount = _a.wrongCount, tipCount = _a.tipCount, reviveUsed = _a.reviveUsed, wrongWords = _a.wrongWords, startTime = _a.startTime, endTime = _a.endTime, duration = _a.duration;
+        var bookId = _a.bookId, bookName = _a.bookName, score = _a.score, maxScore = _a.maxScore, wordsCount = _a.wordsCount, correctCount = _a.correctCount, wrongCount = _a.wrongCount, tipCount = _a.tipCount, reviveUsed = _a.reviveUsed, wrongWords = _a.wrongWords, learnedWords = _a.learnedWords, startTime = _a.startTime, endTime = _a.endTime, duration = _a.duration;
         try {
+            wrongWords = wrongWords || [];
+            learnedWords = learnedWords || [];
             var learningRecordModel = new learningRecord_1.default();
             await learningRecordModel.addLearningRecord({
                 bookId: bookId,
@@ -229,6 +247,16 @@ var LearningDataController = base_1.default({
                 correctRate: correctRate,
                 newWordsCount: wrongWords.length
             });
+            try {
+                console.log('recordLearning 掌握度更新:', {
+                    learnedWords: learnedWords.length,
+                    wrongWords: wrongWords.length
+                });
+                await updateWordMasteryFromLearning(bookId, learnedWords, wrongWords);
+            }
+            catch (error) {
+                console.log('更新学习掌握度失败', error);
+            }
             return this.success(true);
         }
         catch (error_2) {

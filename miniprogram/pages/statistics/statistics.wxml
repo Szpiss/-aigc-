@@ -1,4 +1,4 @@
-﻿<view class="page app-page">
+<view class="page app-page">
   <header>
     <view slot="content" class="header app-header">
       <image class="header-icon app-header-icon touch" catchtap="onBack" src="./../../images/combat-back.png" />

@@ -64,7 +64,7 @@
               </view>
               <view class="mode-text">
                 <text class="mode-title">日常练习</text>
-                <text class="mode-desc">按 25 / 50 / 100 词完成整轮练习</text>
+                <text class="mode-desc">保留 5 词演示，也可按 25 / 50 / 100 词完成整轮练习</text>
               </view>
               <text class="mode-tag">练习</text>
             </button>
@@ -125,7 +125,7 @@
               <text class="setup-label">{{activeModule === 'vocab-test' ? '检测词数' : '选择词数'}}</text>
               <view class="segmented">
                 <button
-                  wx:for="{{practiceCounts}}"
+                  wx:for="{{activeModule === 'vocab-test' ? testWordCounts : practiceCounts}}"
                   wx:key="*this"
                   class="segment {{(activeModule === 'vocab-test' ? selectedTestWordCount : selectedPracticeCount) === item ? 'segment--active' : ''}}"
                   data-count="{{item}}"

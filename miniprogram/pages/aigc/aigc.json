@@ -1,9 +1,9 @@
 {
   "usingComponents": {
-    "agent-ui": "../../components/agent-ui/index",
-    "top-bar": "../learning/components/topBar/topBar",
-    "problem": "../learning/components/problem/problem",
-    "footer-bar": "../learning/components/footerBar/footerBar"
+    "agent-ui": "/components/agent-ui/index",
+    "top-bar": "./components/topBar/topBar",
+    "problem": "./components/problem/problem",
+    "footer-bar": "./components/footerBar/footerBar"
   },
   "navigationBarTitleText": "英语学习助手"
 }

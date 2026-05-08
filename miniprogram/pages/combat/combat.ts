@@ -254,7 +254,7 @@ App.Page({
       return {
         title: `❤ @你, 来一起pk「${book.name}」吖，点我进入`,
         path: `/pages/combat/combat?id=${String(_id)}&type=friend&state=ready`,
-        imageUrl: './../../images/share-pk-bg.png'
+        imageUrl: './../../images/share-pk-bg.jpg'
       }
     }
 
@@ -278,7 +278,7 @@ App.Page({
       return {
         title: `我在和${anotherUser.nickname}的「${book.name}」对战获 ${correctRate}% 的正确率，点我查看详情`,
         path: `/pages/combat/combat?id=${String(_id)}&share_result=true`,
-        imageUrl: './../../images/share-default-bg.png'
+        imageUrl: './../../images/share-default-bg.jpg'
       }
     }
 

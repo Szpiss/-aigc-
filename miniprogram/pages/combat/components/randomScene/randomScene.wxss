@@ -22,6 +22,10 @@
   height: 287rpx;
   left: 96.5rpx;
   top: 96.5rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(105, 168, 255, 0.28);
+  border-top-color: rgba(102, 118, 238, 0.82);
+  box-shadow: 0 0 42rpx rgba(105, 168, 255, 0.18);
 }
 
 .circle-out {
@@ -30,6 +34,10 @@
   height: 480rpx;
   left: 0;
   top: 0;
+  border-radius: 50%;
+  border: 2rpx dashed rgba(102, 118, 238, 0.32);
+  border-bottom-color: rgba(105, 168, 255, 0.85);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.78) 0%, rgba(239, 246, 255, 0.34) 58%, rgba(232, 242, 255, 0.18) 100%);
 }
 
 .matching {

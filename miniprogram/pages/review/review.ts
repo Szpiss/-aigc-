@@ -26,16 +26,23 @@ App.Page<PageData, PageInstance>({
     const page = this.data.nextPage
     if (page) {
       loading.show()
-      const myDate = await userWordModel.getMyList(page)
-      if (!myDate) {
+      try {
+        const myDate = await userWordModel.getMyList(page)
+        if (!myDate) {
+          this.setData({ wordsList: [], nextPage: null })
+          console.log('获取生词失败，请重试')
+          void wx.showToast({ title: '获取生词失败，请稍后重试', icon: 'none', duration: 2000 })
+          return
+        }
+        const { nextPage, list } = myDate
+        this.setData({ wordsList: this.data.wordsList.concat(list), nextPage })
+      } catch (error) {
+        console.warn('获取生词失败', error)
         this.setData({ wordsList: [], nextPage: null })
-        console.log('获取生词失败，请重试')
         void wx.showToast({ title: '获取生词失败，请稍后重试', icon: 'none', duration: 2000 })
-        return
+      } finally {
+        loading.hide()
       }
-      const { nextPage, list } = myDate
-      this.setData({ wordsList: this.data.wordsList.concat(list), nextPage })
-      loading.hide()
     }
   },
   async onReachBottom () {

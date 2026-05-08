@@ -102,6 +102,20 @@ export async function recordLearningData(options: {
     isTip: false,
     responseTime: 0
   }))
+  const wrongWordIds = new Set((learning.wrongWords || []).map(item => item.wordId))
+  const unknownWordIds = new Set((learning.unknownWords || []).map(item => item.wordId))
+  const learnedWords = (learning.wordList || []).slice(0, wordsCount).map(item => {
+    const wordId = item.wordId
+    const isWrong = wrongWordIds.has(wordId)
+    return {
+      wordId,
+      word: item.word,
+      correct: !isWrong,
+      known: learning.mode === 'recognition' ? !unknownWordIds.has(wordId) : undefined,
+      isTip: false,
+      responseTime: 0
+    }
+  })
 
   correctCount = learning.correctCount ?? score
   wrongCount = learning.wrongCount ?? (wordsCount - correctCount)
@@ -131,6 +145,7 @@ export async function recordLearningData(options: {
         tipCount,
         reviveUsed,
         wrongWords,
+        learnedWords,
         startTime: options.startTime,
         endTime: options.endTime,
         duration

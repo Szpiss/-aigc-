@@ -8,7 +8,7 @@ export default {
   defaultShare: {
     title: '❤ 来一起学习吧，轻松掌握【四六级/考研】必考单词 ~ 👏👏',
     path: '/pages/home/home',
-    imageUrl: './../../images/share-default-bg.png'
+    imageUrl: './../../images/share-default-bg.jpg'
   },
   audios: {
     selectCorrect: 'audios/correct.mp3',

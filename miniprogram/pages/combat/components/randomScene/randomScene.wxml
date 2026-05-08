@@ -1,6 +1,6 @@
 <view class="userinfo">
-  <image class="circle-in rotate time-36s" src="./../../../../images/combat-random-in.png" />
-  <image class="circle-out rotate-reverse time-36s" src="./../../../../images/combat-random-out.png" />
+  <view class="circle-in rotate time-36s"></view>
+  <view class="circle-out rotate-reverse time-36s"></view>
   <image class="userinfo-avatar" src="{{$state.user.avatar}}" />
 </view>
 

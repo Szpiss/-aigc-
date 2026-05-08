@@ -1560,6 +1560,11 @@ Component({
             }
             // 优先处理错误,直接中断
             if (finish_reason === "error" || finish_reason === "content_filter" || error) {
+              console.warn("Agent 返回错误", {
+                finish_reason,
+                error,
+                dataJson,
+              });
               lastValue.search_info = null;
               lastValue.reasoning_content = "";
               lastValue.knowledge_meta = [];
@@ -1740,6 +1745,11 @@ Component({
         const lastValue = newValue[lastValueIndex];
         lastValue.hiddenBtnGround = isManuallyPaused;
         if (lastValue.content === "") {
+          console.warn("Agent 流式回复为空", {
+            botId: bot.botId,
+            messageLength: inputValue.length,
+            reasoningLength: reasoningContentText.length,
+          });
           lastValue.content = this.data.defaultErrorMsg;
           this.setData({
             [`chatRecords[${lastValueIndex}].content`]: lastValue.content,

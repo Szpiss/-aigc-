@@ -42,7 +42,8 @@ App.Page({
     selectedPracticeModeLabel: getVocabularyLearningModeLabel(getVocabularyLearningMode()),
     selectedWordCount: 25,
     selectedTestWordCount: 25,
-    dailyWordCounts: [25, 50, 100],
+    dailyWordCounts: [5, 25, 50, 100],
+    testWordCounts: [25, 50, 100],
     selectedWrongLimit: 3,
     wrongLimitOptions: [3, 5, 10],
     actualWordCount: 0,
@@ -152,8 +153,18 @@ App.Page({
       }
     }, resolve))
 
-    await this.loadWordsData()
-    loading.hide()
+    try {
+      await this.loadWordsData()
+    } catch (error) {
+      console.warn('词汇题目加载失败', error)
+      this.setData({
+        phase: 'setup',
+        loadError: '词汇题目加载失败，请稍后重试。'
+      })
+      return
+    } finally {
+      loading.hide()
+    }
 
     const actualWordCount = store.$state.learning?.wordList.length || 0
     if (actualWordCount <= 0) {
@@ -422,7 +433,7 @@ App.Page({
       return {
         title: `❤ 我正在练习「${store.getState().book.name}」，每天进步积累一点哦 ~`,
         path: '/pages/home/home',
-        imageUrl: './../../images/share-pk-bg.png'
+        imageUrl: './../../images/share-pk-bg.jpg'
       }
     }
 

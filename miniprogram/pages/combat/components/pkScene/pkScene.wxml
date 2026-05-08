@@ -36,7 +36,7 @@
       </view>
     </block>
 
-    <image class="pk-icon" src="./../../../../images/combat-pk.png" />
+    <image class="pk-icon" src="./../../../../images/home-pvp.png" />
   </view>
 
   <!-- 坑： 使用 utils.calcProgressPercent($state.combat, true) 在 wxml 中调用计算返回的值变了，但是手机端的进度条 UI 不会更新，所以直接在 wxml 中写表达式计算 -->

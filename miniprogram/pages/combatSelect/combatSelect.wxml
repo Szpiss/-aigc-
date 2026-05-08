@@ -43,9 +43,9 @@
         </view>
         <view class="mode-text">
           <text class="mode-title">人机对战</text>
-          <text class="mode-desc">立即开始与 AI 练习</text>
+          <text class="mode-desc">立即开始与系统练习</text>
         </view>
-        <text class="mode-tag">AI</text>
+        <text class="mode-tag">系统</text>
       </button>
     </view>
   </view>

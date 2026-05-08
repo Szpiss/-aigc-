@@ -1,0 +1,50 @@
+.top {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 24rpx 28rpx 0;
+}
+
+.top-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4rpx;
+}
+
+.top-item {
+  display: flex;
+  align-items: center;
+  min-height: 64rpx;
+  padding: 12rpx 18rpx;
+  box-sizing: border-box;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10rpx 24rpx rgba(65, 107, 173, 0.08);
+}
+
+.top-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 12rpx;
+}
+
+.top-text {
+  color: #203554;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.top-item__countdown {
+  width: auto;
+}
+
+.top-item__countdown .top-icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.top-item__countdown .top-text {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #4d83df;
+}

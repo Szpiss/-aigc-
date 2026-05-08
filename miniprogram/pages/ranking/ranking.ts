@@ -27,15 +27,21 @@ App.Page<PageData, PageInstance>({
   },
   async getData (type) {
     loading.show()
-    const data = await userModel.getRanking(type ?? this.data.type)
-    loading.hide()
+    try {
+      const data = await userModel.getRanking(type ?? this.data.type)
 
-    if (!data) {
+      if (!data) {
+        void wx.showToast({ title: '排行榜加载失败，请稍后重试', icon: 'none', duration: 2000 })
+        return
+      }
+
+      this.setData({ rankingList: data.list, mine: data.mine, type: type ?? this.data.type })
+    } catch (error) {
+      console.warn('排行榜加载失败', error)
       void wx.showToast({ title: '排行榜加载失败，请稍后重试', icon: 'none', duration: 2000 })
-      return
+    } finally {
+      loading.hide()
     }
-
-    this.setData({ rankingList: data.list, mine: data.mine, type: type ?? this.data.type })
   },
   changeType ({ detail: { type } }) {
     if (type !== this.data.type) {

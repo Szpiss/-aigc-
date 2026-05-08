@@ -14,10 +14,6 @@
       <user-info />
     </view>
 
-    <view class="home-section home-section--mode">
-      <learning-mode-switch />
-    </view>
-
     <view class="home-section">
       <tool-bar />
     </view>

@@ -53,7 +53,8 @@ Page({
       { key: "daily-practice", title: "日常练习", desc: "选择词数和模式，轻量背一轮。", action: "开始学习" },
       { key: "vocab-test", title: "词汇检测", desc: "检查当前掌握情况。", action: "开始检测" },
     ],
-    practiceCounts: [25, 50, 100],
+    practiceCounts: [5, 25, 50, 100],
+    testWordCounts: [25, 50, 100],
     wrongLimitOptions: [3, 5, 10],
     selectedPracticeCount: 25,
     selectedTestWordCount: 25,
@@ -214,8 +215,14 @@ Page({
     wx.showLoading({ title: "生成中" });
     try {
       const payload = await this.buildContextPayload();
-      const prompt = `你是“词魂”英语词汇学习对战小程序的 AIGC 学习教练。请基于以下学习计划、弱词和学习报告生成“今日学习建议”。要求：1) 先总结当前薄弱点；2) 给出3条具体复习策略；3) 列出3个重点词并解释记忆法；4) 最后给出一个10分钟执行计划。\n\n${payload}`;
-      this.sendToAgent(prompt);
+      const prompt = [
+        "你是 ADAL Agent（Assess 评估 / Diagnose 诊断 / Adapt 调度 / Learn 反馈）的英语词汇学习教练。请基于下方数据生成专业但可执行的今日学习建议。",
+        "要求：不要联网搜索，不展示推理过程；输出约350-500字；用清晰小标题呈现。",
+        "结构：1) 学习状态评估 2) 薄弱点诊断 3) 自适应训练安排 4) 下一步反馈闭环。",
+        "语气要像比赛展示中的智能学习教练，既专业又具体，避免空泛鸡汤。",
+        payload,
+      ].join("\n");
+      await this.sendToAgent(prompt);
     } catch (error) {
       wx.showToast({ title: "学习建议生成失败", icon: "none", duration: 1500 });
     } finally {
@@ -228,8 +235,14 @@ Page({
     wx.showLoading({ title: "复盘中" });
     try {
       const payload = await this.buildContextPayload(true);
-      const prompt = `你是“词魂”英语词汇学习对战小程序的 AIGC 对战复盘教练。请基于以下学习、弱词和最近对战数据生成“对战复盘”。要求：1) 给出胜率和得分结论；2) 解释主要失误类型；3) 关联弱词给出训练重点；4) 给出下一局可执行的对战策略。\n\n${payload}`;
-      this.sendToAgent(prompt);
+      const prompt = [
+        "你是 ADAL Agent（Assess 评估 / Diagnose 诊断 / Adapt 调度 / Learn 反馈）的英语词汇对战复盘教练。请基于下方数据生成专业对战复盘。",
+        "要求：不要联网搜索，不展示推理过程；输出约350-500字；用清晰小标题呈现。",
+        "结构：1) 对战表现评估 2) 失误原因诊断 3) 弱词回流训练 4) 下一局策略建议。",
+        "语气要体现学习-对战-数据-自适应调度-反馈闭环，避免只给很短结论。",
+        payload,
+      ].join("\n");
+      await this.sendToAgent(prompt);
     } catch (error) {
       wx.showToast({ title: "对战复盘生成失败", icon: "none", duration: 1500 });
     } finally {
@@ -259,10 +272,10 @@ Page({
 
     const wordMap = await this.fetchWordMap([...new Set([...planIds, ...missingWeakIds])]);
     const planText = planWords.length > 0
-      ? planWords.slice(0, 12).map((id) => wordMap[String(id)] || String(id)).join(", ")
+      ? planWords.slice(0, 8).map((id) => wordMap[String(id)] || String(id)).join(", ")
       : "无";
 
-    const weakWords = weakRaw.map((item) => {
+    const weakWords = weakRaw.slice(0, 6).map((item) => {
       const wordName = item.word || wordMap[String(item.wordId)] || String(item.wordId || "");
       return `${wordName}(${Math.round((item.masteryScore || 0) * 100)}%)`;
     });
@@ -272,10 +285,9 @@ Page({
 
     return [
       `数据状态: ${hasLearningSignal ? "已有学习数据" : "暂无充分学习数据，请给出适合新用户的启动建议"}`,
-      `单词书: ${bookId || "未选择"}`,
-      `学习计划词汇(前12): ${planText}`,
+      `学习计划词汇: ${planText}`,
       `弱词榜: ${weakWords.join(", ") || "无"}`,
-      `学习汇总: 学习次数${summary.learningCount || 0}，学习时长${Math.round((summary.totalStudyTime || 0) / 60)}分钟，正确率${Math.round((summary.correctRate || 0) * 100)}%`,
+      `学习汇总: 次数${summary.learningCount || 0}，时长${Math.round((summary.totalStudyTime || 0) / 60)}分钟，正确率${Math.round((summary.correctRate || 0) * 100)}%`,
       combatText,
     ].join("\n");
   },
@@ -482,21 +494,45 @@ Page({
     return actions.slice(0, 3);
   },
 
-  sendToAgent(message) {
-    const agent = this.selectComponent("#agent-ui");
-    if (!agent || typeof agent.handleSendMessage !== "function") {
-      this.switchModule("home");
-      wx.nextTick(() => {
-        const nextAgent = this.selectComponent("#agent-ui");
-        if (!nextAgent || typeof nextAgent.handleSendMessage !== "function") {
-          wx.showToast({ title: "助手未就绪", icon: "none", duration: 1200 });
-          return;
-        }
-        nextAgent.handleSendMessage({ currentTarget: { dataset: { message } } });
-      });
-      return;
+  async waitForAgentReady() {
+    const maxAttempts = 30;
+    for (let index = 0; index < maxAttempts; index += 1) {
+      const agent = this.selectComponent("#agent-ui");
+      const isReady = agent
+        && typeof agent.handleSendMessage === "function"
+        && (
+          agent.data?.isAgent
+          || agent.data?.bot?.botId
+          || this.data.agentConfig?.botId?.startsWith("agent")
+        );
+      if (isReady) {
+        return agent;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    agent.handleSendMessage({ currentTarget: { dataset: { message } } });
+    return null;
+  },
+
+  async sendToAgent(message) {
+    if (this.data.activeModule !== "home") {
+      this.switchModule("home");
+    }
+
+    await new Promise((resolve) => wx.nextTick(resolve));
+    const agent = await this.waitForAgentReady();
+    if (!agent) {
+      wx.showToast({ title: "助手初始化中，请稍后再试", icon: "none", duration: 1500 });
+      return false;
+    }
+
+    agent.setData?.({ useWebSearch: false });
+    const sendTask = agent.handleSendMessage({ currentTarget: { dataset: { message } } });
+    if (sendTask && typeof sendTask.catch === "function") {
+      sendTask.catch((error) => {
+        console.warn("Agent 自动发送失败", error);
+      });
+    }
+    return true;
   },
 
   async onPromptTap(event) {
@@ -506,7 +542,7 @@ Page({
     wx.showLoading({ title: "整理数据" });
     try {
       const payload = await this.buildContextPayload(type === "battle");
-      this.sendToAgent(`${prompt}\n\n以下是当前上下文数据：\n${payload}`);
+      await this.sendToAgent(`${prompt}\n\n以下是当前上下文数据：\n${payload}`);
       if (type === "battle") {
         this.setData({ activeScene: "battle" });
       } else {
