@@ -39,7 +39,7 @@ The home page is the design source for this round. The shared direction is:
 | `miniprogram/pages/learning/learning.wxml` | Structure | Added a page wrapper around existing top bar, problem, and footer components. | No |
 | `miniprogram/pages/learning/learning.wxss` | Style | Added shared page background and layout shell behavior. | No |
 | `miniprogram/pages/learning/components/topBar/topBar.wxss` | Style | Converted learning counters into compact rounded info chips. | No |
-| `miniprogram/pages/learning/components/problem/problem.wxss` | Style | Converted word prompt and options into a modern learning card and rounded option buttons. | No |
+| `miniprogram/pages/learning/components/problem/problem.wxss` | Style | Converted word card and options into a modern learning card and rounded option buttons. | No |
 | `miniprogram/pages/learning/components/footerBar/footerBar.wxss` | Style | Modernized footer action buttons for music, tip card, and pronunciation. | No |
 | `miniprogram/pages/review/review.wxml` | Structure | Added review hero, list wrapper, improved empty state, and retained word item component. | No |
 | `miniprogram/pages/review/review.wxss` | Style | Unified review page background, hero, list spacing, bottom text, and empty card. | No |
@@ -54,10 +54,10 @@ The home page is the design source for this round. The shared direction is:
 | `miniprogram/pages/about/about.wxss` | Style | Added about page background, hero, content card, and rich text typography. | No |
 | `miniprogram/pages/statistics/statistics.wxml` | Structure | Wrapped dashboard content with shared shell/hero classes while preserving tab and data bindings. | No |
 | `miniprogram/pages/statistics/statistics.wxss` | Style | Unified dashboard cards, tabs, trend chart, daily list, weak word list, combat record list, and empty states. | No |
-| `miniprogram/components/agent-ui/index.js` | Display prop | Added `layoutHeight` so pages can size the embedded chat UI without changing Agent behavior. | No |
-| `miniprogram/components/agent-ui/index.wxml` | Structure | Applied the optional `layoutHeight` value to the component root height. | No |
-| `miniprogram/pages/aigc/aigc.wxml` | Structure | Wrapped assistant entry actions and `agent-ui` in a modern assistant page layout. | No |
-| `miniprogram/pages/aigc/aigc.wxss` | Style | Modernized assistant hero, action buttons, back control, and agent result card. | No |
+| 聊天组件脚本 | Display prop | Added `layoutHeight` so pages can size the embedded chat UI without changing assistant behavior. | No |
+| 聊天组件结构文件 | Structure | Applied the optional `layoutHeight` value to the component root height. | No |
+| 学习助手页面结构文件 | Structure | Wrapped assistant entry actions and 聊天组件 in a modern assistant page layout. | No |
+| 学习助手页面样式文件 | Style | Modernized assistant hero, action buttons, back control, and assistant result card. | No |
 
 ## 4. Page-by-page Changes
 
@@ -82,7 +82,7 @@ The home page is the design source for this round. The shared direction is:
 ### learning
 
 - Visual structure: Added a wrapper around the existing `top-bar`, `problem`, and `footer-bar` components.
-- Style changes: Progress counters became compact chips, the word prompt became a learning card, options became rounded answer buttons, and footer tools became card buttons.
+- Style changes: Progress counters became compact chips, the word card became a learning card, options became rounded answer buttons, and footer tools became card buttons.
 - Logic changes: No learning data, learning plan, answer selection, scoring, health, or popup logic was changed.
 
 ### review
@@ -115,11 +115,11 @@ The home page is the design source for this round. The shared direction is:
 - Style changes: Added page background, hero, content card, and consistent rich text spacing/typography.
 - Logic changes: No app config or rich-text source logic was changed.
 
-### aigc
+### 学习助手页面
 
-- Visual structure: Kept the `agent-ui` component and existing action handlers; adjusted the page into a compact top action panel plus a full-width chat host so the Agent header, message area, and input remain visible.
-- Style changes: Assistant action buttons, back control, and chat host now match the home page card/button language without double-wrapping the Agent UI.
-- Logic changes: No Agent config, cloud function calls, context payload building, or message sending logic was changed. A display-only `layoutHeight` prop was added to `agent-ui` so this page can size the chat component safely.
+- Visual structure: Kept the chat component and existing action handlers; adjusted the page into a compact top action panel plus a full-width chat host so the 学习助手 header, message area, and input remain visible.
+- Style changes: Assistant action buttons, back control, and chat host now match the home page card/button language without double-wrapping the 聊天组件.
+- Logic changes: No assistant configuration, cloud function calls, context payload building, or message sending logic was changed. A display-only `layoutHeight` prop was added to the chat component so this page can size the chat component safely.
 
 ## 5. Validation
 
@@ -130,7 +130,7 @@ The home page is the design source for this round. The shared direction is:
 - Fallback lint attempt:
   - Ran ESLint through temporary `npx` packages with `--resolve-plugins-relative-to`.
   - Result: ESLint executed and reported `25212 problems (24887 errors, 325 warnings)`.
-  - The reported errors are broad pre-existing TypeScript/JavaScript style issues across files such as `miniprogram/components/agent-ui/**`, `miniprogram/app.ts`, `miniprogram/pages/statistics/statistics.ts`, `miniprogram/pages/learning/learning.ts`, and utilities. This full UI pass changed WXML/WXSS only after the backup branch and did not introduce new TypeScript or JavaScript business logic.
+  - The reported errors are broad pre-existing TypeScript/JavaScript style issues across files such as 聊天组件目录, `miniprogram/app.ts`, `miniprogram/pages/statistics/statistics.ts`, `miniprogram/pages/learning/learning.ts`, and utilities. This full UI pass changed WXML/WXSS only after the backup branch and did not introduce new TypeScript or JavaScript business logic.
 - Static diff check:
   - `git diff --check -- miniprogram/app.wxss miniprogram/pages UI_MODERNIZATION_CHANGELOG.md`: passed.
 - WeChat DevTools page-open checklist:
@@ -143,7 +143,7 @@ The home page is the design source for this round. The shared direction is:
   - Ranking page: needs preview.
   - Settings page: needs preview.
   - About page: needs preview.
-  - AIGC assistant page: needs preview.
+  - 学习助手页面: needs preview.
 - Manual checks to perform in DevTools:
   - No obvious overflow on iPhone small screens.
   - Buttons remain clickable.
@@ -179,5 +179,5 @@ git clean -fd
 - This full UI unification did not modify cloud functions.
 - This full UI unification did not modify database fields or schemas.
 - This full UI unification did not modify route paths.
-- This full UI unification did not modify core combat scoring, answer selection, learning plan, learning record, ranking fetch, statistics aggregation, or AIGC cloud-call logic.
+- This full UI unification did not modify core combat scoring, answer selection, learning plan, learning record, ranking fetch, statistics aggregation, or 学习助手调用逻辑.
 - The only TypeScript/JavaScript behavior already present before this full pass remains outside this changelog baseline; this pass is WXML/WXSS plus documentation only.
