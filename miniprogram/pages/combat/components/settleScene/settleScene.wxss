@@ -108,13 +108,7 @@
 }
 
 .words-bg {
-  position: fixed;
-  width: 677rpx;
-  height: 311rpx;
-  margin: 8vh auto;
-  left: 0;
-  right: 0;
-  z-index: 0;
+  display: none;
 }
 
 .word {

@@ -126,7 +126,8 @@ App.Component({
         const wrongWords: Array<{wordId: string, word: string, isTip: boolean, responseTime: number}> = []
 
         combat.wordList?.forEach((word, index) => {
-          const record = myUser.records?.[index] as { score?: number; isTip?: boolean } | undefined
+          // 对战记录的 key 使用 t0/t1/t2，和 pkScene.wxs 中的读取方式保持一致。
+          const record = myUser.records?.[`t${index}`] as { score?: number; isTip?: boolean } | undefined
           if (!record) return
 
           const score = record.score ?? 0

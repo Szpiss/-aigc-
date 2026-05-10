@@ -65,8 +65,5 @@ page {
 }
 
 .pk-icon {
-  display: block;
-  width: 350rpx;
-  height: 160rpx;
-  margin: 64rpx auto 0;
+  display: none;
 }

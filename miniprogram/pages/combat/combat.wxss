@@ -1,7 +1,7 @@
 page {
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(180deg, #f4f9ff 0%, #eef5ff 38%, #f8fbff 100%);
+  background: linear-gradient(180deg, #f4f9ff 0%, #eef5ff 46%, #f8fbff 100%);
 }
 
 .header {
