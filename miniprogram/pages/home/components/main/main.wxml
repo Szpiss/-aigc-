@@ -1,50 +1,64 @@
 <view class="main">
+  <view class="main__header">
+    <text class="main__title">核心功能</text>
+  </view>
+
   <!-- 单词对战模块 -->
-  <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onCombatModule">
-    <image class="btn-oneline__icon" src="./../../../../images/home-btn-pk.png" />
-    <image class="btn-oneline__tag" src="./../../../../images/home-btn-hot.png" />
-    <view class="btn-oneline__text">
-      <text class="oneline-text__title">单 词 对 战</text>
-      <text class="oneline-text__desc">Word battle</text>
+  <button class="feature-card feature-card--hero" hover-class="touch-s" catchtap="onCombatModule">
+    <view class="feature-card__badge">HOT</view>
+    <view class="feature-card__icon feature-card__icon--combat">
+      <text class="feature-card__icon-text">PK</text>
     </view>
+    <view class="feature-card__content">
+      <text class="feature-card__title">单词对战</text>
+      <text class="feature-card__desc">好友对战、随机匹配，边玩边巩固记忆点</text>
+    </view>
+    <text class="feature-card__action">立即开始</text>
   </button>
 
-  <!-- AIGC按钮：修改事件绑定为onAIGC -->
-  <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onAIGC">
-    <image class="btn-oneline__icon" src="./../../../../images/home-btn-pk.png" />
-    <view class="btn-oneline__text">
-      <text class="oneline-text__title">智 能 英 语 学 习 助 手</text>
-      <text class="oneline-text__desc">AIGC</text>
-    </view>
-  </button>
-
-  <!-- 数据看板按钮 -->
-  <button class="btn-oneline shadow-lg" hover-class="btn-hover" catchtap="onToStatistics">
-    <image class="btn-oneline__icon" src="./../../../../images/home-grade.png" />
-    <view class="btn-oneline__text">
-      <text class="oneline-text__title">数 据 看 板</text>
-      <text class="oneline-text__desc">Study dashboard</text>
-    </view>
-  </button>
-
-  <view class="btn-two-wrap">
-    <!-- 每日词汇按钮 -->
-    <button class="btn-two shadow-lg" hover-class="btn-hover" catchtap="onChallengeWord" style="position: relative; left: -31rpx">
-      <view class="btn-two__text">
-        <text class="btn-two__title">每日词汇</text>
-        <text class="btn-two__desc">Everyday Study</text>
+  <view class="feature-grid">
+    <!-- AIGC按钮：修改事件绑定为onAIGC -->
+    <button class="feature-card feature-card--secondary" hover-class="touch-s" catchtap="onAIGC">
+      <view class="feature-card__icon feature-card__icon--aigc">
+        <text class="feature-card__icon-text">AI</text>
       </view>
-      <image class="btn-two__icon" src="./../../../../images/home-pikaqiu.png" />
+      <view class="feature-card__content">
+        <text class="feature-card__title">AIGC 学习助手</text>
+        <text class="feature-card__desc">用智能问答陪你拆词、练句子、查疑难</text>
+      </view>
+    </button>
+
+    <!-- 数据看板按钮 -->
+    <button class="feature-card feature-card--secondary" hover-class="touch-s" catchtap="onToStatistics">
+      <view class="feature-card__icon feature-card__icon--stats">
+        <text class="feature-card__icon-text">DATA</text>
+      </view>
+      <view class="feature-card__content">
+        <text class="feature-card__title">数据看板</text>
+        <text class="feature-card__desc">查看学习次数、胜率和阶段表现变化</text>
+      </view>
+    </button>
+
+    <!-- 每日词汇按钮 -->
+    <button class="feature-card feature-card--secondary" hover-class="touch-s" catchtap="onChallengeWord">
+      <view class="feature-card__icon feature-card__icon--daily">
+        <text class="feature-card__icon-text">DAY</text>
+      </view>
+      <view class="feature-card__content">
+        <text class="feature-card__title">每日词汇</text>
+        <text class="feature-card__desc">用更轻量的日练节奏维持英语输入输出</text>
+      </view>
     </button>
 
     <!-- 生词本按钮 -->
-    <button class="btn-two shadow-lg" hover-class="btn-hover" catchtap="onToUserWords" style="position: relative; left: 16rpx">
-      <view class="btn-two__text">
-        <text class="btn-two__title">生词本</text>
-        <text class="btn-two__desc">Review Words</text>
+    <button class="feature-card feature-card--secondary" hover-class="touch-s" catchtap="onToUserWords">
+      <view class="feature-card__icon feature-card__icon--review">
+        <text class="feature-card__icon-text">WORD</text>
       </view>
-      <image class="btn-two__icon" style="width: 56rpx;" src="./../../../../images/home-userwords.png" />
+      <view class="feature-card__content">
+        <text class="feature-card__title">生词本</text>
+        <text class="feature-card__desc">回收薄弱词汇，安排针对性复习任务</text>
+      </view>
     </button>
   </view>
 </view>
-    
