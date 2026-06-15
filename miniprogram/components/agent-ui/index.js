@@ -989,6 +989,52 @@ Component({
         scrollTo: "scroll-bottom",
       });
     },
+    recoverLatestBotAnswer: async function (inputValue, targetIndex) {
+      if (this.data.chatMode !== "bot" || !this.data.agentConfig?.botId) {
+        return false;
+      }
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+        const cloudInstance = await getCloudInstance(this.data.envShareConfig);
+        const ai = cloudInstance.extend.AI;
+        const getRecordsReq = {
+          botId: this.data.agentConfig.botId,
+          pageNumber: 1,
+          pageSize: 8,
+          sort: "desc",
+        };
+        if (this.data.conversation?.conversationId) {
+          getRecordsReq.conversationId = this.data.conversation.conversationId;
+        }
+        const res = await ai.bot.getChatRecords(getRecordsReq);
+        const records = res.recordList || [];
+        let answer = null;
+        const userIndex = records.findIndex((item) => item.role === "user" && item.content === inputValue);
+        if (userIndex > -1) {
+          answer = records.slice(0, userIndex).find((item) => item.role === "assistant" && item.content);
+        }
+        if (!answer) {
+          answer = records.find((item) => item.role === "assistant" && item.content);
+        }
+        if (!answer?.content) {
+          this.setData({ chatStatus: 0 });
+          return false;
+        }
+        const lastValueIndex = typeof targetIndex === "number" ? targetIndex : this.data.chatRecords.length - 1;
+        this.setData({
+          [`chatRecords[${lastValueIndex}].content`]: answer.content,
+          [`chatRecords[${lastValueIndex}].record_id`]: answer.recordId || answer.record_id || this.data.chatRecords[lastValueIndex]?.record_id,
+          [`chatRecords[${lastValueIndex}].error`]: null,
+          chatStatus: 0,
+        });
+        this.autoToBottom();
+        return true;
+      } catch (error) {
+        console.warn("从历史记录恢复 Bot 回复失败", error);
+        this.setData({ chatStatus: 0 });
+        return false;
+      }
+    },
     bindInputFocus: function (e) {
       this.setData({
         manualScroll: false,
@@ -1750,10 +1796,13 @@ Component({
             messageLength: inputValue.length,
             reasoningLength: reasoningContentText.length,
           });
-          lastValue.content = this.data.defaultErrorMsg;
-          this.setData({
-            [`chatRecords[${lastValueIndex}].content`]: lastValue.content,
-          });
+          const recovered = await this.recoverLatestBotAnswer(inputValue, lastValueIndex);
+          if (!recovered) {
+            lastValue.content = this.data.defaultErrorMsg;
+            this.setData({
+              [`chatRecords[${lastValueIndex}].content`]: lastValue.content,
+            });
+          }
         }
         // console.log("this.data.chatRecords", this.data.chatRecords);
         this.setData({

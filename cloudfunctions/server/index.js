@@ -1,6 +1,4 @@
 "use strict";
-// 云函数入口 - 学习数据统计模块
-// 部署时间: 2026-01-23 01:45 强制更新
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {

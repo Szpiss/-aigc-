@@ -91,10 +91,5 @@ export function playPronunciation (word: string): void {
   const safeWord = encodeURIComponent((word || '').trim())
   const src = baseUrl && safeWord ? `${baseUrl}${safeWord}` : ''
 
-  if (!src) {
-    console.log(`playPronunciation -> ${word}，请在 config.pronunciation.baseUrl 配置发音接口`)
-    return
-  }
-
   playAudio(src)
 }

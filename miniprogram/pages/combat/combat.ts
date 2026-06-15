@@ -30,18 +30,18 @@ App.Page({
       return
     }
 
-    // NOTE: 数据库层面创建房间，然后创建该房间的监听及房间数据通过云端首次 watch 初始化
+    //数据库层面创建房间，然后创建该房间的监听及房间数据通过云端首次 watch 初始化
     if (options.state === 'create' && options.type === 'friend') {
       const combatId = await this.createCombat('friend')
 
       await this.initCombatWatcher(combatId)
 
-      // NOTE: 该房间是通过「再来一局」创建的情况下，会携带该参数
+      //该房间是通过「再来一局」创建的情况下，会携带该参数
       options.previousId && combatModel.updateNext(options.previousId, combatId)
       return
     }
 
-    // NOTE: 分享给好友的链接进入后的状态，通过 watch 来获取房间的云端数据
+    //分享给好友的链接进入后的状态，通过 watch 来获取房间的云端数据
     if (options.state === 'ready' && options.type === 'friend' && options.id) {
       loading.show('获取房间信息中')
       await this.initCombatWatcher(options.id)

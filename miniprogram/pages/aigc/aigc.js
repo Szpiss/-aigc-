@@ -72,7 +72,6 @@ Page({
     chatMode: "bot",
     showBotAvatar: true,
     agentConfig: {
-      // ============ ↓↓↓ 把这行改成你自己的真实BotId ↓↓↓ ============
       botId: "ibot-yingyuxuexi-fg8vn8",
       allowWebSearch: true,
       allowUploadFile: true,
@@ -216,10 +215,11 @@ Page({
     try {
       const payload = await this.buildContextPayload();
       const prompt = [
-        "你是 ADAL Agent（Assess 评估 / Diagnose 诊断 / Adapt 调度 / Learn 反馈）的英语词汇学习教练。请基于下方数据生成专业但可执行的今日学习建议。",
-        "要求：不要联网搜索，不展示推理过程；输出约350-500字；用清晰小标题呈现。",
-        "结构：1) 学习状态评估 2) 薄弱点诊断 3) 自适应训练安排 4) 下一步反馈闭环。",
-        "语气要像比赛展示中的智能学习教练，既专业又具体，避免空泛鸡汤。",
+        "任务类型：生成今日学习建议。",
+        "你是 ADAL 英语词汇学习教练，请只围绕词汇学习表现给出建议，不要写成对战复盘。",
+        "请基于下方学习计划、弱词榜和近 7 天学习汇总，输出一份专业但可执行的今日学习建议。",
+        "输出结构：1) Assess 学习状态评估 2) Diagnose 薄弱词诊断 3) Adapt 今日训练安排 4) Learn 下一步反馈闭环。",
+        "要求：不要联网搜索，不展示推理过程；约350-500字；用清晰小标题；建议要具体到练哪些词、怎么练、完成后看什么指标。",
         payload,
       ].join("\n");
       await this.sendToAgent(prompt);
@@ -236,10 +236,11 @@ Page({
     try {
       const payload = await this.buildContextPayload(true);
       const prompt = [
-        "你是 ADAL Agent（Assess 评估 / Diagnose 诊断 / Adapt 调度 / Learn 反馈）的英语词汇对战复盘教练。请基于下方数据生成专业对战复盘。",
-        "要求：不要联网搜索，不展示推理过程；输出约350-500字；用清晰小标题呈现。",
-        "结构：1) 对战表现评估 2) 失误原因诊断 3) 弱词回流训练 4) 下一局策略建议。",
-        "语气要体现学习-对战-数据-自适应调度-反馈闭环，避免只给很短结论。",
+        "任务类型：生成最近对战复盘。",
+        "你是 ADAL 英语词汇对战复盘教练，请只围绕最近对战表现做复盘，不要写成普通学习计划。",
+        "请基于下方对战摘要、弱词榜和学习数据，分析本次对战暴露的问题，并说明这些错词如何回流到 CDS 训练。",
+        "输出结构：1) Assess 对战表现评估 2) Diagnose 失误原因诊断 3) Adapt 弱词回流训练 4) Learn 下一局策略建议。",
+        "要求：不要联网搜索，不展示推理过程；约350-500字；用清晰小标题；要提到胜负、正误、弱词回流和下一局策略。",
         payload,
       ].join("\n");
       await this.sendToAgent(prompt);
@@ -528,8 +529,11 @@ Page({
     agent.setData?.({ useWebSearch: false });
     const sendTask = agent.handleSendMessage({ currentTarget: { dataset: { message } } });
     if (sendTask && typeof sendTask.catch === "function") {
-      sendTask.catch((error) => {
-        console.warn("Agent 自动发送失败", error);
+      sendTask.catch(async (error) => {
+        console.warn("Agent 自动发送失败，尝试从历史记录恢复", error);
+        if (typeof agent.recoverLatestBotAnswer === "function") {
+          await agent.recoverLatestBotAnswer(message);
+        }
       });
     }
     return true;

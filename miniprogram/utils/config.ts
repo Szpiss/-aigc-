@@ -65,10 +65,7 @@ export default {
   /** 对战设置每局的对战单词数目 */
   combatQuestionNumbers: [8, 10, 12, 15, 20, 30],
 
-  /** 单词发音接口配置（需加入小程序“request 合法域名”） */
   pronunciation: {
-    // 默认使用有道发音接口，如需替换请改为你的接口地址
-    // 例：https://dict.youdao.com/dictvoice?type=0&audio=
     baseUrl: 'https://dict.youdao.com/dictvoice?type=0&audio='
   }
 }
