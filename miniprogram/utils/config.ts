@@ -8,7 +8,7 @@ export default {
   defaultShare: {
     title: '❤ 来一起学习吧，轻松掌握【四六级/考研】必考单词 ~ 👏👏',
     path: '/pages/home/home',
-    imageUrl: './../../images/share-default-bg.png'
+    imageUrl: './../../images/share-default-bg.jpg'
   },
   audios: {
     selectCorrect: 'audios/correct.mp3',
@@ -47,28 +47,25 @@ export default {
   /** 对战模式分享战绩赠送的提示卡数目 */
   combatShareAddTotalTip: 5,
 
-  /** 每日词汇每次加载的词汇数目 */
+  /** 词汇学习每次加载的词汇数目 */
   learningPageSize: 20,
 
-  /** 每日词汇每道题目的选项数目 */
+  /** 词汇学习每道题目的选项数目 */
   learningOptionNumber: 4,
 
-  /** 每日词汇每局的默认生命值 */
+  /** 词汇学习每局的默认生命值 */
   learningHealthPoint: 3,
 
-  /** 每日词汇每题的倒计时，单位 s */
+  /** 词汇学习每题的倒计时，单位 s */
   learningCountDown: 30,
 
-  /** 每日词汇剩余多少题目没回答时进行下页题目的预请求加载 */
+  /** 词汇学习剩余多少题目没回答时进行下页题目的预请求加载 */
   learningWordsSurplusPreload: 5,
 
   /** 对战设置每局的对战单词数目 */
   combatQuestionNumbers: [8, 10, 12, 15, 20, 30],
 
-  /** 单词发音接口配置（需加入小程序“request 合法域名”） */
   pronunciation: {
-    // 默认使用有道发音接口，如需替换请改为你的接口地址
-    // 例：https://dict.youdao.com/dictvoice?type=0&audio=
     baseUrl: 'https://dict.youdao.com/dictvoice?type=0&audio='
   }
 }

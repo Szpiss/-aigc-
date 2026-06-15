@@ -63,6 +63,44 @@ export const getUserInfo = async (getUserProfile = false): Promise<UserInfoState
 }
 
 /**
+ * 从云端重新拉取当前用户数据，并同步到全局 store。
+ * 数据库作为用户成长数据的最终来源，避免首页返回时继续展示旧缓存。
+ */
+export const refreshUserInfo = async (source = 'manual'): Promise<UserInfoState | null> => {
+  try {
+    const latestUserInfo = await userModel.login()
+    const { book: latestBooks, ...latestUser } = latestUserInfo
+    const currentBook = store.$state.book
+    const nextBook = latestBooks.find(book => book._id === latestUser.bookId) ||
+      latestBooks.find(book => book._id === currentBook._id) ||
+      latestBooks[0] ||
+      currentBook
+
+    await new Promise(resolve => store.setState({
+      user: latestUser,
+      book: nextBook
+    }, resolve))
+    const app = getApp<{globalData?: {userInfo?: UserInfoState}}>()
+    app.globalData = {
+      ...(app.globalData || {}),
+      userInfo: latestUser
+    }
+    wx.setStorageSync('userInfo', latestUser)
+
+    console.log('[user-sync] refreshed user info', source, {
+      experience: latestUser.experience,
+      totalGames: latestUser.totalGames,
+      winGames: latestUser.winGames
+    })
+
+    return latestUser
+  } catch (error) {
+    console.warn('[user-sync] refresh user info failed', source, error)
+    return null
+  }
+}
+
+/**
  * 随机单词列表转成符合对战选词的列表
  * @param {array} list 随机单词列表
  * @param {number} len 每一个题目有多少个选项

@@ -28,11 +28,11 @@ App.Component({
       }, 500),
 
     /**
-     * 每日词汇
+     * 词汇学习
      */
     async onChallengeWord () {
       await getUserInfo()
-      void app.routes.pages.learning.go({})
+      void app.routes.pages.aigc.go({ module: 'vocabulary' })
     },
 
     /**

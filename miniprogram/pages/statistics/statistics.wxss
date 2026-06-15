@@ -1,65 +1,49 @@
 page {
-  background: #f2f4fb;
   font-family: "DIN Alternate", "Avenir Next", "PingFang SC", sans-serif;
 }
 
 .page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f7f9ff 0%, #eef3ff 42%, #f7f7ff 100%);
   padding-bottom: 48rpx;
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0 24rpx;
-  box-sizing: border-box;
 }
 
 .header-icon {
-  width: 44rpx;
-  height: 44rpx;
 }
 
 .header-title {
-  font-size: 34rpx;
-  font-weight: 600;
-  color: #1b2b52;
-  margin-left: 16rpx;
 }
 
 .header-spacer {
-  flex: 1;
 }
 
 .hero {
-  margin: 12rpx 32rpx 0;
-  padding: 24rpx 28rpx;
-  border-radius: 20rpx;
-  background: linear-gradient(135deg, #e4f0ff 0%, #f3e7ff 100%);
-  box-shadow: 0 12rpx 24rpx rgba(122, 134, 255, 0.15);
-}
-
-.hero-title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #2d2f4a;
-}
-
-.hero-subtitle {
-  font-size: 22rpx;
-  color: #6b6f8f;
   margin-top: 8rpx;
 }
 
+.hero-kicker {
+  margin-bottom: 10rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  color: #3d71bf;
+}
+
+.hero-title {
+}
+
+.hero-subtitle {
+}
+
 .tabs {
-  margin: 24rpx 32rpx 0;
+  margin-top: 24rpx;
   display: flex;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.88);
   border-radius: 999rpx;
   padding: 8rpx;
-  box-shadow: 0 8rpx 20rpx rgba(21, 32, 64, 0.08);
+  box-shadow: 0 12rpx 26rpx rgba(65, 107, 173, 0.08);
 }
 
 .tab {
@@ -72,7 +56,7 @@ page {
 }
 
 .tab-active {
-  background: linear-gradient(135deg, #4d8cff, #7d5cff);
+  background: linear-gradient(135deg, #69a8ff 0%, #6676ee 100%);
   color: #ffffff;
   font-weight: 600;
 }
@@ -82,17 +66,20 @@ page {
 }
 
 .summary-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20rpx;
-  margin: 0 32rpx;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .card {
-  background: #ffffff;
-  border-radius: 18rpx;
+  width: 48.6%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 24rpx;
   padding: 24rpx;
-  box-shadow: 0 12rpx 24rpx rgba(9, 20, 55, 0.08);
+  margin-bottom: 18rpx;
+  border: 1rpx solid rgba(124, 170, 232, 0.14);
+  box-shadow: 0 12rpx 26rpx rgba(65, 107, 173, 0.08);
 }
 
 .card-label {
@@ -113,13 +100,53 @@ page {
   color: #7a84a6;
 }
 
+.effect-card,
 .chart-card,
 .detail-card {
-  margin: 24rpx 32rpx 0;
-  background: #ffffff;
-  border-radius: 22rpx;
+  margin-top: 18rpx;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 28rpx;
   padding: 24rpx;
-  box-shadow: 0 16rpx 30rpx rgba(25, 40, 80, 0.08);
+  border: 1rpx solid rgba(124, 170, 232, 0.14);
+  box-shadow: 0 16rpx 34rpx rgba(65, 107, 173, 0.10);
+}
+
+.effect-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.effect-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 18rpx;
+  border-radius: 18rpx;
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.96), rgba(250, 247, 255, 0.96));
+  margin-top: 12rpx;
+}
+
+.effect-label {
+  flex: 1;
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #52617f;
+}
+
+.effect-value {
+  min-width: 128rpx;
+  text-align: right;
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #2f63b4;
+}
+
+.effect-desc {
+  display: block;
+  width: 210rpx;
+  margin-left: 18rpx;
+  font-size: 20rpx;
+  line-height: 28rpx;
+  color: #8a95b5;
 }
 
 .chart-header {
@@ -163,7 +190,7 @@ page {
 .bar {
   width: 30rpx;
   border-radius: 999rpx;
-  background: linear-gradient(180deg, #4d8cff, #7d5cff);
+  background: linear-gradient(180deg, #69a8ff, #6676ee);
   box-shadow: 0 10rpx 18rpx rgba(83, 120, 255, 0.32);
 }
 
@@ -183,25 +210,27 @@ page {
 .detail-list {
   display: flex;
   flex-direction: column;
-  gap: 16rpx;
 }
 
 .detail-item {
-  display: grid;
-  grid-template-columns: 120rpx 1fr 1fr 1fr;
+  display: flex;
+  align-items: center;
   background: #f6f7ff;
   border-radius: 14rpx;
   padding: 16rpx 18rpx;
   font-size: 22rpx;
   color: #5b6485;
+  margin-top: 14rpx;
 }
 
 .detail-date {
+  width: 120rpx;
   font-weight: 600;
   color: #3b4466;
 }
 
 .detail-meta {
+  flex: 1;
   text-align: right;
 }
 
@@ -210,8 +239,9 @@ page {
   padding: 18rpx 18rpx 18rpx 22rpx;
   background: #f6f7ff;
   border-radius: 16rpx;
-  display: grid;
-  gap: 8rpx;
+  display: flex;
+  flex-direction: column;
+  margin-top: 14rpx;
 }
 
 .record-main {
@@ -236,6 +266,7 @@ page {
   justify-content: space-between;
   font-size: 22rpx;
   color: #5f6b90;
+  margin-top: 8rpx;
 }
 
 .record-score {
@@ -257,11 +288,11 @@ page {
 }
 
 .badge-win {
-  background: linear-gradient(135deg, #29d9a7, #24b6a4);
+  background: #32b68a;
 }
 
 .badge-lose {
-  background: linear-gradient(135deg, #ff6b6b, #ff8f71);
+  background: #d64d5b;
 }
 
 .empty {
@@ -274,7 +305,6 @@ page {
 .weak-list {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
 }
 
 .weak-item {
@@ -286,6 +316,7 @@ page {
   background: #f6f7ff;
   font-size: 22rpx;
   color: #4a5475;
+  margin-top: 12rpx;
 }
 
 .weak-word {

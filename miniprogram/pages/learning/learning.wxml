@@ -1,14 +1,149 @@
-<top-bar />
+<view class="learning-page">
+  <view wx:if="{{phase === 'home'}}" class="learning-shell">
+    <view class="learning-hero">
+      <text class="learning-hero__kicker">Vocabulary Mode</text>
+      <text class="learning-hero__title">选择词汇学习模式</text>
+      <text class="learning-hero__subtitle">从日常练习到词汇检测，选择最适合当前节奏的一轮。</text>
+    </view>
 
-<problem wordItem="{{$state.learning.wordList[$state.learning.wordsIndex]}}" bind:loadMoreWords="loadWordsData" />
+    <view class="scene-grid">
+      <button class="scene-card scene-card--daily" data-type="daily" hover-class="touch-s" catchtap="onChooseSession">
+        <view class="scene-card__icon-wrap">
+          <text class="scene-card__icon">练</text>
+        </view>
+        <view class="scene-card__content">
+          <text class="scene-card__title">日常练习</text>
+          <text class="scene-card__desc">保留 5 词演示，也可按 25 / 50 / 100 词完成整轮练习</text>
+        </view>
+        <text class="scene-card__action">练习</text>
+      </button>
 
-<footer-bar />
+      <button class="scene-card scene-card--test" data-type="test" hover-class="touch-s" catchtap="onChooseSession">
+        <view class="scene-card__icon-wrap">
+          <text class="scene-card__icon">测</text>
+        </view>
+        <view class="scene-card__content">
+          <text class="scene-card__title">词汇检测</text>
+          <text class="scene-card__desc">设置错误上限，完成词汇掌握检测</text>
+        </view>
+        <text class="scene-card__action">检测</text>
+      </button>
+    </view>
+  </view>
+
+  <view wx:elif="{{phase === 'setup'}}" class="learning-shell">
+    <view class="setup-card app-card">
+      <view class="setup-header">
+        <view>
+          <text class="setup-title">{{selectedSessionType === 'daily' ? '日常练习' : '词汇检测'}}</text>
+          <text class="setup-desc">{{selectedSessionType === 'daily' ? '选择本轮词数和背词方式。' : '选择检测词数、检测模式和错误上限。'}}</text>
+        </view>
+      </view>
+
+      <view class="setup-section">
+        <text class="setup-section__title">{{selectedSessionType === 'daily' ? '本轮练习词数' : '检测词数'}}</text>
+        <view class="choice-row">
+          <button wx:for="{{selectedSessionType === 'daily' ? dailyWordCounts : testWordCounts}}" wx:key="*this" data-count="{{item}}" data-target="{{selectedSessionType === 'daily' ? 'daily' : 'test'}}" class="choice-pill {{(selectedSessionType === 'daily' ? selectedWordCount : selectedTestWordCount) === item ? 'choice-pill--active' : ''}}" hover-class="touch-s" catchtap="onSelectWordCount">{{item}} 词</button>
+        </view>
+      </view>
+
+      <view class="setup-section" wx:if="{{selectedSessionType === 'test'}}">
+        <text class="setup-section__title">错误上限</text>
+        <view class="choice-row">
+          <button wx:for="{{wrongLimitOptions}}" wx:key="*this" data-limit="{{item}}" class="choice-pill {{selectedWrongLimit === item ? 'choice-pill--active' : ''}}" hover-class="touch-s" catchtap="onSelectWrongLimit">错 {{item}} 个结束</button>
+        </view>
+      </view>
+
+      <view class="setup-section">
+        <text class="setup-section__title">学习方式</text>
+        <view class="mode-grid">
+          <button class="mode-card {{selectedPracticeMode === 'choice' ? 'mode-card--active' : ''}}" data-mode="choice" hover-class="touch-s" catchtap="onSelectPracticeMode">
+            <text class="mode-card__title">单词选项</text>
+            <text class="mode-card__desc">通过选择正确释义巩固记忆</text>
+          </button>
+          <button class="mode-card {{selectedPracticeMode === 'recognition' ? 'mode-card--active' : ''}}" data-mode="recognition" hover-class="touch-s" catchtap="onSelectPracticeMode">
+            <text class="mode-card__title">认识 / 不认识</text>
+            <text class="mode-card__desc">快速自评掌握情况，筛出生词</text>
+          </button>
+        </view>
+      </view>
+
+      <view class="setup-error" wx:if="{{loadError}}">{{loadError}}</view>
+
+      <view class="setup-actions">
+        <button class="setup-btn setup-btn--primary" hover-class="touch-s" catchtap="onStartSession">{{selectedSessionType === 'daily' ? '开始日常练习' : '开始词汇检测'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:elif="{{phase === 'session'}}" class="session-page">
+    <view class="learning-mode">
+      <view class="learning-mode__copy">
+        <text class="learning-mode__label">{{sessionTitle}}</text>
+        <text class="learning-mode__value">{{selectedPracticeModeLabel}}</text>
+        <text class="learning-mode__desc">{{sessionDesc}}</text>
+      </view>
+      <button class="learning-mode__btn" hover-class="touch-s" catchtap="onBack">退出</button>
+    </view>
+
+    <top-bar />
+
+    <problem wordItem="{{$state.learning.wordList[$state.learning.wordsIndex]}}" bind:loadMoreWords="loadWordsData" bind:sessionFinish="onSessionFinish" />
+
+    <footer-bar />
+  </view>
+
+  <view wx:elif="{{phase === 'summary'}}" class="learning-shell">
+    <view class="summary-card app-card">
+      <text class="summary-title">{{summary.title}}</text>
+      <text class="summary-subtitle">{{summary.subtitle}}</text>
+
+      <view class="summary-grid">
+        <view class="summary-stat">
+          <text class="summary-stat__label">{{selectedSessionType === 'test' ? '完成 / 选择' : '完成词数'}}</text>
+          <text wx:if="{{selectedSessionType === 'test'}}" class="summary-stat__value">{{summary.total}} / {{summary.requested}}</text>
+          <text wx:else class="summary-stat__value">{{summary.total}}</text>
+        </view>
+        <view wx:if="{{selectedSessionType === 'test'}}" class="summary-stat">
+          <text class="summary-stat__label">实际检测</text>
+          <text class="summary-stat__value">{{summary.actual}}</text>
+        </view>
+        <view class="summary-stat">
+          <text class="summary-stat__label">{{selectedPracticeMode === 'recognition' ? '认识' : '正确'}}</text>
+          <text class="summary-stat__value">{{summary.correct}}</text>
+        </view>
+        <view class="summary-stat">
+          <text class="summary-stat__label">{{selectedPracticeMode === 'recognition' ? '不认识' : '错误'}}</text>
+          <text class="summary-stat__value">{{summary.wrong}}</text>
+        </view>
+        <view class="summary-stat">
+          <text class="summary-stat__label">{{selectedPracticeMode === 'recognition' ? '认识率' : '正确率'}}</text>
+          <text class="summary-stat__value">{{summary.rate}}%</text>
+        </view>
+      </view>
+
+      <view class="weak-panel">
+        <text class="weak-panel__title">{{summary.weakTitle}}</text>
+        <view wx:if="{{summary.weakWords.length}}" class="weak-word-list">
+          <text wx:for="{{summary.weakWords}}" wx:key="wordId" class="weak-word-item">{{item.word}}</text>
+        </view>
+        <text wx:else class="weak-empty">本轮没有明显薄弱词，状态不错。</text>
+      </view>
+
+      <view class="summary-advice">
+        {{summary.wrong > 0 ? '建议把错词/不认识词加入下一轮重点练习，或进入生词本集中复习。' : '可以适当提高练习词数，继续保持输入节奏。'}}
+      </view>
+
+      <view class="summary-actions">
+        <button class="summary-btn summary-btn--ghost" hover-class="touch-s" catchtap="onPracticeWeakWords">练习错词</button>
+        <button class="summary-btn summary-btn--primary" hover-class="touch-s" catchtap="onRestartSession">{{summary.primaryLabel}}</button>
+      </view>
+    </view>
+  </view>
+</view>
 
 <!-- 加载 -->
 <loading id="loading" />
 
 <!-- 弹窗 -->
 <toast id="toast" />
-
-<!-- 复活、再来一局弹窗 -->
-<popup />

@@ -11,7 +11,7 @@
     </view>
     <view class="feature-card__content">
       <text class="feature-card__title">单词对战</text>
-      <text class="feature-card__desc">好友对战、随机匹配，边玩边巩固记忆点</text>
+      <text class="feature-card__desc">好友对战、随机匹配、人机练习，边玩边巩固记忆点</text>
     </view>
     <text class="feature-card__action">立即开始</text>
   </button>
@@ -24,7 +24,7 @@
       </view>
       <view class="feature-card__content">
         <text class="feature-card__title">AIGC 学习助手</text>
-        <text class="feature-card__desc">用智能问答陪你拆词、练句子、查疑难</text>
+        <text class="feature-card__desc">学习建议、对战复盘和薄弱词训练建议</text>
       </view>
     </button>
 
@@ -39,13 +39,13 @@
       </view>
     </button>
 
-    <!-- 每日词汇按钮 -->
+    <!-- 词汇学习按钮 -->
     <button class="feature-card feature-card--secondary" hover-class="touch-s" catchtap="onChallengeWord">
       <view class="feature-card__icon feature-card__icon--daily">
         <text class="feature-card__icon-text">DAY</text>
       </view>
       <view class="feature-card__content">
-        <text class="feature-card__title">每日词汇</text>
+        <text class="feature-card__title">词汇学习</text>
         <text class="feature-card__desc">用更轻量的日练节奏维持英语输入输出</text>
       </view>
     </button>

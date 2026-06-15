@@ -15,10 +15,12 @@
           <text class="user-info__login-text">点击登录同步学习进度</text>
         </view>
 
-        <button class="user-info__rank-btn" hover-class="touch-s" catchtap="onToRanking">
-          <text class="user-info__rank-label">TOP</text>
-          <text class="user-info__rank-text">排行榜</text>
-        </button>
+        <view class="user-info__actions">
+          <button class="user-info__rank-btn" hover-class="touch-s" catchtap="onToRanking">
+            <text class="user-info__rank-label">TOP</text>
+            <text class="user-info__rank-text">排行榜</text>
+          </button>
+        </view>
       </view>
 
       <text class="user-info__summary">轻量复习、对战闯关、持续积累你的词力值</text>

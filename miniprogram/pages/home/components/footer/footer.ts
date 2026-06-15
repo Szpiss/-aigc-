@@ -12,6 +12,9 @@ App.Component({
     onToRanking () {
       void app.routes.pages.ranking.go({})
     },
+    onToSetting () {
+      void app.routes.pages.setting.go({})
+    },
     onAbout () {
       void app.routes.pages.about.go({})
     }

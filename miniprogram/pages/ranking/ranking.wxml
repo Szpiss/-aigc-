@@ -1,23 +1,39 @@
-<top-bar type="{{type}}" bind:change="changeType" />
+<view class="ranking-page app-page">
+  <view class="app-shell">
+    <view class="ranking-hero app-hero-card">
+      <text class="ranking-hero__kicker">Leaderboard</text>
+      <text class="ranking-hero__title app-hero-title">排行榜</text>
+      <text class="ranking-hero__subtitle app-hero-subtitle">查看词力值和词汇训练表现，找到下一次冲榜目标。</text>
+    </view>
 
-<block wx:for="{{rankingList}}" wx:key="index" wx:for-index="index" wx:for-item="user">
-  <info 
-    index="{{user.index}}"
-    avatar="{{user.avatar}}"
-    nickname="{{user.nickname}}"
-    score="{{type === 'experience' ? user.experience : user.learning.maxScore}}"
-    tag="{{type === 'learning' ? user.learning.bookShortName : ''}}" 
-  />
-</block>
+    <top-bar type="{{type}}" bind:change="changeType" />
 
-<view class="mine" wx:if="{{mine}}">
-  <info 
-    index="{{mine.index}}"
-    avatar="{{mine.avatar}}"
-    nickname="{{mine.nickname}}" 
-    score="{{type === 'experience' ? mine.experience : mine.learning.maxScore}}"
-    tag="{{type === 'learning' ? mine.learning.bookShortName : ''}}"  
-  />
+    <view class="ranking-list" wx:if="{{rankingList.length}}">
+      <block wx:for="{{rankingList}}" wx:key="index" wx:for-index="index" wx:for-item="user">
+        <info
+          index="{{user.index}}"
+          avatar="{{user.avatar}}"
+          nickname="{{user.nickname}}"
+          score="{{type === 'experience' ? user.experience : user.learning.maxScore}}"
+          tag="{{type === 'learning' ? user.learning.bookShortName : ''}}"
+        />
+      </block>
+    </view>
+
+    <view class="ranking-empty app-empty" wx:if="{{!rankingList.length && !mine}}">
+      <text>暂无排行榜数据</text>
+    </view>
+  </view>
+
+  <view class="mine" wx:if="{{mine}}">
+    <info
+      index="{{mine.index}}"
+      avatar="{{mine.avatar}}"
+      nickname="{{mine.nickname}}"
+      score="{{type === 'experience' ? mine.experience : mine.learning.maxScore}}"
+      tag="{{type === 'learning' ? mine.learning.bookShortName : ''}}"
+    />
+  </view>
 </view>
 
 <!-- 加载 -->

@@ -47,6 +47,13 @@
   justify-content: space-between;
 }
 
+.user-info__actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-left: 12rpx;
+}
+
 .user-info__login {
   display: flex;
   flex-direction: column;
@@ -59,11 +66,11 @@
 }
 
 .user-info__rank-btn {
-  flex-shrink: 0;
   display: flex;
   align-items: center;
+  min-width: 0;
   height: 54rpx;
-  margin-left: 12rpx;
+  margin: 0;
   padding: 0 14rpx;
   box-sizing: border-box;
   border: 0;
@@ -99,7 +106,7 @@
 }
 
 .user-info__nickname {
-  max-width: 320rpx;
+  max-width: 250rpx;
   line-height: 1.2;
   font-size: 34rpx;
   font-weight: 700;

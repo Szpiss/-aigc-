@@ -23,6 +23,7 @@
 │   └── images/                  # 图片资源
 ├── cloudfunctions/server/        # 云函数入口、控制器、数据模型
 ├── typings/                      # 小程序和业务类型定义
+├── project_materials/            # 课程材料、截图和文档
 ├── 项目技术与架构文档.md
 ├── 创新点与技术方案.md
 ├── 项目改造与修复记录.md

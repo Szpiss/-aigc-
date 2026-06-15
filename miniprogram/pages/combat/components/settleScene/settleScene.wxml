@@ -24,7 +24,7 @@
 </view>
 
 <scroll-view class="words" scroll-y="{{true}}">
-  <image class="words-bg" src="./../../../../images/combat-pk.png" />
+  <image class="words-bg" src="./../../../../images/home-pvp.png" />
 
   <block wx:for="{{utils.getWordList($state.combat)}}" wx:for-index="index" wx:key="index" wx:for-item="item">
     <view class="word">
@@ -61,4 +61,3 @@
     <text class="tip-text">和 TA 一起 PK 单词很有趣哦</text>
   </view>
 </view>
-

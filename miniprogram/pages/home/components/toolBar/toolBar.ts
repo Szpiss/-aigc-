@@ -8,7 +8,7 @@ App.Component({
       bookSelect?.show()
     },
     onTipCard () {
-      void toast.show('可用于「对战模式」和「每日词汇」助力选择', 0, 640)
+      void toast.show('可用于「对战模式」和「词汇学习」助力选择', 0, 640)
     }
   }
 })

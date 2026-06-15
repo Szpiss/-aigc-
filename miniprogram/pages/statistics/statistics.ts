@@ -35,15 +35,18 @@ App.Page({
       correctRate: 0,
       learningCount: 0
     },
+    learningEffectCards: [] as Array<{ label: string; value: string; desc: string }>,
     trendBars: [] as Array<{ label: string; minutes: number; height: number }>,
     dailyList: [] as Array<{ label: string; learningMinutes: number; correctRate: number; wordCount: number }>,
     weakWords: [] as Array<{ word: string; masteryScore: number }>,
     combatSummary: {
       total: 0,
+      win: 0,
       winRate: 0,
       avgScore: 0,
       avgMinutes: 0
     },
+    combatEffectCards: [] as Array<{ label: string; value: string; desc: string }>,
     combatRecords: [] as Array<{
       bookName: string
       typeLabel: string
@@ -77,12 +80,18 @@ App.Page({
 
   async refreshAll () {
     this.setData({ loading: true })
-    await Promise.all([
-      this.fetchLearningSummary(),
-      this.fetchWeakWords(),
-      this.fetchCombatRecords()
-    ])
-    this.setData({ loading: false })
+    try {
+      await Promise.all([
+        this.fetchLearningSummary(),
+        this.fetchWeakWords(),
+        this.fetchCombatRecords()
+      ])
+    } catch (error) {
+      console.warn('数据看板刷新失败', error)
+      void wx.showToast({ title: '数据看板加载失败', icon: 'none', duration: 1500 })
+    } finally {
+      this.setData({ loading: false })
+    }
   },
 
   async fetchLearningSummary () {
@@ -112,10 +121,15 @@ App.Page({
       const correctCount = daily.reduce((sum, item) => sum + (item.correctCount || 0), 0)
       const wrongCount = daily.reduce((sum, item) => sum + (item.wrongCount || 0), 0)
       const learningCount = daily.reduce((sum, item) => sum + (item.learningCount || 0), 0)
+      const activeDays = daily.filter(item => (item.learningCount || 0) > 0 || (item.totalWordsCount || 0) > 0).length
 
       const totalAnswer = correctCount + wrongCount
       const correctRate = totalAnswer > 0 ? Math.round((correctCount / totalAnswer) * 100) : 0
       const learningMinutes = Math.round(learningSeconds / 60)
+      const previous = daily.length > 1 ? daily[daily.length - 2] : null
+      const previousTotal = previous ? (previous.correctCount || 0) + (previous.wrongCount || 0) : 0
+      const previousRate = previousTotal > 0 ? Math.round(((previous?.correctCount || 0) / previousTotal) * 100) : 0
+      const rateDelta = previousTotal > 0 ? correctRate - previousRate : 0
 
       this.setData({
         learningSummary: {
@@ -123,7 +137,24 @@ App.Page({
           wordCount,
           correctRate,
           learningCount
-        }
+        },
+        learningEffectCards: [
+          {
+            label: '本周学习词数',
+            value: `${wordCount}`,
+            desc: wordCount > 0 ? '词汇输入持续沉淀' : '先完成一轮词汇学习'
+          },
+          {
+            label: '正确率变化',
+            value: previousTotal > 0 ? `${rateDelta >= 0 ? '+' : ''}${rateDelta}%` : '待积累',
+            desc: previousTotal > 0 ? '相较上一学习日' : '完成两天学习后展示趋势'
+          },
+          {
+            label: '连续学习参考',
+            value: `${activeDays} 天`,
+            desc: '近一周有学习记录的天数'
+          }
+        ]
       })
 
       const barItems = this.buildTrendBars(daily)
@@ -141,8 +172,8 @@ App.Page({
 
       this.setData({ trendBars: barItems, dailyList })
     } catch (error) {
-      console.error('鑾峰彇瀛︿範鏁版嵁澶辫触', error)
-      void wx.showToast({ title: '瀛︿範鏁版嵁鑾峰彇澶辫触', icon: 'none', duration: 1500 })
+      console.error('获取学习数据失败', error)
+      void wx.showToast({ title: '获取学习数据失败', icon: 'none', duration: 1500 })
     }
   },
 
@@ -188,7 +219,7 @@ App.Page({
       const winRate = total > 0 ? Math.round((win / total) * 100) : 0
 
       const list = records.map((item) => ({
-        bookName: item.bookName || '鏈煡璇嶄功',
+        bookName: item.bookName || '未知词书',
         typeLabel: this.formatCombatType(item.combatType),
         isWin: !!item.isWin,
         score: item.score || 0,
@@ -199,15 +230,33 @@ App.Page({
       this.setData({
         combatSummary: {
           total,
+          win,
           winRate,
           avgScore,
           avgMinutes
         },
+        combatEffectCards: [
+          {
+            label: '总局数',
+            value: `${total}`,
+            desc: total > 0 ? '最近 30 天对战样本' : '先完成一局单词对战'
+          },
+          {
+            label: '胜利次数',
+            value: `${win}`,
+            desc: total > 0 ? `胜率 ${winRate}%` : '对战后自动统计'
+          },
+          {
+            label: '最近表现',
+            value: total > 0 ? `${avgScore} 分` : '待积累',
+            desc: '最近对战平均得分'
+          }
+        ],
         combatRecords: list
       })
     } catch (error) {
-      console.error('鑾峰彇瀵规垬璁板綍澶辫触', error)
-      void wx.showToast({ title: '瀵规垬鏁版嵁鑾峰彇澶辫触', icon: 'none', duration: 1500 })
+      console.error('获取对战记录失败', error)
+      void wx.showToast({ title: '获取对战数据失败', icon: 'none', duration: 1500 })
     }
   },
 
@@ -232,15 +281,15 @@ App.Page({
       }))
       this.setData({ weakWords: list })
     } catch (error) {
-      console.warn('鑾峰彇寮辫瘝鍒楄〃澶辫触', error)
+      console.warn('获取弱词列表失败', error)
     }
   },
 
   formatCombatType (type?: string) {
-    if (type === 'friend') return '濂藉弸'
-    if (type === 'random') return '闅忔満'
-    if (type === 'npc') return '浜烘満'
-    return '瀵规垬'
+    if (type === 'friend') return '好友'
+    if (type === 'random') return '随机'
+    if (type === 'npc') return '人机'
+    return '对战'
   },
 
   formatDate (date?: string | number | Date) {
@@ -259,4 +308,3 @@ App.Page({
     return `${month}/${day} ${hour}:${minute}`
   }
 })
-

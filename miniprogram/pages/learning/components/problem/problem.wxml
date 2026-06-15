@@ -1,23 +1,43 @@
 <wxs src="./problem.wxs" module="utils" />
 
-<view class="problem">
+<view class="problem {{$state.learning.mode === 'recognition' ? 'problem--recognition' : ''}}">
   <text class="problem-word">{{wordItem.word}}</text>
   <text class="problem-usphone {{!wordItem.usphone && 'problem-usphone__hidden'}}">/{{wordItem.usphone}}/</text>
 
-  <view class="problem-options">
+  <block wx:if="{{$state.learning.mode === 'recognition'}}">
+    <text class="recognition-mode-tag">{{$state.learning.sessionType === 'daily' ? '日常练习' : '词汇检测'}} · 认识 / 不认识</text>
 
+    <view class="recognition-meaning {{!showMeaning ? 'recognition-meaning--placeholder' : ''}}">
+      <block wx:if="{{showMeaning}}">
+        <text class="recognition-meaning__label">中文释义</text>
+        <text class="recognition-meaning__text">{{wordItem.options[wordItem.correctIndex]}}</text>
+      </block>
+      <text wx:else class="recognition-meaning__placeholder">点击“查看释义”后显示中文释义</text>
+    </view>
+
+    <button class="recognition-reveal {{showMeaning ? 'recognition-reveal--shown' : ''}} touch-s" hover-class="touch-s" catchtap="onRevealRecognition">
+      {{showMeaning ? '已显示释义' : '查看释义'}}
+    </button>
+
+    <view class="recognition-actions">
+      <button class="recognition-btn recognition-btn--known touch-s" hover-class="touch-s" data-known="{{true}}" catchtap="onSelectRecognition">认识</button>
+      <button class="recognition-btn recognition-btn--unknown touch-s" hover-class="touch-s" data-known="{{false}}" catchtap="onSelectRecognition">不认识</button>
+    </view>
+  </block>
+
+  <view class="problem-options" wx:else>
     <block wx:for="{{wordItem.options}}" wx:key="index" wx:for-index="index" wx:for-item="option">
-      <view catchtap="onSelectOption" data-index="{{index}}" 
-      class="option touch-s {{utils.setOptionBgColor(wordItem, selectIndex, index)}}" animation="{{optionsAnimation}}">
-        <text class="option-text">{{option}}</text>
+      <view catchtap="onSelectOption" data-index="{{index}}"
+        class="option touch-s {{utils.setOptionBgColor(wordItem, selectIndex, index)}}" animation="{{optionsAnimation}}">
+          <text class="option-text">{{option}}</text>
 
-        <!-- 当前选项选择正确 -->
-        <image wx:if="{{utils.isSelectCorrect(wordItem, selectIndex, index)}}" class="option-icon" src="./../../../../images/combat-g.png" />
+          <!-- 当前选项选择正确 -->
+          <image wx:if="{{utils.isSelectCorrect(wordItem, selectIndex, index)}}" class="option-icon" src="./../../../../images/combat-g.png" />
 
-        <!-- 当前选项选择错误 -->
-        <image wx:if="{{utils.isSelectWrong(wordItem, selectIndex, index)}}" class="option-icon" src="./../../../../images/combat-x.png" />
-      </view>
-    </block>
+          <!-- 当前选项选择错误 -->
+          <image wx:if="{{utils.isSelectWrong(wordItem, selectIndex, index)}}" class="option-icon" src="./../../../../images/combat-x.png" />
+        </view>
+      </block>
 
   </view>
 </view>

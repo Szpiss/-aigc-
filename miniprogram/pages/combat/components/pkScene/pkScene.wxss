@@ -28,11 +28,16 @@
 .word {
   display: block;
   text-align: center;
-  font-size: 52rpx;
-  font-weight: 500;
-  color: rgba(255, 92, 30, 1);
-  width: 614rpx;
-  margin: 16vh auto;
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #1a2b49;
+  width: 650rpx;
+  margin: 12vh auto 0;
+  padding: 42rpx 28rpx;
+  box-sizing: border-box;
+  border-radius: 32rpx;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18rpx 38rpx rgba(65, 107, 173, 0.12);
 }
 
 .options {
@@ -43,55 +48,50 @@
   left: 0;
   right: 0;
   box-sizing: border-box;
-  height: 43vh;
+  height: 39vh;
   overflow-y: scroll;
   justify-content: space-around;
 }
 
 .pk-icon {
-  position: absolute;
-  display: block;
-  left: 50%;
-  top: 50%;
-  transform: translate(-175rpx, -80rpx) scale(1.2);
-  width: 350rpx;
-  height: 160rpx;
-  z-index: 0;
+  display: none;
 }
 
 .option {
-  width: 600rpx;
+  width: 640rpx;
   margin: 0 auto;
-  height: 110rpx;
-  background: rgba(126, 206, 247, 1);
-  border-radius: 55rpx;
+  min-height: 104rpx;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 28rpx;
   box-sizing: border-box;
   position: relative;
   z-index: 1;
+  border: 1rpx solid rgba(124, 170, 232, 0.16);
+  box-shadow: 0 12rpx 26rpx rgba(65, 107, 173, 0.10);
 }
 
 .option:active {
-  background: rgb(114, 181, 218) !important;
+  background: #eef6ff !important;
 }
 
 .option-text {
   display: block;
   position: absolute;
   text-align: center;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
+  color: #203554;
   font-size: 28rpx;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  line-height: 110rpx;
+  line-height: 104rpx;
   box-sizing: border-box;
   padding: 0 72rpx;
 }
 
 .option-text__correct {
-  color: #fc2a79 !important;
+  color: #2f63b4 !important;
 }
 
 .option-result__left,
@@ -133,8 +133,8 @@
 .grade-text__right {
   display: inline-block;
   font-size: 34rpx;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 1);
+  font-weight: 700;
+  color: #1a2b49;
   min-width: 68rpx;
   text-align: center;
 }
@@ -193,13 +193,18 @@
 
 .pk-tip {
   position: absolute;
-  width: 200rpx;
-  height: 135rpx;
+  width: 180rpx;
+  min-height: 116rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  right: 48rpx;
-  bottom: 52vh;
+  right: 36rpx;
+  bottom: 50vh;
+  padding: 16rpx 10rpx;
+  box-sizing: border-box;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12rpx 28rpx rgba(65, 107, 173, 0.10);
 }
 
 .pk-tip__img {
@@ -208,9 +213,10 @@
 }
 
 .pk-tip__title {
-  font-size: 24rpx;
+  margin-top: 6rpx;
+  font-size: 22rpx;
   font-weight: 600;
-  color: rgba(255, 255, 255, 1);
+  color: #3d71bf;
 }
 
 .top {
@@ -218,15 +224,20 @@
 }
 
 .count-down {
-  height: 100rpx;
-  line-height: 100rpx;
-  font-size: 72rpx;
+  height: 104rpx;
+  line-height: 104rpx;
+  font-size: 68rpx;
   font-weight: 700;
-  color: rgba(255, 143, 101, 1);
+  color: #4d83df;
   display: block;
   text-align: center;
-  width: 100%;
+  width: 150rpx;
   position: absolute;
   top: 50%;
-  margin-top: -50rpx;
+  left: 50%;
+  margin-top: -52rpx;
+  margin-left: -75rpx;
+  border-radius: 32rpx;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12rpx 30rpx rgba(65, 107, 173, 0.12);
 }

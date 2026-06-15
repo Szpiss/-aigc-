@@ -1,5 +1,8 @@
 import { User, Book, Combat, CombatWord } from './../../typings/model'
 import { AppConfig } from './../models/kv'
+import type { VocabularyLearningMode } from './vocabularyLearningMode'
+
+export type VocabularySessionType = 'daily' | 'test'
 
 interface UiState {
   statusBarHeight: number
@@ -29,6 +32,18 @@ export interface CombatState extends Combat {
 export type LearningWord = CombatWord
 
 export interface LearningState {
+  /** 当前词汇学习模式 */
+  mode: VocabularyLearningMode
+
+  /** 当前词汇学习场景：日常练习 / 词汇检测 */
+  sessionType: VocabularySessionType
+
+  /** 本轮目标词数 */
+  targetWordCount: number
+
+  /** 词汇检测错误上限，仅 test 场景使用 */
+  selectedWrongLimit?: number
+
   /** 当前分数 */
   score: number
 
@@ -44,8 +59,26 @@ export interface LearningState {
   /** 题目选择倒计时 */
   countdown: number
 
-  /** 本局每日词汇剩余未增加的词力值，在答题结束时进行结算，每答对一题增加一次分数 */
+  /** 本局词汇学习剩余未增加的词力值，在答题结束时进行结算，每答对一题增加一次分数 */
   experience: number
+
+  /** 答对数量 */
+  correctCount: number
+
+  /** 答错数量 */
+  wrongCount: number
+
+  /** 认识数量 */
+  knownCount: number
+
+  /** 不认识数量 */
+  unknownCount: number
+
+  /** 错词列表 */
+  wrongWords: Array<{ wordId: string; word: string }>
+
+  /** 不认识词列表 */
+  unknownWords: Array<{ wordId: string; word: string }>
 }
 
 export interface State {
@@ -61,7 +94,7 @@ export interface State {
   /** 对战模式数据 */
   combat: CombatState | null
 
-  /** 每日词汇数据 */
+  /** 词汇学习数据 */
   learning: LearningState | null
 
   appConfig: AppConfig

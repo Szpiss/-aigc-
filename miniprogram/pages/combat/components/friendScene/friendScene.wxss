@@ -6,9 +6,9 @@ page {
   display: flex;
   width: 100%;
   box-sizing: border-box;
-  padding: 32rpx 0 36rpx 0;
-  height: 456rpx;
-  margin-top: 148rpx;
+  padding: 24rpx;
+  min-height: 420rpx;
+  margin-top: 96rpx;
 }
 
 .userinfo {
@@ -16,6 +16,12 @@ page {
   flex-direction: column;
   align-items: center;
   width: 50%;
+  margin: 0 10rpx;
+  padding: 36rpx 18rpx;
+  box-sizing: border-box;
+  border-radius: 30rpx;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 16rpx 34rpx rgba(65, 107, 173, 0.10);
 }
 
 .userinfo-avatar {
@@ -25,17 +31,17 @@ page {
 }
 
 .userinfo-nickname {
-  margin-top: 38rpx;
-  font-size: 18px;
-  color: rgba(255, 255, 255, 1);
-  font-weight: 600;
+  margin-top: 28rpx;
+  font-size: 32rpx;
+  color: #1a2b49;
+  font-weight: 700;
 }
 
 .userinfo-grade,
 .userinfo-winRate {
-  margin-top: 28rpx;
-  font-size: 15px;
-  color: rgba(153, 153, 153, 1);
+  margin-top: 18rpx;
+  font-size: 24rpx;
+  color: #7a8ca8;
   font-weight: 500;
 }
 
@@ -44,22 +50,20 @@ page {
 }
 
 .button-container {
-  margin-top: 72rpx;
+  margin-top: 44rpx;
 }
 
 .button {
   width: 480rpx !important;
   height: 80rpx;
-  background: rgba(126, 206, 247, 1);
+  background: linear-gradient(135deg, #69a8ff 0%, #6676ee 100%);
   border-radius: 64rpx;
   color: #ffffff;
-  font-size: 34rpx;
-  font-weight: 500;
+  font-size: 30rpx;
+  font-weight: 700;
+  box-shadow: 0 14rpx 28rpx rgba(72, 119, 201, 0.22);
 }
 
 .pk-icon {
-  display: block;
-  width: 350rpx;
-  height: 160rpx;
-  margin: 64rpx auto 0;
+  display: none;
 }

@@ -3,7 +3,3 @@
   <view class="bg-orb bg-orb--secondary"></view>
   <view class="bg-orb bg-orb--tertiary"></view>
 </view>
-
-<view class="home-setting touch-s" catchtap="onToSetting">
-  <image class="home-setting__icon" src="./../../../../images/home-setting.png" />
-</view>

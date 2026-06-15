@@ -19,6 +19,10 @@ Component({
       type: String,
       value: "",
     },
+    layoutHeight: {
+      type: String,
+      value: "100vh",
+    },
     agentConfig: {
       type: Object,
       value: {
@@ -103,6 +107,7 @@ Component({
     showToolCallDetail: true,
     showMultiConversation: true,
     showBotName: true,
+    hideQuestions: false,
     showVoice: true,
     useWebSearch: false,
     showFeatureList: false,
@@ -206,6 +211,7 @@ Component({
         allowMultiConversation,
         allowVoice,
         showBotName,
+        hideQuestions,
       } = this.data.agentConfig;
       allowWebSearch = allowWebSearch === undefined ? true : allowWebSearch;
       allowUploadFile = allowUploadFile === undefined ? true : allowUploadFile;
@@ -215,6 +221,7 @@ Component({
       allowMultiConversation = allowMultiConversation === undefined ? true : allowMultiConversation;
       allowVoice = allowVoice === undefined ? true : allowVoice;
       showBotName = showBotName === undefined ? true : showBotName;
+      hideQuestions = hideQuestions === undefined ? false : hideQuestions;
       this.setData({
         bot,
         questions,
@@ -227,6 +234,7 @@ Component({
         showMultiConversation: allowMultiConversation,
         showVoice: allowVoice,
         showBotName: showBotName,
+        hideQuestions: hideQuestions,
       });
       // 如果多会话开启，拉一次会话
       if (this.data.bot.multiConversationEnable) {
@@ -981,6 +989,52 @@ Component({
         scrollTo: "scroll-bottom",
       });
     },
+    recoverLatestBotAnswer: async function (inputValue, targetIndex) {
+      if (this.data.chatMode !== "bot" || !this.data.agentConfig?.botId) {
+        return false;
+      }
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+        const cloudInstance = await getCloudInstance(this.data.envShareConfig);
+        const ai = cloudInstance.extend.AI;
+        const getRecordsReq = {
+          botId: this.data.agentConfig.botId,
+          pageNumber: 1,
+          pageSize: 8,
+          sort: "desc",
+        };
+        if (this.data.conversation?.conversationId) {
+          getRecordsReq.conversationId = this.data.conversation.conversationId;
+        }
+        const res = await ai.bot.getChatRecords(getRecordsReq);
+        const records = res.recordList || [];
+        let answer = null;
+        const userIndex = records.findIndex((item) => item.role === "user" && item.content === inputValue);
+        if (userIndex > -1) {
+          answer = records.slice(0, userIndex).find((item) => item.role === "assistant" && item.content);
+        }
+        if (!answer) {
+          answer = records.find((item) => item.role === "assistant" && item.content);
+        }
+        if (!answer?.content) {
+          this.setData({ chatStatus: 0 });
+          return false;
+        }
+        const lastValueIndex = typeof targetIndex === "number" ? targetIndex : this.data.chatRecords.length - 1;
+        this.setData({
+          [`chatRecords[${lastValueIndex}].content`]: answer.content,
+          [`chatRecords[${lastValueIndex}].record_id`]: answer.recordId || answer.record_id || this.data.chatRecords[lastValueIndex]?.record_id,
+          [`chatRecords[${lastValueIndex}].error`]: null,
+          chatStatus: 0,
+        });
+        this.autoToBottom();
+        return true;
+      } catch (error) {
+        console.warn("从历史记录恢复 Bot 回复失败", error);
+        this.setData({ chatStatus: 0 });
+        return false;
+      }
+    },
     bindInputFocus: function (e) {
       this.setData({
         manualScroll: false,
@@ -1552,6 +1606,11 @@ Component({
             }
             // 优先处理错误,直接中断
             if (finish_reason === "error" || finish_reason === "content_filter" || error) {
+              console.warn("Agent 返回错误", {
+                finish_reason,
+                error,
+                dataJson,
+              });
               lastValue.search_info = null;
               lastValue.reasoning_content = "";
               lastValue.knowledge_meta = [];
@@ -1732,10 +1791,18 @@ Component({
         const lastValue = newValue[lastValueIndex];
         lastValue.hiddenBtnGround = isManuallyPaused;
         if (lastValue.content === "") {
-          lastValue.content = this.data.defaultErrorMsg;
-          this.setData({
-            [`chatRecords[${lastValueIndex}].content`]: lastValue.content,
+          console.warn("Agent 流式回复为空", {
+            botId: bot.botId,
+            messageLength: inputValue.length,
+            reasoningLength: reasoningContentText.length,
           });
+          const recovered = await this.recoverLatestBotAnswer(inputValue, lastValueIndex);
+          if (!recovered) {
+            lastValue.content = this.data.defaultErrorMsg;
+            this.setData({
+              [`chatRecords[${lastValueIndex}].content`]: lastValue.content,
+            });
+          }
         }
         // console.log("this.data.chatRecords", this.data.chatRecords);
         this.setData({

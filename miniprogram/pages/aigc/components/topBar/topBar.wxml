@@ -1,0 +1,24 @@
+<view class="top">
+  <view class="top-line">
+    <view class="top-item">
+      <image class="top-icon" src="/images/learning-score.png" />
+      <text class="top-text">{{$state.learning.sessionType === 'daily' ? '日常练习' : '词汇检测'}}：{{$state.learning.wordsIndex + 1}} / {{$state.learning.wordList.length}}</text>
+    </view>
+    <view class="top-item" wx:if="{{$state.learning.sessionType === 'test'}}">
+      <image class="top-icon" src="/images/learning-hp.png" />
+      <text class="top-text">错误数：{{$state.learning.wrongCount}} / {{$state.learning.selectedWrongLimit}}</text>
+    </view>
+  </view>
+
+  <view class="top-line">
+    <view class="top-item">
+      <image class="top-icon" src="/images/learning-score.png" />
+      <text class="top-text">当前分数：{{$state.learning.score}}</text>
+    </view>
+
+    <view class="top-item top-item__countdown" wx:if="{{$state.learning.sessionType === 'test' && $state.learning.mode === 'choice'}}">
+      <image class="top-icon" src="/images/learning-countdown.png" />
+      <text class="top-text">{{$state.learning.countdown}}</text>
+    </view>
+  </view>
+</view>

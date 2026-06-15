@@ -1,5 +1,5 @@
 <!-- agent ui 组件根容器 -->
-<view class="agent-ui" bind:tap="onTapPage">
+<view class="agent-ui" style="height: {{layoutHeight}};" bind:tap="onTapPage">
   <!-- 左侧抽屉，只在 bot 模式下展示 -->
   <view wx-if="{{chatMode==='bot'&&!isAgent}}" class="drawer-mask {{isDrawerShow ? 'show' : ''}}" bindtap="closeDrawer"></view>
   <view wx-if="{{chatMode==='bot'&&!isAgent}}" class="drawer {{isDrawerShow ? 'show' : ''}}">
@@ -56,7 +56,7 @@
     </view>
   </view>
   <!-- 标题栏（包含会话列表展开按钮，agent 名称，开启新会话按钮），只在 bot 模式下展示 -->
-  <view class="navBar {{showBotName ? 'showBotName' : 'hiddenBotName'}}" wx:if="{{chatMode === 'bot'&&!isAgent}}">
+  <view class="navBar {{showBotName ? 'showBotName' : 'hiddenBotName'}}" wx:if="{{chatMode === 'bot'&&!isAgent&&(showBotName||showMultiConversation)}}">
     <view class="nav-content {{showBotName ? 'showBotName' : 'hiddenBotName'}}"
       style="{{showMultiConversation ? 'justify-content: space-between;' : ''}}">
       <image wx:if="{{bot.botId && showMultiConversation}}" bind:tap="openDrawer" class="con-icon"
@@ -289,7 +289,7 @@
           <image src="./imgs/loading.svg" mode="aspectFill" style="width: 14px;height: 14px; margin-left: 32rpx;" />
         </view>
         <!-- 推荐问题,只在 bot 模式下展示 -->
-        <block wx-if="{{chatMode==='bot'&&!isAgent}}" wx:for="{{questions}}" wx:key="item">
+        <block wx-if="{{!hideQuestions&&chatMode==='bot'&&!isAgent}}" wx:for="{{questions}}" wx:key="item">
           <view class="questions" style="padding-left: {{showBotAvatar?80:0}}rpx;">
             <view class="question_content" bind:tap="handleSendMessage" data-message="{{item}}">{{item}}</view>
           </view>

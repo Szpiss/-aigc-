@@ -14,7 +14,8 @@ export const routesConfig = [
   { path: '/setting', route: '/pages/setting/setting' },
   { path: '/about', route: '/pages/about/about' },
   // 添加AIGC页面路由配置
-  { path: '/aigc', route: '/pages/aigc/aigc' }
+  { path: '/aigc', route: '/pages/aigc/aigc' },
+  { path: '/ai-agent', route: '/pages/aigc/aigc' }
 ]
 
 export interface ICombatRoute {
@@ -36,15 +37,17 @@ export interface ICombatRoute {
 
 // AIGC页面路由参数接口（如果需要传递参数）
 export interface IAIGCRoute {
-  // 可以添加AIGC页面需要的参数，如：
-  // from?: string  // 记录来源页面
+  /** 默认打开的 Agent 场景 */
+  scene?: 'learning' | 'battle'
+  /** 默认打开的 Agent 工作台模块 */
+  module?: 'home' | 'vocabulary' | 'daily-practice' | 'vocab-test' | 'battle-review' | 'suggestions' | 'weak-words' | 'settings'
 }
 
 export interface IRoutes {
   pages: {
     /** 首页 */
     home: Route<{}>
-    /** 每日词汇 */
+    /** 词汇学习 */
     learning: Route<{}>
     /** 生词本 */
     review: Route<{}>

@@ -30,18 +30,18 @@ App.Page({
       return
     }
 
-    // NOTE: 数据库层面创建房间，然后创建该房间的监听及房间数据通过云端首次 watch 初始化
+    //数据库层面创建房间，然后创建该房间的监听及房间数据通过云端首次 watch 初始化
     if (options.state === 'create' && options.type === 'friend') {
       const combatId = await this.createCombat('friend')
 
       await this.initCombatWatcher(combatId)
 
-      // NOTE: 该房间是通过「再来一局」创建的情况下，会携带该参数
+      //该房间是通过「再来一局」创建的情况下，会携带该参数
       options.previousId && combatModel.updateNext(options.previousId, combatId)
       return
     }
 
-    // NOTE: 分享给好友的链接进入后的状态，通过 watch 来获取房间的云端数据
+    //分享给好友的链接进入后的状态，通过 watch 来获取房间的云端数据
     if (options.state === 'ready' && options.type === 'friend' && options.id) {
       loading.show('获取房间信息中')
       await this.initCombatWatcher(options.id)
@@ -254,7 +254,7 @@ App.Page({
       return {
         title: `❤ @你, 来一起pk「${book.name}」吖，点我进入`,
         path: `/pages/combat/combat?id=${String(_id)}&type=friend&state=ready`,
-        imageUrl: './../../images/share-pk-bg.png'
+        imageUrl: './../../images/share-pk-bg.jpg'
       }
     }
 
@@ -278,7 +278,7 @@ App.Page({
       return {
         title: `我在和${anotherUser.nickname}的「${book.name}」对战获 ${correctRate}% 的正确率，点我查看详情`,
         path: `/pages/combat/combat?id=${String(_id)}&share_result=true`,
-        imageUrl: './../../images/share-default-bg.png'
+        imageUrl: './../../images/share-default-bg.jpg'
       }
     }
 

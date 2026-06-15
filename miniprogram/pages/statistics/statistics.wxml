@@ -1,117 +1,142 @@
-﻿<view class="page">
+<view class="page app-page">
   <header>
-    <view slot="content" class="header">
-      <image class="header-icon touch" catchtap="onBack" src="./../../images/combat-back.png" />
-      <text class="header-title">数据看板</text>
-      <view class="header-spacer" />
+    <view slot="content" class="header app-header">
+      <image class="header-icon app-header-icon touch" catchtap="onBack" src="./../../images/combat-back.png" />
+      <text class="header-title app-header-title">数据看板</text>
+      <view class="header-spacer app-header-spacer" />
     </view>
   </header>
 
-  <view class="hero">
-    <view class="hero-title">学习与对战可视化</view>
-    <view class="hero-subtitle">近一周趋势与最近对战记录</view>
-  </view>
-
-  <view class="tabs">
-    <view class="tab {{activeTab === 'learning' ? 'tab-active' : ''}}" data-tab="learning" bindtap="onSwitchTab">学习</view>
-    <view class="tab {{activeTab === 'combat' ? 'tab-active' : ''}}" data-tab="combat" bindtap="onSwitchTab">对战</view>
-  </view>
-
-  <view class="section" wx:if="{{activeTab === 'learning'}}">
-    <view class="summary-grid">
-      <view class="card">
-        <text class="card-label">学习时长</text>
-        <text class="card-value">{{learningSummary.learningMinutes}}<text class="card-unit">分</text></text>
-      </view>
-      <view class="card">
-        <text class="card-label">学习词数</text>
-        <text class="card-value">{{learningSummary.wordCount}}</text>
-      </view>
-      <view class="card">
-        <text class="card-label">正确率</text>
-        <text class="card-value">{{learningSummary.correctRate}}<text class="card-unit">%</text></text>
-      </view>
-      <view class="card">
-        <text class="card-label">学习次数</text>
-        <text class="card-value">{{learningSummary.learningCount}}</text>
-      </view>
+  <view class="app-shell">
+    <view class="hero app-hero-card">
+      <view class="hero-kicker">Dashboard</view>
+      <view class="hero-title app-hero-title">学习与对战可视化</view>
+      <view class="hero-subtitle app-hero-subtitle">近一周趋势、弱词表现和最近对战记录。</view>
     </view>
 
-    <view class="chart-card">
-      <view class="chart-header">
-        <text class="chart-title">近7天学习时长</text>
-        <text class="chart-unit">分钟</text>
-      </view>
-      <view class="bar-chart">
-        <view class="bar-item" wx:for="{{trendBars}}" wx:key="label">
-          <view class="bar-value">{{item.minutes}}</view>
-          <view class="bar" style="height: {{item.height}}rpx"></view>
-          <text class="bar-label">{{item.label}}</text>
+    <view class="tabs">
+      <view class="tab {{activeTab === 'learning' ? 'tab-active' : ''}}" data-tab="learning" bindtap="onSwitchTab">学习</view>
+      <view class="tab {{activeTab === 'combat' ? 'tab-active' : ''}}" data-tab="combat" bindtap="onSwitchTab">对战</view>
+    </view>
+
+    <view class="section" wx:if="{{activeTab === 'learning'}}">
+      <view class="summary-grid">
+        <view class="card">
+          <text class="card-label">学习时长</text>
+          <text class="card-value">{{learningSummary.learningMinutes}}<text class="card-unit">分</text></text>
+        </view>
+        <view class="card">
+          <text class="card-label">学习词数</text>
+          <text class="card-value">{{learningSummary.wordCount}}</text>
+        </view>
+        <view class="card">
+          <text class="card-label">正确率</text>
+          <text class="card-value">{{learningSummary.correctRate}}<text class="card-unit">%</text></text>
+        </view>
+        <view class="card">
+          <text class="card-label">学习次数</text>
+          <text class="card-value">{{learningSummary.learningCount}}</text>
         </view>
       </view>
-    </view>
 
-    <view class="detail-card">
-      <view class="detail-title">每日概览</view>
-      <view class="detail-list" wx:if="{{dailyList.length}}">
-        <view class="detail-item" wx:for="{{dailyList}}" wx:key="label">
-          <view class="detail-date">{{item.label}}</view>
-          <view class="detail-meta">学习 {{item.learningMinutes}} 分</view>
-          <view class="detail-meta">正确率 {{item.correctRate}}%</view>
-          <view class="detail-meta">词数 {{item.wordCount}}</view>
-        </view>
-      </view>
-      <view class="empty" wx:else>暂无学习数据</view>
-    </view>
-
-    <view class="detail-card">
-      <view class="detail-title">弱词榜（掌握度）</view>
-      <view class="weak-list" wx:if="{{weakWords.length}}">
-        <view class="weak-item" wx:for="{{weakWords}}" wx:key="word">
-          <text class="weak-word">{{item.word}}</text>
-          <text class="weak-score">{{item.masteryScore}}%</text>
-        </view>
-      </view>
-      <view class="empty" wx:else>暂无弱词数据</view>
-    </view>
-  </view>
-
-  <view class="section" wx:if="{{activeTab === 'combat'}}">
-    <view class="summary-grid">
-      <view class="card">
-        <text class="card-label">对战场次</text>
-        <text class="card-value">{{combatSummary.total}}</text>
-      </view>
-      <view class="card">
-        <text class="card-label">胜率</text>
-        <text class="card-value">{{combatSummary.winRate}}<text class="card-unit">%</text></text>
-      </view>
-      <view class="card">
-        <text class="card-label">平均得分</text>
-        <text class="card-value">{{combatSummary.avgScore}}</text>
-      </view>
-      <view class="card">
-        <text class="card-label">平均耗时</text>
-        <text class="card-value">{{combatSummary.avgMinutes}}<text class="card-unit">分</text></text>
-      </view>
-    </view>
-
-    <view class="detail-card">
-      <view class="detail-title">最近对战</view>
-      <view class="detail-list" wx:if="{{combatRecords.length}}">
-        <view class="record-item" wx:for="{{combatRecords}}" wx:key="index">
-          <view class="record-main">
-            <text class="record-book">{{item.bookName}}</text>
-            <text class="record-type">{{item.typeLabel}}</text>
+      <view class="effect-card">
+        <view class="detail-title">学习成效洞察</view>
+        <view class="effect-list">
+          <view class="effect-item" wx:for="{{learningEffectCards}}" wx:key="label">
+            <text class="effect-label">{{item.label}}</text>
+            <text class="effect-value">{{item.value}}</text>
+            <text class="effect-desc">{{item.desc}}</text>
           </view>
-          <view class="record-meta">
-            <text class="record-score">{{item.score}} : {{item.opponentScore}}</text>
-            <text class="record-time">{{item.endLabel}}</text>
-          </view>
-          <view class="record-badge {{item.isWin ? 'badge-win' : 'badge-lose'}}">{{item.isWin ? '胜' : '负'}}</view>
         </view>
       </view>
-      <view class="empty" wx:else>暂无对战记录</view>
+
+      <view class="chart-card">
+        <view class="chart-header">
+          <text class="chart-title">近7天学习时长</text>
+          <text class="chart-unit">分钟</text>
+        </view>
+        <view class="bar-chart">
+          <view class="bar-item" wx:for="{{trendBars}}" wx:key="label">
+            <view class="bar-value">{{item.minutes}}</view>
+            <view class="bar" style="height: {{item.height}}rpx"></view>
+            <text class="bar-label">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="detail-card">
+        <view class="detail-title">每日概览</view>
+        <view class="detail-list" wx:if="{{dailyList.length}}">
+          <view class="detail-item" wx:for="{{dailyList}}" wx:key="label">
+            <view class="detail-date">{{item.label}}</view>
+            <view class="detail-meta">学习 {{item.learningMinutes}} 分</view>
+            <view class="detail-meta">正确率 {{item.correctRate}}%</view>
+            <view class="detail-meta">词数 {{item.wordCount}}</view>
+          </view>
+        </view>
+        <view class="empty" wx:else>暂无学习数据，先完成一轮词汇学习即可生成趋势。</view>
+      </view>
+
+      <view class="detail-card">
+        <view class="detail-title">弱词榜（掌握度）</view>
+        <view class="weak-list" wx:if="{{weakWords.length}}">
+          <view class="weak-item" wx:for="{{weakWords}}" wx:key="word">
+            <text class="weak-word">{{item.word}}</text>
+            <text class="weak-score">{{item.masteryScore}}%</text>
+          </view>
+        </view>
+        <view class="empty" wx:else>暂无弱词数据，系统会在学习和对战后自动沉淀。</view>
+      </view>
+    </view>
+
+    <view class="section" wx:if="{{activeTab === 'combat'}}">
+      <view class="summary-grid">
+        <view class="card">
+          <text class="card-label">对战场次</text>
+          <text class="card-value">{{combatSummary.total}}</text>
+        </view>
+        <view class="card">
+          <text class="card-label">胜利次数</text>
+          <text class="card-value">{{combatSummary.win}}</text>
+        </view>
+        <view class="card">
+          <text class="card-label">胜率</text>
+          <text class="card-value">{{combatSummary.winRate}}<text class="card-unit">%</text></text>
+        </view>
+        <view class="card">
+          <text class="card-label">平均得分</text>
+          <text class="card-value">{{combatSummary.avgScore}}</text>
+        </view>
+      </view>
+
+      <view class="effect-card">
+        <view class="detail-title">对战成效洞察</view>
+        <view class="effect-list">
+          <view class="effect-item" wx:for="{{combatEffectCards}}" wx:key="label">
+            <text class="effect-label">{{item.label}}</text>
+            <text class="effect-value">{{item.value}}</text>
+            <text class="effect-desc">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="detail-card">
+        <view class="detail-title">最近对战</view>
+        <view class="detail-list" wx:if="{{combatRecords.length}}">
+          <view class="record-item" wx:for="{{combatRecords}}" wx:key="index">
+            <view class="record-main">
+              <text class="record-book">{{item.bookName}}</text>
+              <text class="record-type">{{item.typeLabel}}</text>
+            </view>
+            <view class="record-meta">
+              <text class="record-score">{{item.score}} : {{item.opponentScore}}</text>
+              <text class="record-time">{{item.endLabel}}</text>
+            </view>
+            <view class="record-badge {{item.isWin ? 'badge-win' : 'badge-lose'}}">{{item.isWin ? '胜' : '负'}}</view>
+          </view>
+        </view>
+        <view class="empty" wx:else>暂无对战记录，完成单词对战后会展示最近表现。</view>
+      </view>
     </view>
   </view>
 </view>

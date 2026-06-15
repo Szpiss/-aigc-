@@ -1,44 +1,53 @@
-<view class="page">
+<view class="page app-page">
   <header>
-    <view slot="content" class="header">
-      <image class="header-icon touch" catchtap="onBack" src="./../../images/combat-back.png" />
-      <text class="header-title">单词对战</text>
-      <view class="header-spacer"></view>
+    <view slot="content" class="header app-header">
+      <image class="header-icon app-header-icon touch" catchtap="onBack" src="./../../images/combat-back.png" />
+      <text class="header-title app-header-title">单词对战</text>
+      <view class="header-spacer app-header-spacer"></view>
     </view>
   </header>
 
-  <view class="hero">
-    <view class="hero-title">选择对战模式</view>
-    <view class="hero-subtitle">随机匹配 / 好友对战 / 人机对战</view>
-  </view>
+  <view class="app-shell">
+    <view class="hero app-hero-card">
+      <view class="hero-kicker">Battle Mode</view>
+      <view class="hero-title app-hero-title">选择对战模式</view>
+      <view class="hero-subtitle app-hero-subtitle">从快速匹配、好友房间到人机练习，选择最适合当前节奏的一局。</view>
+    </view>
 
-  <view class="panel">
-    <button class="mode-button shadow-lg" hover-class="btn-hover" catchtap="onRandomMatch">
-      <image class="mode-icon" src="./../../images/home-btn-random.png" />
-      <view class="mode-text">
-        <text class="mode-title">随机匹配</text>
-        <text class="mode-desc">快速匹配同水平玩家</text>
-      </view>
-      <text class="mode-tag">快速</text>
-    </button>
+    <view class="panel">
+      <button class="mode-button mode-random touch-s" hover-class="touch-s" catchtap="onRandomMatch">
+        <view class="mode-icon-wrap">
+          <image class="mode-icon" src="./../../images/home-btn-random.png" />
+        </view>
+        <view class="mode-text">
+          <text class="mode-title">随机匹配</text>
+          <text class="mode-desc">快速匹配同水平玩家</text>
+        </view>
+        <text class="mode-tag">快速</text>
+      </button>
 
-    <button class="mode-button mode-friend shadow-lg" hover-class="btn-hover" catchtap="onChallengeFriend">
-      <image class="mode-icon" src="./../../images/home-btn-pk.png" />
-      <view class="mode-text">
-        <text class="mode-title">好友对战</text>
-        <text class="mode-desc">邀请好友一起PK</text>
-      </view>
-      <text class="mode-tag">好友</text>
-    </button>
+      <button class="mode-button mode-friend touch-s" hover-class="touch-s" catchtap="onChallengeFriend">
+        <view class="mode-icon-wrap">
+          <image class="mode-icon" src="./../../images/home-btn-pk.png" />
+        </view>
+        <view class="mode-text">
+          <text class="mode-title">好友对战</text>
+          <text class="mode-desc">邀请好友一起 PK</text>
+        </view>
+        <text class="mode-tag">好友</text>
+      </button>
 
-    <button class="mode-button mode-npc shadow-lg" hover-class="btn-hover" catchtap="onNpcMatch">
-      <image class="mode-icon" src="./../../images/home-pvp.png" />
-      <view class="mode-text">
-        <text class="mode-title">人机对战</text>
-        <text class="mode-desc">立即开始与AI练习</text>
-      </view>
-      <text class="mode-tag">AI</text>
-    </button>
+      <button class="mode-button mode-npc touch-s" hover-class="touch-s" catchtap="onNpcMatch">
+        <view class="mode-icon-wrap">
+          <image class="mode-icon" src="./../../images/home-pvp.png" />
+        </view>
+        <view class="mode-text">
+          <text class="mode-title">人机对战</text>
+          <text class="mode-desc">立即开始与系统练习</text>
+        </view>
+        <text class="mode-tag">系统</text>
+      </button>
+    </view>
   </view>
 </view>
 

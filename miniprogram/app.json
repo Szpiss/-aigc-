@@ -1,15 +1,62 @@
 {
   "pages": [
-    "pages/home/home",
-    "pages/combatSelect/combatSelect",
-    "pages/combat/combat",
-    "pages/learning/learning",
-    "pages/review/review",
-    "pages/statistics/statistics",
-    "pages/ranking/ranking",
-    "pages/setting/setting",
-    "pages/about/about",
-    "pages/aigc/aigc"
+    "pages/home/home"
+  ],
+  "subpackages": [
+    {
+      "root": "pages/aigc",
+      "pages": [
+        "aigc"
+      ]
+    },
+    {
+      "root": "pages/learning",
+      "pages": [
+        "learning"
+      ]
+    },
+    {
+      "root": "pages/combatSelect",
+      "pages": [
+        "combatSelect"
+      ]
+    },
+    {
+      "root": "pages/combat",
+      "pages": [
+        "combat"
+      ]
+    },
+    {
+      "root": "pages/review",
+      "pages": [
+        "review"
+      ]
+    },
+    {
+      "root": "pages/statistics",
+      "pages": [
+        "statistics"
+      ]
+    },
+    {
+      "root": "pages/ranking",
+      "pages": [
+        "ranking"
+      ]
+    },
+    {
+      "root": "pages/setting",
+      "pages": [
+        "setting"
+      ]
+    },
+    {
+      "root": "pages/about",
+      "pages": [
+        "about"
+      ]
+    }
   ],
   "window": {
     "backgroundColor": "#FFFFFF",
